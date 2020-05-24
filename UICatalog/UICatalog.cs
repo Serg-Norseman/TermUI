@@ -7,12 +7,39 @@ using System.Globalization;
 using System.Linq;
 using Terminal.Gui;
 
+/// <remarks>
+/// <para>
+///	UI Catalog attempts to satisfy the following goals:
+/// </para>
+/// <para>
+/// <list type="number">
+///	<item>
+///		<description>
+///		Be an easy to use showcase for Terminal.Gui concepts and features.
+///		</description>
+///	</item>
+///	<item>
+///		<description>
+///		Provide sample code that illustrates how to properly implement said concepts & features.
+///		</description>
+///	</item>
+///	<item>
+///		<description>
+///		Make it easy for contributors to add additional samples in a structured way.
+///		</description>
+///	</item>
+/// </list>
+/// </para>	
+/// <para>
+///	See the project README for more details (https://github.com/migueldeicaza/gui.cs/tree/master/UICatalog/README.md).
+/// </para>	
+/// </remarks>
+
 namespace UICatalog {
 	/// <summary>
-	/// Main program for the Terminal.gui UI Catalog app. This app provides a chooser that allows
-	/// for a calalog of UI demos, examples, and tests.
+	/// UI Catalog is a comprehensive sample app and scenario library for <see cref="Terminal.Gui"/>
 	/// </summary>
-	internal class Program {
+	public class UICatalogApp {
 		private static Toplevel _top;
 		private static MenuBar _menu;
 		private static int _nameColumnWidth;
@@ -24,33 +51,34 @@ namespace UICatalog {
 		private static ListView _scenarioListView;
 		private static StatusBar _statusBar;
 
-		private static Scenario _selectedScenario = null;
+		private static Scenario _runningScenario = null;
 
 		static void Main (string [] args)
 		{
 			if (Debugger.IsAttached)
 				CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo ("en-US");
 
-			_scenarios = Scenario.GetDerivedClassesCollection ().OrderBy (t => Scenario.ScenarioMetadata.GetName (t)).ToList();
+			_scenarios = Scenario.GetDerivedClassesCollection ().ToList ();
 
 			if (args.Length > 0) {
 				var item = _scenarios.FindIndex (t => Scenario.ScenarioMetadata.GetName (t).Equals (args [0], StringComparison.OrdinalIgnoreCase));
-				_selectedScenario = (Scenario)Activator.CreateInstance (_scenarios [item]);
-				_selectedScenario.Init (Application.Top);
-				_selectedScenario.Setup ();
-				_selectedScenario.Run ();
-				_selectedScenario = null;
+				_runningScenario = (Scenario)Activator.CreateInstance (_scenarios [item]);
+				Application.Init ();
+				_runningScenario.Init (Application.Top);
+				_runningScenario.Setup ();
+				_runningScenario.Run ();
+				_runningScenario = null;
 				return;
 			}
 
 			Scenario scenario = GetScenarioToRun ();
 			while (scenario != null) {
+				Application.Init ();
 				scenario.Init (Application.Top);
 				scenario.Setup ();
 				scenario.Run ();
 				scenario = GetScenarioToRun ();
 			}
-
 		}
 
 		/// <summary>
@@ -74,7 +102,7 @@ namespace UICatalog {
 			};
 
 
-			_categories = Scenario.GetAllCategories ().OrderBy(c => c).ToList();
+			_categories = Scenario.GetAllCategories ();
 			_categoryListView = new ListView (_categories) {
 				X = 1,
 				Y = 0,
@@ -124,12 +152,12 @@ namespace UICatalog {
 			_statusBar = new StatusBar (new StatusItem [] {
 				//new StatusItem(Key.F1, "~F1~ Help", () => Help()),
 				new StatusItem(Key.ControlQ, "~CTRL-Q~ Quit", () => {
-					if (_selectedScenario is null){
+					if (_runningScenario is null){
 						// This causes GetScenarioToRun to return null
-						_selectedScenario = null;
+						_runningScenario = null;
 						Application.RequestStop();
 					} else {
-						_selectedScenario.RequestStop();
+						_runningScenario.RequestStop();
 					}
 				}),
 			});
@@ -162,16 +190,15 @@ namespace UICatalog {
 				Application.Iteration += Application_Iteration;
 #else
 			_top.Ready += (o, a) => {
-				if (_selectedScenario != null) {
+				if (_runningScenario != null) {
 					_top.SetFocus (_rightPane);
-					_selectedScenario = null;
+					_runningScenario = null;
 				}
 			};
 #endif
 			
 			Application.Run (_top);
-			Application.Shutdown ();
-			return _selectedScenario;
+			return _runningScenario;
 		}
 
 #if false
@@ -183,9 +210,9 @@ namespace UICatalog {
 #endif
 		private static void _scenarioListView_OpenSelectedItem (object sender, EventArgs e)
 		{
-			if (_selectedScenario is null) {
+			if (_runningScenario is null) {
 				var source = _scenarioListView.Source as ScenarioListDataSource;
-				_selectedScenario = (Scenario)Activator.CreateInstance (source.Scenarios [_scenarioListView.SelectedItem]);
+				_runningScenario = (Scenario)Activator.CreateInstance (source.Scenarios [_scenarioListView.SelectedItem]);
 				Application.RequestStop ();
 			}
 		}
@@ -246,7 +273,7 @@ namespace UICatalog {
 		/// <param name="ke"></param>
 		private static void KeyUpHandler (object sender, View.KeyEventEventArgs a)
 		{
-			if (_selectedScenario != null) {
+			if (_runningScenario != null) {
 				//switch (ke.Key) {
 				//case Key.Esc:
 				//	//_runningScenario.RequestStop ();
