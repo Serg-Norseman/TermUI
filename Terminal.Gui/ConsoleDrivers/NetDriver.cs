@@ -5,7 +5,9 @@
 //   Miguel de Icaza (miguel@gnome.org)
 //
 using System;
-using Mono.Terminal;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using NStack;
 
 namespace Terminal.Gui {
@@ -111,24 +113,17 @@ namespace Terminal.Gui {
 
 		public override void Init (Action terminalResized)
 		{
+			Colors.TopLevel = new ColorScheme ();
 			Colors.Base = new ColorScheme ();
 			Colors.Dialog = new ColorScheme ();
 			Colors.Menu = new ColorScheme ();
 			Colors.Error = new ColorScheme ();
 			Clip = new Rect (0, 0, Cols, Rows);
 
-			HLine = '\u2500';
-			VLine = '\u2502';
-			Stipple = '\u2592';
-			Diamond = '\u25c6';
-			ULCorner = '\u250C';
-			LLCorner = '\u2514';
-			URCorner = '\u2510';
-			LRCorner = '\u2518';
-			LeftTee = '\u251c';
-			RightTee = '\u2524';
-			TopTee = '\u22a4';
-			BottomTee = '\u22a5';
+			Colors.TopLevel.Normal = MakeColor (ConsoleColor.Green, ConsoleColor.Black);
+			Colors.TopLevel.Focus = MakeColor (ConsoleColor.White, ConsoleColor.DarkCyan);
+			Colors.TopLevel.HotNormal = MakeColor (ConsoleColor.DarkYellow, ConsoleColor.Black);
+			Colors.TopLevel.HotFocus = MakeColor (ConsoleColor.DarkBlue, ConsoleColor.DarkCyan);
 
 			Colors.Base.Normal = MakeColor (ConsoleColor.White, ConsoleColor.Blue);
 			Colors.Base.Focus = MakeColor (ConsoleColor.Black, ConsoleColor.Cyan);
@@ -144,7 +139,7 @@ namespace Terminal.Gui {
 			Colors.Menu.Focus = MakeColor (ConsoleColor.White, ConsoleColor.Black);
 			Colors.Menu.HotNormal = MakeColor (ConsoleColor.Yellow, ConsoleColor.Cyan);
 			Colors.Menu.Normal = MakeColor (ConsoleColor.White, ConsoleColor.Cyan);
-			Colors.Menu.Disabled = MakeColor(ConsoleColor.DarkGray, ConsoleColor.Cyan);
+			Colors.Menu.Disabled = MakeColor (ConsoleColor.DarkGray, ConsoleColor.Cyan);
 
 			Colors.Dialog.Normal = MakeColor (ConsoleColor.Black, ConsoleColor.Gray);
 			Colors.Dialog.Focus = MakeColor (ConsoleColor.Black, ConsoleColor.Cyan);
@@ -156,6 +151,19 @@ namespace Terminal.Gui {
 			Colors.Error.HotNormal = MakeColor (ConsoleColor.Yellow, ConsoleColor.Red);
 			Colors.Error.HotFocus = Colors.Error.HotNormal;
 			Console.Clear ();
+
+			HLine = '\u2500';
+			VLine = '\u2502';
+			Stipple = '\u2592';
+			Diamond = '\u25c6';
+			ULCorner = '\u250C';
+			LLCorner = '\u2514';
+			URCorner = '\u2510';
+			LRCorner = '\u2518';
+			LeftTee = '\u251c';
+			RightTee = '\u2524';
+			TopTee = '\u22a4';
+			BottomTee = '\u22a5';
 		}
 
 		public override Attribute MakeAttribute (Color fore, Color back)
@@ -167,8 +175,15 @@ namespace Terminal.Gui {
 		void SetColor (int color)
 		{
 			redrawColor = color;
-			Console.BackgroundColor = (ConsoleColor)(color & 0xffff);
-			Console.ForegroundColor = (ConsoleColor)((color >> 16) & 0xffff);
+			IEnumerable<int> values = Enum.GetValues (typeof (ConsoleColor))
+			      .OfType<ConsoleColor> ()
+			      .Select (s => (int)s);
+			if (values.Contains (color & 0xffff)) {
+				Console.BackgroundColor = (ConsoleColor)(color & 0xffff);
+			}
+			if (values.Contains ((color >> 16) & 0xffff)) {
+				Console.ForegroundColor = (ConsoleColor)((color >> 16) & 0xffff);
+			}
 		}
 
 		public override void UpdateScreen ()
@@ -355,5 +370,72 @@ namespace Terminal.Gui {
 		// on the Mono emulation
 		//
 
+	}
+
+	/// <summary>
+	/// Mainloop intended to be used with the .NET System.Console API, and can
+	/// be used on Windows and Unix, it is cross platform but lacks things like
+	/// file descriptor monitoring.
+	/// </summary>
+	class NetMainLoop : IMainLoopDriver {
+		AutoResetEvent keyReady = new AutoResetEvent (false);
+		AutoResetEvent waitForProbe = new AutoResetEvent (false);
+		ConsoleKeyInfo? windowsKeyResult = null;
+		public Action<ConsoleKeyInfo> WindowsKeyPressed;
+		MainLoop mainLoop;
+
+		public NetMainLoop ()
+		{
+		}
+
+		void WindowsKeyReader ()
+		{
+			while (true) {
+				waitForProbe.WaitOne ();
+				windowsKeyResult = Console.ReadKey (true);
+				keyReady.Set ();
+			}
+		}
+
+		void IMainLoopDriver.Setup (MainLoop mainLoop)
+		{
+			this.mainLoop = mainLoop;
+			Thread readThread = new Thread (WindowsKeyReader);
+			readThread.Start ();
+		}
+
+		void IMainLoopDriver.Wakeup ()
+		{
+		}
+
+		bool IMainLoopDriver.EventsPending (bool wait)
+		{
+			long now = DateTime.UtcNow.Ticks;
+
+			int waitTimeout;
+			if (mainLoop.timeouts.Count > 0) {
+				waitTimeout = (int)((mainLoop.timeouts.Keys [0] - now) / TimeSpan.TicksPerMillisecond);
+				if (waitTimeout < 0)
+					return true;
+			} else
+				waitTimeout = -1;
+
+			if (!wait)
+				waitTimeout = 0;
+
+			windowsKeyResult = null;
+			waitForProbe.Set ();
+			keyReady.WaitOne (waitTimeout);
+			return windowsKeyResult.HasValue;
+		}
+
+		void IMainLoopDriver.MainIteration ()
+		{
+			if (windowsKeyResult.HasValue) {
+				if (WindowsKeyPressed != null)
+					WindowsKeyPressed (windowsKeyResult.Value);
+				windowsKeyResult = null;
+			}
+		}
 	}
 }

@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Mono.Terminal;
 using NStack;
 using Unix.Terminal;
 
@@ -17,7 +16,7 @@ namespace Terminal.Gui {
 	/// <summary>
 	/// This is the Curses driver for the gui.cs/Terminal framework.
 	/// </summary>
-	public class CursesDriver : ConsoleDriver {
+	internal class CursesDriver : ConsoleDriver {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 		public override int Cols => Curses.Cols;
 		public override int Rows => Curses.Lines;
@@ -136,6 +135,8 @@ namespace Terminal.Gui {
 			case Curses.KeyF8: return Key.F8;
 			case Curses.KeyF9: return Key.F9;
 			case Curses.KeyF10: return Key.F10;
+			case Curses.KeyF11: return Key.F11;
+			case Curses.KeyF12: return Key.F12;
 			case Curses.KeyUp: return Key.CursorUp;
 			case Curses.KeyDown: return Key.CursorDown;
 			case Curses.KeyLeft: return Key.CursorLeft;
@@ -146,6 +147,7 @@ namespace Terminal.Gui {
 			case Curses.KeyPPage: return Key.PageUp;
 			case Curses.KeyDeleteChar: return Key.DeleteChar;
 			case Curses.KeyInsertChar: return Key.InsertChar;
+			case Curses.KeyTab: return Key.Tab;
 			case Curses.KeyBackTab: return Key.BackTab;
 			case Curses.KeyBackspace: return Key.Backspace;
 			case Curses.ShiftKeyUp: return Key.CursorUp | Key.ShiftMask;
@@ -241,7 +243,7 @@ namespace Terminal.Gui {
 								break;
 							if (IsButtonPressed && LastMouseButtonPressed != null && (mouseFlag & MouseFlags.ReportMousePosition) == 0) {
 								mouseHandler (me);
-								mainLoop.Driver.Wakeup ();
+								//mainLoop.Driver.Wakeup ();
 							}
 						}
 					});
@@ -366,7 +368,7 @@ namespace Terminal.Gui {
 			};
 		}
 
-		void ProcessInput (Action<KeyEvent> keyHandler, Action<KeyEvent> keyUpHandler, Action<MouseEvent> mouseHandler)
+		void ProcessInput (Action<KeyEvent> keyHandler, Action<KeyEvent> keyDownHandler, Action<KeyEvent> keyUpHandler, Action<MouseEvent> mouseHandler)
 		{
 			int wch;
 			var code = Curses.get_wch (out wch);
@@ -418,12 +420,20 @@ namespace Terminal.Gui {
 				} else {
 					keyHandler (new KeyEvent (Key.Esc));
 				}
+			} else if (wch == Curses.KeyTab) {
+				keyDownHandler (new KeyEvent (MapCursesKey (wch)));
+				keyHandler (new KeyEvent (MapCursesKey (wch)));
 			} else {
+				keyDownHandler (new KeyEvent ((Key)wch));
 				keyHandler (new KeyEvent ((Key)wch));
 			}
 			// Cause OnKeyUp and OnKeyPressed. Note that the special handling for ESC above 
 			// will not impact KeyUp.
-			keyUpHandler (new KeyEvent ((Key)wch));
+			if (wch == Curses.KeyTab) {
+				keyUpHandler (new KeyEvent (MapCursesKey (wch)));
+			} else {
+				keyUpHandler (new KeyEvent ((Key)wch));
+			}
 		}
 
 		Action<MouseEvent> mouseHandler;
@@ -436,8 +446,8 @@ namespace Terminal.Gui {
 			this.mouseHandler = mouseHandler;
 			this.mainLoop = mainLoop;
 
-			(mainLoop.Driver as Mono.Terminal.UnixMainLoop).AddWatch (0, Mono.Terminal.UnixMainLoop.Condition.PollIn, x => {
-				ProcessInput (keyHandler, keyUpHandler, mouseHandler);
+			(mainLoop.Driver as UnixMainLoop).AddWatch (0, UnixMainLoop.Condition.PollIn, x => {
+				ProcessInput (keyHandler, keyDownHandler, keyUpHandler, mouseHandler);
 				return true;
 			});
 
@@ -476,6 +486,7 @@ namespace Terminal.Gui {
 			TopTee = Curses.ACS_TTEE;
 			BottomTee = Curses.ACS_BTEE;
 
+			Colors.TopLevel = new ColorScheme ();
 			Colors.Base = new ColorScheme ();
 			Colors.Dialog = new ColorScheme ();
 			Colors.Menu = new ColorScheme ();
@@ -484,6 +495,11 @@ namespace Terminal.Gui {
 			if (Curses.HasColors) {
 				Curses.StartColor ();
 				Curses.UseDefaultColors ();
+
+				Colors.TopLevel.Normal = MakeColor (Curses.COLOR_GREEN, Curses.COLOR_BLACK);
+				Colors.TopLevel.Focus = MakeColor (Curses.COLOR_WHITE, Curses.COLOR_CYAN);
+				Colors.TopLevel.HotNormal = MakeColor (Curses.COLOR_YELLOW, Curses.COLOR_BLACK);
+				Colors.TopLevel.HotFocus = MakeColor (Curses.COLOR_YELLOW, Curses.COLOR_CYAN);
 
 				Colors.Base.Normal = MakeColor (Curses.COLOR_WHITE, Curses.COLOR_BLUE);
 				Colors.Base.Focus = MakeColor (Curses.COLOR_BLACK, Curses.COLOR_CYAN);
@@ -511,6 +527,10 @@ namespace Terminal.Gui {
 				Colors.Error.HotNormal = Curses.A_BOLD | MakeColor (Curses.COLOR_YELLOW, Curses.COLOR_RED);
 				Colors.Error.HotFocus = Colors.Error.HotNormal;
 			} else {
+				Colors.TopLevel.Normal = Curses.COLOR_GREEN;
+				Colors.TopLevel.Focus = Curses.COLOR_WHITE;
+				Colors.TopLevel.HotNormal = Curses.COLOR_YELLOW;
+				Colors.TopLevel.HotFocus = Curses.COLOR_YELLOW;
 				Colors.Base.Normal = Curses.A_NORMAL;
 				Colors.Base.Focus = Curses.A_REVERSE;
 				Colors.Base.HotNormal = Curses.A_BOLD;
@@ -528,12 +548,6 @@ namespace Terminal.Gui {
 				Colors.Error.HotNormal = Curses.A_BOLD | Curses.A_REVERSE;
 				Colors.Error.HotFocus = Curses.A_REVERSE;
 			}
-			Colors.TopLevel = new ColorScheme ();
-
-			Colors.TopLevel.Normal = MakeColor (Curses.COLOR_GREEN, Curses.COLOR_BLACK);
-			Colors.TopLevel.Focus = MakeColor (Curses.COLOR_WHITE, Curses.COLOR_CYAN);
-			Colors.TopLevel.HotNormal = MakeColor (Curses.COLOR_YELLOW, Curses.COLOR_BLACK);
-			Colors.TopLevel.HotFocus = MakeColor (Curses.COLOR_YELLOW, Curses.COLOR_CYAN);
 		}
 
 		static int MapColor (Color color)
