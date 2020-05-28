@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Mono.Terminal;
 using NStack;
 using Unix.Terminal;
 
@@ -17,7 +16,7 @@ namespace Terminal.Gui {
 	/// <summary>
 	/// This is the Curses driver for the gui.cs/Terminal framework.
 	/// </summary>
-	public class CursesDriver : ConsoleDriver {
+	internal class CursesDriver : ConsoleDriver {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 		public override int Cols => Curses.Cols;
 		public override int Rows => Curses.Lines;
@@ -447,7 +446,7 @@ namespace Terminal.Gui {
 			this.mouseHandler = mouseHandler;
 			this.mainLoop = mainLoop;
 
-			(mainLoop.Driver as Mono.Terminal.UnixMainLoop).AddWatch (0, Mono.Terminal.UnixMainLoop.Condition.PollIn, x => {
+			(mainLoop.Driver as UnixMainLoop).AddWatch (0, UnixMainLoop.Condition.PollIn, x => {
 				ProcessInput (keyHandler, keyDownHandler, keyUpHandler, mouseHandler);
 				return true;
 			});
