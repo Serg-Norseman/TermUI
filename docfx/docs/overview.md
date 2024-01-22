@@ -1,5 +1,7 @@
 # Terminal.Gui API Overview
 
+**These are the v1 API docs**. The v2 API docs are [here](https://gui-cs.github.io/Terminal.GuiV2Docs/).
+
 `Terminal.Gui` is a library intended to create console-based
 applications using C#. The framework has been designed to make it
 easy to write applications that will work on monochrome terminals, as
@@ -42,10 +44,10 @@ the various views that are included. In the following sections, you
 will see how applications are put together.
 
 In the example above, you can see that we have initialized the runtime by calling the 
-[`Init`](~/api/Terminal.Gui/Terminal.Gui.Application.yml#Terminal_Gui_Application_Init_Terminal_Gui_ConsoleDriver_Terminal_Gui_IMainLoopDriver_) method in the Application class - this sets up the environment, initializes the color
+[`Init`](~/api/Terminal.Gui.Application.yml#Terminal_Gui_Application_Init_Terminal_Gui_ConsoleDriver_Terminal_Gui_IMainLoopDriver_) method in the Application class - this sets up the environment, initializes the color
 schemes available for your application and clears the screen to start your application.
 
-The [`Application`](~/api/Terminal.Gui/Terminal.Gui.Application.yml) class, additionally creates an instance of the [`Toplevel`](~/api/Terminal.Gui/Terminal.Gui.Toplevel.yml) class that is ready to be consumed, 
+The [`Application`](~/api/Terminal.Gui.Application.yml) class, additionally creates an instance of the [`Toplevel`](~/api/Terminal.Gui.Toplevel.yml) class that is ready to be consumed, 
 this instance is available in the `Application.Top` property, and can be used like this:
 
 ```csharp
@@ -105,13 +107,13 @@ class Demo {
 ## Views
 
 All visible elements on a Terminal.Gui application are implemented as
-[Views](~/api/Terminal.Gui/Terminal.Gui.View.yml). Views are self-contained objects that take care of displaying themselves, can receive keyboard and mouse input and participate in the focus mechanism.
+[Views](~/api/Terminal.Gui.View.yml). Views are self-contained objects that take care of displaying themselves, can receive keyboard and mouse input and participate in the focus mechanism.
 
 See the full list of [Views provided by the Terminal.Gui library here](views.md).
 
 Every view can contain an arbitrary number of children views. These are called
 the Subviews. You can add a view to an existing view, by calling the 
-[`Add`](~/api/Terminal.Gui/Terminal.Gui.View.yml#Terminal_Gui_View_Add_Terminal_Gui_View_) method, for example, to add a couple of buttons to a UI, you can do this:
+[`Add`](~/api/Terminal.Gui.View.yml#Terminal_Gui_View_Add_Terminal_Gui_View_) method, for example, to add a couple of buttons to a UI, you can do this:
 
 ```csharp
 void SetupMyView (View myView)
@@ -140,12 +142,12 @@ View.
 ## Layout
 
 `Terminal.Gui` supports two different layout systems, absolute and computed \
-(controlled by the [`LayoutStyle`](~/api/Terminal.Gui/Terminal.Gui.LayoutStyle.yml)
+(controlled by the [`LayoutStyle`](~/api/Terminal.Gui.LayoutStyle.yml)
 property on the view.
 
 The absolute system is used when you want the view to be positioned exactly in
 one location and want to manually control where the view is. This is done
-by invoking your View constructor with an argument of type [`Rect`](~/api/Terminal.Gui/Terminal.Gui.Rect.yml). When you do this, to change the
+by invoking your View constructor with an argument of type [`Rect`](~/api/Terminal.Gui.Rect.yml). When you do this, to change the
 position of the View, you can change the `Frame` property on the View.
 
 The computed layout system offers a few additional capabilities, like automatic
@@ -169,7 +171,7 @@ var label = new Label ("Hello") {
 var label2 = new Label (new Rect (1, 2, 20, 1), "World")
 ```
 
-The computed layout system does not take integers, instead the `X` and `Y` properties are of type [`Pos`](~/api/Terminal.Gui/Terminal.Gui.Pos.yml) and the `Width` and `Height` properties are of type [`Dim`](~/api/Terminal.Gui/Terminal.Gui.Dim.yml) both which can be created implicitly from integer values.
+The computed layout system does not take integers, instead the `X` and `Y` properties are of type [`Pos`](~/api/Terminal.Gui.Pos.yml) and the `Width` and `Height` properties are of type [`Dim`](~/api/Terminal.Gui.Dim.yml) both which can be created implicitly from integer values.
 
 ### The `Pos` Type
 
@@ -220,8 +222,8 @@ anotherView.Height = Dim.Height (view)+1
 
 ## TopLevels, Windows and Dialogs.
 
-Among the many kinds of views, you typically will create a [Toplevel](~/api/Terminal.Gui/Terminal.Gui.Toplevel.yml) view (or any of its subclasses,
-like [Window](~/api/Terminal.Gui/Terminal.Gui.Window.yml) or [Dialog](~/api/Terminal.Gui/Terminal.Gui.Dialog.yml) which is special kind of views
+Among the many kinds of views, you typically will create a [Toplevel](~/api/Terminal.Gui.Toplevel.yml) view (or any of its subclasses,
+like [Window](~/api/Terminal.Gui.Window.yml) or [Dialog](~/api/Terminal.Gui.Dialog.yml) which is special kind of views
 that can be executed modally - that is, the view can take over all input and returns
 only when the user chooses to complete their work there. 
 
@@ -229,7 +231,7 @@ The following sections cover the differences.
 
 ### TopLevel Views
 
-[Toplevel](~/api/Terminal.Gui/Terminal.Gui.Toplevel.yml) views have no visible user interface elements and occupy an arbitrary portion of the screen.
+[Toplevel](~/api/Terminal.Gui.Toplevel.yml) views have no visible user interface elements and occupy an arbitrary portion of the screen.
 
 You would use a toplevel Modal view for example to launch an entire new experience in your application, one where you would have a new top-level menu for example. You 
 typically would add a Menu and a Window to your Toplevel, it would look like this:
@@ -281,20 +283,20 @@ class Demo {
 
 ### Window Views
 
-[Window](~/api/Terminal.Gui/Terminal.Gui.Window.yml) views extend the Toplevel view by providing a frame and a title around the toplevel - and can be moved on the screen with the mouse (caveat: code is currently disabled)
+[Window](~/api/Terminal.Gui.Window.yml) views extend the Toplevel view by providing a frame and a title around the toplevel - and can be moved on the screen with the mouse (caveat: code is currently disabled)
 
 From a user interface perspective, you might have more than one Window on the screen at a given time.
 
 ### Dialogs
 
-[Dialog](~/api/Terminal.Gui/Terminal.Gui.Dialog.yml) are [Window](~/api/Terminal.Gui/Terminal.Gui.Window.yml) objects that happen to be centered in the middle of the screen.
+[Dialog](~/api/Terminal.Gui.Dialog.yml) are [Window](~/api/Terminal.Gui.Window.yml) objects that happen to be centered in the middle of the screen.
 
 Dialogs are instances of a Window that are centered in the screen, and are intended
 to be used modally - that is, they run, and they are expected to return a result 
 before resuming execution of your application.
 
 Dialogs are a subclass of `Window` and additionally expose the 
-[`AddButton`](https://migueldeicaza.github.io/gui.cs/api/Terminal.Gui/Terminal.Gui.Dialog.yml#Terminal_Gui_Dialog_AddButton_Terminal_Gui_Button_) API which manages the layout
+[`AddButton`](https://migueldeicaza.github.io/gui.cs/api/Terminal.Gui.Dialog.yml#Terminal_Gui_Dialog_AddButton_Terminal_Gui_Button_) API which manages the layout
 of any button passed to it, ensuring that the buttons are at the bottom of the dialog.
 
 Example:
@@ -384,7 +386,7 @@ More details are available on the [`Keyboard Event Processing`](keyboard.md) doc
 All views have been configured with a color scheme that will work both in color
 terminals as well as the more limited black and white terminals. 
 
-The various styles are captured in the [`Colors`](~/api/Terminal.Gui/Terminal.Gui.Colors.yml) class which defined color schemes for
+The various styles are captured in the [`Colors`](~/api/Terminal.Gui.Colors.yml) class which defined color schemes for
 the toplevel, the normal views, the menu bar, popup dialog boxes and error dialog boxes, that you can use like this:
 
 * `Colors.Toplevel`
@@ -400,7 +402,7 @@ var w = new Window ("Hello");
 w.ColorScheme = Colors.Error
 ```
 
-The [`ColorScheme`](~/api/Terminal.Gui/Terminal.Gui.ColorScheme.yml) represents
+The [`ColorScheme`](~/api/Terminal.Gui.ColorScheme.yml) represents
 four values, the color used for Normal text, the color used for normal text when
 a view is focused an the colors for the hot-keys both in focused and unfocused modes.
 
@@ -418,7 +420,7 @@ label.TextColor = myColor
 
 ## MainLoop, Threads and Input Handling
 
-Detailed description of the mainloop is described on the [Event Processing and the Application Main Loop](~/articles/mainloop.md) document.
+Detailed description of the mainloop is described on the [Event Processing and the Application Main Loop](~/docs/mainloop.md) document.
 
 ## Cross-Platform Drivers
 

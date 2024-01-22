@@ -1,5 +1,7 @@
 # Event Processing and the Application Main Loop
 
+**These are the v1 API docs**. The v2 API docs are [here](https://gui-cs.github.io/Terminal.GuiV2Docs/).
+
 _See also [Cross-platform Driver Model](drivers.md)_
 
 The method `Application.Run` that we covered before will wait for
@@ -26,12 +28,12 @@ This class provides the following capabilities:
 * On Unix systems, it can monitor file descriptors for readability or writability.
 
 The `MainLoop` property in the the
-[`Application`](~/api/Terminal.Gui/Terminal.Gui.Application.yml)
+[`Application`](~/api/Terminal.Gui.Application.yml)
 provides access to these functions.
 
 When your code invokes `Application.Run (Toplevel)`, the application
 will prepare the current
-[`Toplevel`](~/api/Terminal.Gui/Terminal.Gui.Toplevel.yml) instance by
+[`Toplevel`](~/api/Terminal.Gui.Toplevel.yml) instance by
 redrawing the screen appropriately and then calling the mainloop to
 run.   
 

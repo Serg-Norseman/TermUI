@@ -1,10 +1,12 @@
 # Table View
 
+**These are the v1 API docs**. The v2 API docs are [here](https://gui-cs.github.io/Terminal.GuiV2Docs/).
+
 This control supports viewing and editing tabular data. It provides a view of a [System.DataTable](https://docs.microsoft.com/en-us/dotnet/api/system.data.datatable?view=net-5.0).
 
 System.DataTable is a core class of .net standard and can be created very easily
 
-[TableView API Reference](~/api/Terminal.Gui/Terminal.Gui.TableView.yml)
+[TableView API Reference](~/api/Terminal.Gui.TableView.yml)
 
 ## Csv Example
 
