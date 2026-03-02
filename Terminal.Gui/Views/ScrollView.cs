@@ -68,6 +68,7 @@ namespace Terminal.Gui {
 			};
 			vertical.ChangedPosition += delegate {
 				ContentOffset = new Point (ContentOffset.X, vertical.Position);
+				OnScroll ();
 			};
 			vertical.Host = this;
 			horizontal = new ScrollBarView (1, 0, isVertical: false) {
@@ -78,6 +79,7 @@ namespace Terminal.Gui {
 			};
 			horizontal.ChangedPosition += delegate {
 				ContentOffset = new Point (horizontal.Position, ContentOffset.Y);
+				OnScroll ();
 			};
 			horizontal.Host = this;
 			vertical.OtherScrollBarView = horizontal;
@@ -577,5 +579,12 @@ namespace Terminal.Gui {
 
 			return base.OnEnter (view);
 		}
+
+		protected virtual void OnScroll ()
+		{
+			Scroll?.Invoke (this, new EventArgs());
+		}
+
+		public event EventHandler Scroll;
 	}
 }
