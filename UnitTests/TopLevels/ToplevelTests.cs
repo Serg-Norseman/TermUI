@@ -97,15 +97,15 @@ namespace Terminal.Gui.TopLevelTests {
 				top.Text = "Top1";
 				var menu = new MenuBar (new MenuBarItem [] {
 					new MenuBarItem ("_Options", new MenuItem [] {
-						new MenuItem ("_Run Top2", "", () => Application.Run (Top2 ()), null, null, Key.CtrlMask | Key.R),
-						new MenuItem ("_Quit", "", () => Application.RequestStop(), null, null, Key.CtrlMask | Key.Q)
+						new MenuItem ("_Run Top2", "", (sender, e) => Application.Run (Top2 ()), null, null, Key.CtrlMask | Key.R),
+						new MenuItem ("_Quit", "", (sender, e) => Application.RequestStop(), null, null, Key.CtrlMask | Key.Q)
 					})
 				});
 				top.Add (menu);
 
 				var statusBar = new StatusBar (new [] {
-					new StatusItem(Key.CtrlMask | Key.R, "~^R~ Run Top2", () => Application.Run (Top2 ())),
-					new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Application.RequestStop())
+					new StatusItem(Key.CtrlMask | Key.R, "~^R~ Run Top2", (sender, e) => Application.Run (Top2 ())),
+					new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => Application.RequestStop())
 				});
 				top.Add (statusBar);
 
@@ -122,13 +122,13 @@ namespace Terminal.Gui.TopLevelTests {
 				var win = new Window () { Width = Dim.Fill (), Height = Dim.Fill () };
 				var menu = new MenuBar (new MenuBarItem [] {
 					new MenuBarItem ("_Stage", new MenuItem [] {
-						new MenuItem ("_Close", "", () => Application.RequestStop(), null, null, Key.CtrlMask | Key.C)
+						new MenuItem ("_Close", "", (sender, e) => Application.RequestStop(), null, null, Key.CtrlMask | Key.C)
 					})
 				});
 				top.Add (menu);
 
 				var statusBar = new StatusBar (new [] {
-					new StatusItem(Key.CtrlMask | Key.C, "~^C~ Close", () => Application.RequestStop()),
+					new StatusItem(Key.CtrlMask | Key.C, "~^C~ Close", (sender, e) => Application.RequestStop()),
 				});
 				top.Add (statusBar);
 
@@ -2568,7 +2568,7 @@ BL      BR";
 			var isNew = false;
 			var menu = top.MenuBar;
 			var mi = menu.Menus [0].Children [0];
-			mi.Action = () => isNew = true;
+			mi.Action += (sender, e) => isNew = true;
 			Assert.False (menu.IsMenuOpen);
 			var expectedClosed = @"
 ┌──────────────────┐

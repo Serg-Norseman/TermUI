@@ -21,14 +21,14 @@ namespace UICatalog.Scenarios {
 						CheckType = MenuItemCheckStyle.Checked
 					},
 					null,
-					new MenuItem("Quit", "",() => Application.RequestStop(),null,null, Key.Q | Key.CtrlMask)
+					new MenuItem("Quit", "",(sender, e) => Application.RequestStop(),null,null, Key.Q | Key.CtrlMask)
 				})
 			});
 			Application.Top.Add (menu, scrollViewTestWindow);
 			Application.Run ();
 		}
 
-		private void ChangeWindowSize ()
+		private void ChangeWindowSize (object sender, EventArgs e)
 		{
 			smallerWindow = miSmallerWindow.Checked = !miSmallerWindow.Checked;
 			scrollViewTestWindow.Dispose ();

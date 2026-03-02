@@ -29,21 +29,21 @@ namespace UICatalog.Scenarios {
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File", new MenuItem [] {
 
-					new MenuItem ("_Add Blank Tab", "", () => AddBlankTab()),
+					new MenuItem ("_Add Blank Tab", "", (sender, e) => AddBlankTab()),
 
-					new MenuItem ("_Clear SelectedTab", "", () => tabView.SelectedTab=null),
-					new MenuItem ("_Quit", "", () => Quit()),
+					new MenuItem ("_Clear SelectedTab", "", (sender, e) => tabView.SelectedTab=null),
+					new MenuItem ("_Quit", "", (sender, e) => Quit()),
 				}),
 				new MenuBarItem ("_View", new MenuItem [] {
-					miShowTopLine = new MenuItem ("_Show Top Line", "", () => ShowTopLine()){
+					miShowTopLine = new MenuItem ("_Show Top Line", "", (sender, e) => ShowTopLine()){
 						Checked = true,
 						CheckType = MenuItemCheckStyle.Checked
 					},
-					miShowBorder = new MenuItem ("_Show Border", "", () => ShowBorder()){
+					miShowBorder = new MenuItem ("_Show Border", "", (sender, e) => ShowBorder()){
 						Checked = true,
 						CheckType = MenuItemCheckStyle.Checked
 					},
-					miTabsOnBottom = new MenuItem ("_Tabs On Bottom", "", () => SetTabsOnBottom()){
+					miTabsOnBottom = new MenuItem ("_Tabs On Bottom", "", (sender, e) => SetTabsOnBottom()){
 						Checked = false,
 						CheckType = MenuItemCheckStyle.Checked
 					}
@@ -109,7 +109,7 @@ namespace UICatalog.Scenarios {
 			Win.Add (frameBelow);
 
 			var statusBar = new StatusBar (new StatusItem [] {
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit()),
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => Quit()),
 			});
 			Application.Top.Add (statusBar);
 		}

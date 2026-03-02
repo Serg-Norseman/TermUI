@@ -49,28 +49,28 @@ namespace UICatalog.Scenarios {
 
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File", new MenuItem [] {
-					new MenuItem ("_OpenBigExample", "", () => OpenExample(true)),
-					new MenuItem ("_OpenSmallExample", "", () => OpenExample(false)),
-					new MenuItem ("OpenCharacter_Map","",()=>OpenUnicodeMap()),
-					new MenuItem ("_CloseExample", "", () => CloseExample()),
-					new MenuItem ("_Quit", "", () => Quit()),
+					new MenuItem ("_OpenBigExample", "", (sender, e) => OpenExample(true)),
+					new MenuItem ("_OpenSmallExample", "", (sender, e) => OpenExample(false)),
+					new MenuItem ("OpenCharacter_Map","",(sender, e)=>OpenUnicodeMap()),
+					new MenuItem ("_CloseExample", "", (sender, e) => CloseExample()),
+					new MenuItem ("_Quit", "", (sender, e) => Quit()),
 				}),
 				new MenuBarItem ("_View", new MenuItem [] {
-					miAlwaysShowHeaders = new MenuItem ("_AlwaysShowHeaders", "", () => ToggleAlwaysShowHeader()){Checked = tableView.Style.AlwaysShowHeaders, CheckType = MenuItemCheckStyle.Checked },
-					miHeaderOverline = new MenuItem ("_HeaderOverLine", "", () => ToggleOverline()){Checked = tableView.Style.ShowHorizontalHeaderOverline, CheckType = MenuItemCheckStyle.Checked },
-					miHeaderMidline = new MenuItem ("_HeaderMidLine", "", () => ToggleHeaderMidline()){Checked = tableView.Style.ShowVerticalHeaderLines, CheckType = MenuItemCheckStyle.Checked },
-					miHeaderUnderline = new MenuItem ("_HeaderUnderLine", "", () => ToggleUnderline()){Checked = tableView.Style.ShowHorizontalHeaderUnderline, CheckType = MenuItemCheckStyle.Checked },
-					miShowHorizontalScrollIndicators = new MenuItem ("_HorizontalScrollIndicators", "", () => ToggleHorizontalScrollIndicators()){Checked = tableView.Style.ShowHorizontalScrollIndicators, CheckType = MenuItemCheckStyle.Checked },
-					miFullRowSelect =new MenuItem ("_FullRowSelect", "", () => ToggleFullRowSelect()){Checked = tableView.FullRowSelect, CheckType = MenuItemCheckStyle.Checked },
-					miCellLines =new MenuItem ("_CellLines", "", () => ToggleCellLines()){Checked = tableView.Style.ShowVerticalCellLines, CheckType = MenuItemCheckStyle.Checked },
-					miExpandLastColumn = new MenuItem ("_ExpandLastColumn", "", () => ToggleExpandLastColumn()){Checked = tableView.Style.ExpandLastColumn, CheckType = MenuItemCheckStyle.Checked },
-					miSmoothScrolling = new MenuItem ("_SmoothHorizontalScrolling", "", () => ToggleSmoothScrolling()){Checked = tableView.Style.SmoothHorizontalScrolling, CheckType = MenuItemCheckStyle.Checked },
-					new MenuItem ("_AllLines", "", () => ToggleAllCellLines()),
-					new MenuItem ("_NoLines", "", () => ToggleNoCellLines()),
-					miAlternatingColors = new MenuItem ("Alternating Colors", "", () => ToggleAlternatingColors()){CheckType = MenuItemCheckStyle.Checked},
-					miCursor = new MenuItem ("Invert Selected Cell First Character", "", () => ToggleInvertSelectedCellFirstCharacter()){Checked = tableView.Style.InvertSelectedCellFirstCharacter,CheckType = MenuItemCheckStyle.Checked},
-					new MenuItem ("_ClearColumnStyles", "", () => ClearColumnStyles()),
-					new MenuItem ("Sho_w All Columns", "", ()=>ShowAllColumns())
+					miAlwaysShowHeaders = new MenuItem ("_AlwaysShowHeaders", "", (sender, e) => ToggleAlwaysShowHeader()){Checked = tableView.Style.AlwaysShowHeaders, CheckType = MenuItemCheckStyle.Checked },
+					miHeaderOverline = new MenuItem ("_HeaderOverLine", "", (sender, e) => ToggleOverline()){Checked = tableView.Style.ShowHorizontalHeaderOverline, CheckType = MenuItemCheckStyle.Checked },
+					miHeaderMidline = new MenuItem ("_HeaderMidLine", "", (sender, e) => ToggleHeaderMidline()){Checked = tableView.Style.ShowVerticalHeaderLines, CheckType = MenuItemCheckStyle.Checked },
+					miHeaderUnderline = new MenuItem ("_HeaderUnderLine", "", (sender, e) => ToggleUnderline()){Checked = tableView.Style.ShowHorizontalHeaderUnderline, CheckType = MenuItemCheckStyle.Checked },
+					miShowHorizontalScrollIndicators = new MenuItem ("_HorizontalScrollIndicators", "", (sender, e) => ToggleHorizontalScrollIndicators()){Checked = tableView.Style.ShowHorizontalScrollIndicators, CheckType = MenuItemCheckStyle.Checked },
+					miFullRowSelect =new MenuItem ("_FullRowSelect", "", (sender, e) => ToggleFullRowSelect()){Checked = tableView.FullRowSelect, CheckType = MenuItemCheckStyle.Checked },
+					miCellLines =new MenuItem ("_CellLines", "", (sender, e) => ToggleCellLines()){Checked = tableView.Style.ShowVerticalCellLines, CheckType = MenuItemCheckStyle.Checked },
+					miExpandLastColumn = new MenuItem ("_ExpandLastColumn", "", (sender, e) => ToggleExpandLastColumn()){Checked = tableView.Style.ExpandLastColumn, CheckType = MenuItemCheckStyle.Checked },
+					miSmoothScrolling = new MenuItem ("_SmoothHorizontalScrolling", "", (sender, e) => ToggleSmoothScrolling()){Checked = tableView.Style.SmoothHorizontalScrolling, CheckType = MenuItemCheckStyle.Checked },
+					new MenuItem ("_AllLines", "", (sender, e) => ToggleAllCellLines()),
+					new MenuItem ("_NoLines", "", (sender, e) => ToggleNoCellLines()),
+					miAlternatingColors = new MenuItem ("Alternating Colors", "", (sender, e) => ToggleAlternatingColors()){CheckType = MenuItemCheckStyle.Checked},
+					miCursor = new MenuItem ("Invert Selected Cell First Character", "", (sender, e) => ToggleInvertSelectedCellFirstCharacter()){Checked = tableView.Style.InvertSelectedCellFirstCharacter,CheckType = MenuItemCheckStyle.Checked},
+					new MenuItem ("_ClearColumnStyles", "", (sender, e) => ClearColumnStyles()),
+					new MenuItem ("Sho_w All Columns", "", (sender, e)=>ShowAllColumns())
 				}),
 				new MenuBarItem ("_Column", new MenuItem [] {
 					new MenuItem ("_Set Max Width", "", SetMaxWidth),
@@ -84,10 +84,10 @@ namespace UICatalog.Scenarios {
 			Application.Top.Add (menu);
 
 			var statusBar = new StatusBar (new StatusItem [] {
-				new StatusItem(Key.F2, "~F2~ OpenExample", () => OpenExample(true)),
-				new StatusItem(Key.F3, "~F3~ CloseExample", () => CloseExample()),
-				new StatusItem(Key.F4, "~F4~ OpenSimple", () => OpenSimple(true)),
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit()),
+				new StatusItem(Key.F2, "~F2~ OpenExample", (sender, e) => OpenExample(true)),
+				new StatusItem(Key.F3, "~F3~ CloseExample", (sender, e) => CloseExample()),
+				new StatusItem(Key.F4, "~F4~ OpenSimple", (sender, e) => OpenSimple(true)),
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => Quit()),
 			});
 			Application.Top.Add (statusBar);
 
@@ -222,8 +222,8 @@ namespace UICatalog.Scenarios {
 
 			var contextMenu = new ContextMenu (e.MouseEvent.X + 1, e.MouseEvent.Y + 1,
 				new MenuBarItem (new MenuItem [] {
-					new MenuItem ($"Hide {TrimArrows(clickedCol.ColumnName)}", "", () => HideColumn(clickedCol)),
-					new MenuItem ($"Sort {StripArrows(sort)}","",()=>SortColumn(clickedCol,sort,isAsc)),
+					new MenuItem ($"Hide {TrimArrows(clickedCol.ColumnName)}", "", (sender, e) => HideColumn(clickedCol)),
+					new MenuItem ($"Sort {StripArrows(sort)}","",(sender, e)=>SortColumn(clickedCol,sort,isAsc)),
 				})
 			);
 
@@ -248,7 +248,7 @@ namespace UICatalog.Scenarios {
 			return tableView.Table.Columns [tableView.SelectedColumn];
 		}
 
-		private void SetMinAcceptableWidthToOne ()
+		private void SetMinAcceptableWidthToOne (object sender, EventArgs e)
 		{
 			var columns = tableView?.Table?.Columns;
 			if (columns is null) {
@@ -261,19 +261,19 @@ namespace UICatalog.Scenarios {
 				style.MinAcceptableWidth = 1;
 			}
 		}
-		private void SetMinAcceptableWidth ()
+		private void SetMinAcceptableWidth (object sender, EventArgs e)
 		{
 			var col = GetColumn ();
 			RunColumnWidthDialog (col, "MinAcceptableWidth", (s,v)=>s.MinAcceptableWidth = v,(s)=>s.MinAcceptableWidth);
 		}
 
-		private void SetMinWidth ()
+		private void SetMinWidth (object sender, EventArgs e)
 		{
 			var col = GetColumn ();
 			RunColumnWidthDialog (col, "MinWidth", (s, v) => s.MinWidth = v, (s) => s.MinWidth);
 		}
 
-		private void SetMaxWidth ()
+		private void SetMaxWidth (object sender, EventArgs e)
 		{
 			var col = GetColumn ();
 			RunColumnWidthDialog (col, "MaxWidth", (s, v) => s.MaxWidth = v, (s) => s.MaxWidth);

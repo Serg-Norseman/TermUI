@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 //using static Terminal.Gui.ViewTests.MenuTests;
@@ -65,7 +64,7 @@ namespace Terminal.Gui.MenuTests {
 			menuBarItem = new MenuBarItem ("Test", "Help", null);
 			Assert.Equal ("Test", menuBarItem.Title);
 			Assert.Equal ("Help", menuBarItem.Help);
-			Assert.Null (menuBarItem.Action);
+			Assert.True (!menuBarItem.HasAction ());
 			Assert.Null (menuBarItem.CanExecute);
 			Assert.Null (menuBarItem.Parent);
 			Assert.Equal (Key.Null, menuBarItem.Shortcut);
@@ -73,21 +72,25 @@ namespace Terminal.Gui.MenuTests {
 			var menuItem = new MenuItem ();
 			Assert.Equal ("", menuItem.Title);
 			Assert.Equal ("", menuItem.Help);
-			Assert.Null (menuItem.Action);
+			Assert.True (!menuItem.HasAction ());
 			Assert.Null (menuItem.CanExecute);
 			Assert.Null (menuItem.Parent);
 			Assert.Equal (Key.Null, menuItem.Shortcut);
 
-			menuItem = new MenuItem ("Test", "Help", Run, () => { return true; }, new MenuItem (), Key.F1);
+			var runHandler = new EventHandler (Run);
+			menuItem = new MenuItem ("Test", "Help", runHandler, () => { return true; }, new MenuItem (), Key.F1);
+
 			Assert.Equal ("Test", menuItem.Title);
 			Assert.Equal ("Help", menuItem.Help);
-			Assert.Equal (Run, menuItem.Action);
+
+			TestHelpers.VerifySubscription (menuItem, "Action", runHandler);
+
 			Assert.NotNull (menuItem.CanExecute);
 			Assert.NotNull (menuItem.Parent);
 			Assert.Equal (Key.F1, menuItem.Shortcut);
-
-			void Run () { }
 		}
+
+		void Run (object sender, EventArgs e) { }
 
 		[Fact]
 		public void Exceptions ()
@@ -113,8 +116,7 @@ namespace Terminal.Gui.MenuTests {
 				Assert.Equal ("_File", e.CurrentMenu.Title);
 				Assert.Equal ("_New", e.CurrentMenu.Children [0].Title);
 				Assert.Equal ("Creates new file.", e.CurrentMenu.Children [0].Help);
-				Assert.Equal (New, e.CurrentMenu.Children [0].Action);
-				e.CurrentMenu.Children [0].Action ();
+				e.CurrentMenu.Children [0].PerformAction ();
 				Assert.Equal ("New", miAction);
 				e.NewMenuBarItem = new MenuBarItem ("_Edit", new MenuItem [] {
 					new MenuItem ("_Copy", "Copies the selection.", Copy)
@@ -124,8 +126,7 @@ namespace Terminal.Gui.MenuTests {
 				Assert.Equal ("_Edit", e.Parent.Title);
 				Assert.Equal ("_Copy", e.Title);
 				Assert.Equal ("Copies the selection.", e.Help);
-				Assert.Equal (Copy, e.Action);
-				e.Action ();
+				e.PerformAction ();
 				Assert.Equal ("Copy", miAction);
 			};
 			menu.MenuClosing += (e) => {
@@ -175,8 +176,8 @@ Edit
 ";
 			TestHelpers.AssertDriverContentsAre (expected, output);
 
-			void New () => miAction = "New";
-			void Copy () => miAction = "Copy";
+			void New (object sender, EventArgs e) => miAction = "New";
+			void Copy (object sender, EventArgs e) => miAction = "Copy";
 		}
 
 		[Fact, AutoInitShutdown]
@@ -357,23 +358,23 @@ Edit
 
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File", new MenuItem [] {
-					new MenuItem ("_New", "", () => miAction ="New"),
-					new MenuItem ("_Open", "", () => miAction ="Open"),
-					new MenuItem ("_Save", "", () => miAction ="Save"),
+					new MenuItem ("_New", "", (sender, e) => miAction ="New"),
+					new MenuItem ("_Open", "", (sender, e) => miAction ="Open"),
+					new MenuItem ("_Save", "", (sender, e) => miAction ="Save"),
 					null,
-					new MenuItem ("_Quit", "", () => miAction ="Quit"),
+					new MenuItem ("_Quit", "", (sender, e) => miAction ="Quit"),
 				}),
 				new MenuBarItem ("_Edit", new MenuItem [] {
-					new MenuItem ("_Copy", "", () => miAction ="Copy"),
-					new MenuItem ("C_ut", "", () => miAction ="Cut"),
-					new MenuItem ("_Paste", "", () => miAction ="Paste"),
+					new MenuItem ("_Copy", "", (sender, e) => miAction ="Copy"),
+					new MenuItem ("C_ut", "", (sender, e) => miAction ="Cut"),
+					new MenuItem ("_Paste", "", (sender, e) => miAction ="Paste"),
 					new MenuBarItem ("_Find and Replace", new MenuItem [] {
 						new MenuItem ("F_ind", "", null),
 						new MenuItem ("_Replace", "", null)
 					}),
-					new MenuItem ("_Select All", "", () => miAction ="Select All")
+					new MenuItem ("_Select All", "", (sender, e) => miAction ="Select All")
 				}),
-				new MenuBarItem ("_About", "Top-Level", () => miAction ="About")
+				new MenuBarItem ("_About", "Top-Level", (sender, e) => miAction ="About")
 			});
 			menu.MenuOpening += (e) => mbiCurrent = e.CurrentMenu;
 			menu.MenuOpened += (e) => {
@@ -1051,10 +1052,10 @@ Edit
 
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File", new MenuItem [] {
-					new MenuItem ("_New", "", () => newAction = true)
+					new MenuItem ("_New", "", (sender, e) => newAction = true)
 				}),
 				new MenuBarItem ("_Edit", new MenuItem [] {
-					new MenuItem ("_Copy", "", () => copyAction = true)
+					new MenuItem ("_Copy", "", (sender, e) => copyAction = true)
 				})
 			});
 
@@ -1231,10 +1232,10 @@ Edit
 			// The real menu
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_" + expectedMenu.Menus[0].Title, new MenuItem [] {
-					new MenuItem ("_" + expectedMenu.Menus[0].Children[0].Title, "",  () => newAction = true)
+					new MenuItem ("_" + expectedMenu.Menus[0].Children[0].Title, "",  (sender, e) => newAction = true)
 				}),
 				new MenuBarItem ("_" + expectedMenu.Menus[1].Title, new MenuItem [] {
-					new MenuItem ("_" + expectedMenu.Menus[1].Children[0].Title, "",  () => copyAction = true)
+					new MenuItem ("_" + expectedMenu.Menus[1].Children[0].Title, "",  (sender, e) => copyAction = true)
 				}),
 			});
 
@@ -1640,8 +1641,8 @@ Edit
 			var menu = new MenuBar (
 			    menus: new []
 			    {
-				new MenuBarItem { Title = "Test 1", Action = () => { } },
-				new MenuBarItem { Title = "Test 2", Action = () => { } },
+				new MenuBarItem("Test 1", "", (sender, e) => { }),
+				new MenuBarItem("Test 2", "", (sender, e) => { }),
 			    });
 
 			Application.Top.Add (menu);
@@ -1759,14 +1760,14 @@ Edit
 
 			bool CanExecuteNew () => win == null;
 
-			void New ()
+			void New (object sender, EventArgs e)
 			{
 				win = new Window ();
 			}
 
 			bool CanExecuteClose () => win != null;
 
-			void Close ()
+			void Close (object sender, EventArgs e)
 			{
 				win = null;
 			}

@@ -17,10 +17,10 @@ namespace Terminal.Gui.ViewTests {
 			var si = new StatusItem (Key.CtrlMask | Key.Q, "~^Q~ Quit", null);
 			Assert.Equal (Key.CtrlMask | Key.Q, si.Shortcut);
 			Assert.Equal ("~^Q~ Quit", si.Title);
-			Assert.Null (si.Action);
+			Assert.False (si.HasAction ());
 			Assert.True (si.IsEnabled ());
-			si = new StatusItem (Key.CtrlMask | Key.Q, "~^Q~ Quit", () => { });
-			Assert.NotNull (si.Action);
+			si = new StatusItem (Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => { });
+			Assert.True (si.HasAction ());
 		}
 
 		[Fact]
@@ -73,7 +73,7 @@ namespace Terminal.Gui.ViewTests {
 		public void Run_Action_With_Key_And_Mouse ()
 		{
 			var msg = "";
-			var sb = new StatusBar (new StatusItem [] { new StatusItem (Key.CtrlMask | Key.Q, "~^Q~ Quit", () => msg = "Quiting...") });
+			var sb = new StatusBar (new StatusItem [] { new StatusItem (Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => msg = "Quiting...") });
 			Application.Top.Add (sb);
 
 			var iteration = 0;
@@ -189,14 +189,14 @@ CTRL-T _Text_ {Application.Driver.VLine} CTRL-O ~/Work
 
 			bool CanExecuteNew () => win == null;
 
-			void New ()
+			void New (object sender, EventArgs e)
 			{
 				win = new Window ();
 			}
 
 			bool CanExecuteClose () => win != null;
 
-			void Close ()
+			void Close (object sender, EventArgs e)
 			{
 				win = null;
 			}

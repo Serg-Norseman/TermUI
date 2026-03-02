@@ -41,31 +41,31 @@ namespace UICatalog.Scenarios {
 
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File", new MenuItem [] {
-					new MenuItem ("_Quit", "CTRL-Q", () => Quit()),
+					new MenuItem ("_Quit", "CTRL-Q", (sender, e) => Quit()),
 				}),
 				new MenuBarItem ("_View", new MenuItem [] {
-					miFullPaths = new MenuItem ("_Full Paths", "", () => SetFullName()){Checked = false, CheckType = MenuItemCheckStyle.Checked},
-					miMultiSelect = new MenuItem ("_Multi Select", "", () => SetMultiSelect()){Checked = true, CheckType = MenuItemCheckStyle.Checked},
+					miFullPaths = new MenuItem ("_Full Paths", "", (sender, e) => SetFullName()){Checked = false, CheckType = MenuItemCheckStyle.Checked},
+					miMultiSelect = new MenuItem ("_Multi Select", "", (sender, e) => SetMultiSelect()){Checked = true, CheckType = MenuItemCheckStyle.Checked},
 				}),
 				new MenuBarItem ("_Style", new MenuItem [] {
-					miShowLines = new MenuItem ("_Show Lines", "", () => ShowLines()){
+					miShowLines = new MenuItem ("_Show Lines", "", (sender, e) => ShowLines()){
 					Checked = true, CheckType = MenuItemCheckStyle.Checked
 						},
 					null /*separator*/,
-					miPlusMinus = new MenuItem ("_Plus Minus Symbols", "+ -", () => SetExpandableSymbols('+','-')){Checked = true, CheckType = MenuItemCheckStyle.Radio},
-					miArrowSymbols = new MenuItem ("_Arrow Symbols", "> v", () => SetExpandableSymbols('>','v')){Checked = false, CheckType = MenuItemCheckStyle.Radio},
-					miNoSymbols = new MenuItem ("_No Symbols", "", () => SetExpandableSymbols(null,null)){Checked = false, CheckType = MenuItemCheckStyle.Radio},
-					miUnicodeSymbols = new MenuItem ("_Unicode", "ஹ ﷽", () => SetExpandableSymbols('ஹ','﷽')){Checked = false, CheckType = MenuItemCheckStyle.Radio},
+					miPlusMinus = new MenuItem ("_Plus Minus Symbols", "+ -", (sender, e) => SetExpandableSymbols('+','-')){Checked = true, CheckType = MenuItemCheckStyle.Radio},
+					miArrowSymbols = new MenuItem ("_Arrow Symbols", "> v", (sender, e) => SetExpandableSymbols('>','v')){Checked = false, CheckType = MenuItemCheckStyle.Radio},
+					miNoSymbols = new MenuItem ("_No Symbols", "", (sender, e) => SetExpandableSymbols(null,null)){Checked = false, CheckType = MenuItemCheckStyle.Radio},
+					miUnicodeSymbols = new MenuItem ("_Unicode", "ஹ ﷽", (sender, e) => SetExpandableSymbols('ஹ','﷽')){Checked = false, CheckType = MenuItemCheckStyle.Radio},
 					null /*separator*/,
-					miColoredSymbols = new MenuItem ("_Colored Symbols", "", () => ShowColoredExpandableSymbols()){Checked = false, CheckType = MenuItemCheckStyle.Checked},
-					miInvertSymbols = new MenuItem ("_Invert Symbols", "", () => InvertExpandableSymbols()){Checked = false, CheckType = MenuItemCheckStyle.Checked},
+					miColoredSymbols = new MenuItem ("_Colored Symbols", "", (sender, e) => ShowColoredExpandableSymbols()){Checked = false, CheckType = MenuItemCheckStyle.Checked},
+					miInvertSymbols = new MenuItem ("_Invert Symbols", "", (sender, e) => InvertExpandableSymbols()){Checked = false, CheckType = MenuItemCheckStyle.Checked},
 					null /*separator*/,
-					miLeaveLastRow = new MenuItem ("_Leave Last Row", "", () => SetLeaveLastRow()){Checked = true, CheckType = MenuItemCheckStyle.Checked},
-					miHighlightModelTextOnly = new MenuItem ("_Highlight Model Text Only", "", () => SetCheckHighlightModelTextOnly()){Checked = false, CheckType = MenuItemCheckStyle.Checked},
+					miLeaveLastRow = new MenuItem ("_Leave Last Row", "", (sender, e) => SetLeaveLastRow()){Checked = true, CheckType = MenuItemCheckStyle.Checked},
+					miHighlightModelTextOnly = new MenuItem ("_Highlight Model Text Only", "", (sender, e) => SetCheckHighlightModelTextOnly()){Checked = false, CheckType = MenuItemCheckStyle.Checked},
 					null /*separator*/,
-					miCustomColors = new MenuItem ("C_ustom Colors Hidden Files", "Yellow/Red", () => SetCustomColors()){Checked = false, CheckType = MenuItemCheckStyle.Checked},
+					miCustomColors = new MenuItem ("C_ustom Colors Hidden Files", "Yellow/Red", (sender, e) => SetCustomColors()){Checked = false, CheckType = MenuItemCheckStyle.Checked},
 					null /*separator*/,
-					miCursor = new MenuItem ("Curs_or (MultiSelect only)", "", () => SetCursor()){Checked = false, CheckType = MenuItemCheckStyle.Checked},
+					miCursor = new MenuItem ("Curs_or (MultiSelect only)", "", (sender, e) => SetCursor()){Checked = false, CheckType = MenuItemCheckStyle.Checked},
 				}),
 			});
 			Application.Top.Add (menu);
@@ -152,7 +152,7 @@ namespace UICatalog.Scenarios {
 			var menu = new ContextMenu ();
 			menu.Position = screenPoint;
 
-			menu.MenuItems = new MenuBarItem (new [] { new MenuItem ("Properties", null, () => ShowPropertiesOf (forObject)) });
+			menu.MenuItems = new MenuBarItem (new [] { new MenuItem ("Properties", null, (sender, e) => ShowPropertiesOf (forObject)) });
 
 			Application.MainLoop.Invoke (menu.Show);
 		}

@@ -21,20 +21,20 @@ namespace UICatalog.Scenarios {
 
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File", new MenuItem [] {
-					new MenuItem ("_Quit", "", () => Quit()),
+					new MenuItem ("_Quit", "", (sender, e) => Quit()),
 				}),
 				new MenuBarItem ("_Scenarios", new MenuItem [] {
-					new MenuItem ("_Simple Nodes", "", () => LoadSimpleNodes()),
-					new MenuItem ("_Rooms", "", () => LoadRooms()),
-					new MenuItem ("_Armies With Builder", "", () => LoadArmies(false)),
-					new MenuItem ("_Armies With Delegate", "", () => LoadArmies(true)),
+					new MenuItem ("_Simple Nodes", "", (sender, e) => LoadSimpleNodes()),
+					new MenuItem ("_Rooms", "", (sender, e) => LoadRooms()),
+					new MenuItem ("_Armies With Builder", "", (sender, e) => LoadArmies(false)),
+					new MenuItem ("_Armies With Delegate", "", (sender, e) => LoadArmies(true)),
 				}),
 			});
 
 			Application.Top.Add (menu);
 
 			var statusBar = new StatusBar (new StatusItem [] {
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit()),
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => Quit()),
 			});
 
 			Application.Top.Add (statusBar);

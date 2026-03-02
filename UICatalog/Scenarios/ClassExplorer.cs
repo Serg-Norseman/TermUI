@@ -64,18 +64,18 @@ namespace UICatalog.Scenarios {
 
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File", new MenuItem [] {
-					new MenuItem ("_Quit", "", () => Quit()),
+					new MenuItem ("_Quit", "", (sender, e) => Quit()),
 				}),
 				new MenuBarItem ("_View", new MenuItem [] {
-					miShowPrivate = new MenuItem ("_Include Private", "", () => ShowPrivate()){
+					miShowPrivate = new MenuItem ("_Include Private", "", (sender, e) => ShowPrivate()){
 						Checked = false,
 						CheckType = MenuItemCheckStyle.Checked
 					},
-					new MenuItem ("_Expand All", "", () => treeView.ExpandAll()),
-					new MenuItem ("_Collapse All", "", () => treeView.CollapseAll())
+					new MenuItem ("_Expand All", "", (sender, e) => treeView.ExpandAll()),
+					new MenuItem ("_Collapse All", "", (sender, e) => treeView.CollapseAll())
 				}),
 				new MenuBarItem ("_Style", new MenuItem [] {
-					highlightModelTextOnly = new MenuItem ("_Highlight Model Text Only", "", () => OnCheckHighlightModelTextOnly()) {
+					highlightModelTextOnly = new MenuItem ("_Highlight Model Text Only", "", (sender, e) => OnCheckHighlightModelTextOnly()) {
 						CheckType = MenuItemCheckStyle.Checked
 					},
 				}) 

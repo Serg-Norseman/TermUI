@@ -33,10 +33,10 @@ namespace UICatalog.Scenarios {
 
 				menu = new MenuBar (new MenuBarItem [] {
 					new MenuBarItem ("_Options", new MenuItem [] {
-						new MenuItem ("_Run Worker", "", () => workerApp.RunWorker(), null, null, Key.CtrlMask | Key.R),
-						new MenuItem ("_Cancel Worker", "", () => workerApp.CancelWorker(), null, null, Key.CtrlMask | Key.C),
+						new MenuItem ("_Run Worker", "", (sender, e) => workerApp.RunWorker(), null, null, Key.CtrlMask | Key.R),
+						new MenuItem ("_Cancel Worker", "", (sender, e) => workerApp.CancelWorker(), null, null, Key.CtrlMask | Key.C),
 						null,
-						new MenuItem ("_Quit", "", () => Quit(), null, null, Key.CtrlMask | Key.Q)
+						new MenuItem ("_Quit", "", (sender, e) => Quit(), null, null, Key.CtrlMask | Key.Q)
 					}),
 					new MenuBarItem ("_View", new MenuItem [] { }),
 					new MenuBarItem ("_Window", new MenuItem [] { })
@@ -45,9 +45,9 @@ namespace UICatalog.Scenarios {
 				Add (menu);
 
 				var statusBar = new StatusBar (new [] {
-					new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Exit", () => Quit()),
-					new StatusItem(Key.CtrlMask | Key.R, "~^R~ Run Worker", () => workerApp.RunWorker()),
-					new StatusItem(Key.CtrlMask | Key.C, "~^C~ Cancel Worker", () => workerApp.CancelWorker())
+					new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Exit", (sender, e) => Quit()),
+					new StatusItem(Key.CtrlMask | Key.R, "~^R~ Run Worker", (sender, e) => workerApp.RunWorker()),
+					new StatusItem(Key.CtrlMask | Key.C, "~^C~ Cancel Worker", (sender, e) => workerApp.CancelWorker())
 				});
 				Add (statusBar);
 
@@ -103,7 +103,7 @@ namespace UICatalog.Scenarios {
 				if (top != null) {
 					item.Checked = top.Visible;
 				}
-				item.Action += () => {
+				item.Action += (sender, e) => {
 					var top = Application.MdiChildes.Find ((x) => x.Data.ToString () == "WorkerApp");
 					item.Checked = top.Visible = !item.Checked;
 					if (top.Visible) {
@@ -138,7 +138,7 @@ namespace UICatalog.Scenarios {
 					} else {
 						item.Checked = false;
 					}
-					item.Action += () => {
+					item.Action += (sender, e) => {
 						top.ShowChild ();
 					};
 					menuItems.Add (item);

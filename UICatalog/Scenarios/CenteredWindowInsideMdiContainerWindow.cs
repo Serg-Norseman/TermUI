@@ -1,4 +1,5 @@
-﻿using Terminal.Gui;
+﻿using System;
+using Terminal.Gui;
 
 namespace UICatalog.Scenarios {
 	[ScenarioMetadata (Name: "CenteredWindowInsideMdiContainerWindow", Description: "Centered Window Inside MdiContainer Window")]
@@ -34,29 +35,29 @@ namespace UICatalog.Scenarios {
 			InitializeComponent ();
 			// MenuBar
 			createChildMenuItem.CanExecute = CanExecuteCreateChildWindow;
-			createChildMenuItem.Action = CreateChildWindow;
+			createChildMenuItem.Action += CreateChildWindow;
 			centerChildMenuItem.CanExecute = CanExecuteCenterChildWindow;
-			centerChildMenuItem.Action = CenterChildWindow;
+			centerChildMenuItem.Action += CenterChildWindow;
 			hideShowChildMenuItem.CanExecute = CanExecuteHideShowChildWindow;
-			hideShowChildMenuItem.Action = HideShowChildWindow;
+			hideShowChildMenuItem.Action += HideShowChildWindow;
 			borderChildMenuItem.CanExecute = CanExecuteCenterChildWindow;
-			borderChildMenuItem.Action = BorderToggleChildWindow;
-			parentMenu.Action = BorderToggleParentWindow;
+			borderChildMenuItem.Action += BorderToggleChildWindow;
+			parentMenu.Action += BorderToggleParentWindow;
 			// StatusBar
 			createChildStatusItem.CanExecute = CanExecuteCreateChildWindow;
-			createChildStatusItem.Action = CreateChildWindow;
+			createChildStatusItem.Action += CreateChildWindow;
 			centerChildStatusItem.CanExecute = CanExecuteCenterChildWindow;
-			centerChildStatusItem.Action = CenterChildWindow;
+			centerChildStatusItem.Action += CenterChildWindow;
 			hideShowChildStatusItem.CanExecute = CanExecuteHideShowChildWindow;
-			hideShowChildStatusItem.Action = HideShowChildWindow;
+			hideShowChildStatusItem.Action += HideShowChildWindow;
 			borderChildStatusItem.CanExecute = CanExecuteCenterChildWindow;
-			borderChildStatusItem.Action = BorderToggleChildWindow;
-			borderParentStatusItem.Action = BorderToggleParentWindow;
+			borderChildStatusItem.Action += BorderToggleChildWindow;
+			borderParentStatusItem.Action += BorderToggleParentWindow;
 
 			KeyPress += ParentWindowClass_KeyPress;
 		}
 
-		private void BorderToggleParentWindow ()
+		private void BorderToggleParentWindow (object sender, EventArgs e)
 		{
 			if (Border.BorderStyle == BorderStyle.None) {
 				Border.BorderStyle = BorderStyle.Single;
@@ -74,7 +75,7 @@ namespace UICatalog.Scenarios {
 			}
 		}
 
-		private void BorderToggleChildWindow ()
+		private void BorderToggleChildWindow (object sender, EventArgs e)
 		{
 			if (_childWindow.Border.BorderStyle == BorderStyle.None) {
 				_childWindow.Border.BorderStyle = BorderStyle.Single;
@@ -108,7 +109,7 @@ namespace UICatalog.Scenarios {
 
 		private bool CanExecuteCreateChildWindow () => _childWindow == null;
 
-		private void CreateChildWindow ()
+		private void CreateChildWindow (object sender, EventArgs e)
 		{
 			_childWindow ??= new MdiChildWindowClass ();
 			Application.Top.SetNeedsDisplay ();
@@ -117,7 +118,7 @@ namespace UICatalog.Scenarios {
 
 		private bool CanExecuteCenterChildWindow () => _childWindow != null && _childWindow.Visible;
 
-		private void CenterChildWindow ()
+		private void CenterChildWindow (object sender, EventArgs e)
 		{
 			_childWindow.X = Pos.Center ();
 			_childWindow.Y = Pos.Center ();
@@ -125,7 +126,7 @@ namespace UICatalog.Scenarios {
 
 		private bool CanExecuteHideShowChildWindow () => _childWindow != null;
 
-		private void HideShowChildWindow ()
+		private void HideShowChildWindow (object sender, EventArgs e)
 		{
 			if (_childWindow.Visible) {
 				_childWindow.Visible = false;

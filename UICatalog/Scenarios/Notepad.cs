@@ -21,12 +21,12 @@ namespace UICatalog.Scenarios {
 		{
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File", new MenuItem [] {
-					new MenuItem ("_New", "", () => New()),
-					new MenuItem ("_Open", "", () => Open()),
-					new MenuItem ("_Save", "", () => Save()),
-					new MenuItem ("Save _As", "", () => SaveAs()),
-					new MenuItem ("_Close", "", () => Close()),
-					new MenuItem ("_Quit", "", () => Quit()),
+					new MenuItem ("_New", "", (sender, e) => New()),
+					new MenuItem ("_Open", "", (sender, e) => Open()),
+					new MenuItem ("_Save", "", (sender, e) => Save()),
+					new MenuItem ("Save _As", "", (sender, e) => SaveAs()),
+					new MenuItem ("_Close", "", (sender, e) => Close()),
+					new MenuItem ("_Quit", "", (sender, e) => Quit()),
 				})
 				});
 			Application.Top.Add (menu);
@@ -47,14 +47,14 @@ namespace UICatalog.Scenarios {
 
 			var lenStatusItem = new StatusItem (Key.CharMask, "Len: ", null);
 			var statusBar = new StatusBar (new StatusItem [] {
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit()),
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => Quit()),
 
 				// These shortcut keys don't seem to work correctly in linux 
 				//new StatusItem(Key.CtrlMask | Key.N, "~^O~ Open", () => Open()),
 				//new StatusItem(Key.CtrlMask | Key.N, "~^N~ New", () => New()),
 
-				new StatusItem(Key.CtrlMask | Key.S, "~^S~ Save", () => Save()),
-				new StatusItem(Key.CtrlMask | Key.W, "~^W~ Close", () => Close()),
+				new StatusItem(Key.CtrlMask | Key.S, "~^S~ Save", (sender, e) => Save()),
+				new StatusItem(Key.CtrlMask | Key.W, "~^W~ Close", (sender, e) => Close()),
 				lenStatusItem,
 			});
 
@@ -76,13 +76,13 @@ namespace UICatalog.Scenarios {
 
 			if (e.Tab == null) {
 				items = new MenuBarItem (new MenuItem [] {
-					new MenuItem ($"Open", "", () => Open()),
+					new MenuItem ($"Open", "", (sender, e) => Open()),
 				});
 
 			} else {
 				items = new MenuBarItem (new MenuItem [] {
-					new MenuItem ($"Save", "", () => Save(e.Tab)),
-					new MenuItem ($"Close", "", () => Close(e.Tab)),
+					new MenuItem ($"Save", "", (sender, ea) => Save(e.Tab)),
+					new MenuItem ($"Close", "", (sender, ea) => Close(e.Tab)),
 				});
 			}
 

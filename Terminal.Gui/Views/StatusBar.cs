@@ -28,7 +28,7 @@ namespace Terminal.Gui {
 		/// <param name="title">Title for the <see cref="StatusItem"/>.</param>
 		/// <param name="action">Action to invoke when the <see cref="StatusItem"/> is activated.</param>
 		/// <param name="canExecute">Function to determine if the action can currently be executed.</param>
-		public StatusItem (Key shortcut, ustring title, Action action, Func<bool> canExecute = null)
+		public StatusItem (Key shortcut, ustring title, EventHandler action, Func<bool> canExecute = null)
 		{
 			Title = title ?? "";
 			Shortcut = shortcut;
@@ -56,7 +56,7 @@ namespace Terminal.Gui {
 		/// Gets or sets the action to be invoked when the statusbar item is triggered
 		/// </summary>
 		/// <value>Action to invoke.</value>
-		public Action Action { get; set; }
+		public event EventHandler Action;
 
 		/// <summary>
 		/// Gets or sets the action to be invoked to determine if the <see cref="StatusItem"/> can be triggered. 
@@ -87,6 +87,17 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <remarks>This property is not used internally.</remarks>
 		public object Data { get; set; }
+
+		public bool HasAction ()
+		{
+			var action = Action;
+			return action != null;
+		}
+
+		public void PerformAction ()
+		{
+			Action?.Invoke (this, new EventArgs ());
+		}
 	};
 
 	/// <summary>
@@ -191,7 +202,7 @@ namespace Terminal.Gui {
 			foreach (var item in Items) {
 				if (kb.Key == item.Shortcut) {
 					if (item.IsEnabled ()) {
-						Run (item.Action);
+						Run (item);
 					}
 					return true;
 				}
@@ -210,7 +221,7 @@ namespace Terminal.Gui {
 				if (me.X >= pos && me.X < pos + GetItemTitleLength (Items [i])) {
 					var item = Items [i];
 					if (item.IsEnabled ()) {
-						Run (item.Action);
+						Run (item);
 					}
 					break;
 				}
@@ -231,13 +242,13 @@ namespace Terminal.Gui {
 			return len;
 		}
 
-		void Run (Action action)
+		void Run (StatusItem item)
 		{
-			if (action == null)
+			if (item == null)
 				return;
 
 			Application.MainLoop.AddIdle (() => {
-				action ();
+				item.PerformAction ();
 				return false;
 			});
 		}

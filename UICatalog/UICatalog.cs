@@ -168,15 +168,15 @@ namespace UICatalog {
 				ColorScheme = _colorScheme = Colors.Base;
 				MenuBar = new MenuBar (new MenuBarItem [] {
 					new MenuBarItem ("_File", new MenuItem [] {
-						new MenuItem ("_Quit", "Quit UI Catalog", () => RequestStop(), null, null, Key.Q | Key.CtrlMask)
+						new MenuItem ("_Quit", "Quit UI Catalog", (sender, e) => RequestStop(), null, null, Key.Q | Key.CtrlMask)
 					}),
 					new MenuBarItem ("_Color Scheme", CreateColorSchemeMenuItems()),
 					new MenuBarItem ("Diag_nostics", CreateDiagnosticMenuItems()),
 					new MenuBarItem ("_Help", new MenuItem [] {
-						new MenuItem ("_gui.cs API Overview", "", () => OpenUrl ("https://gui-cs.github.io/Terminal.Gui/articles/overview.html"), null, null, Key.F1),
-						new MenuItem ("gui.cs _README", "", () => OpenUrl ("https://github.com/gui-cs/Terminal.Gui"), null, null, Key.F2),
+						new MenuItem ("_gui.cs API Overview", "", (sender, e) => OpenUrl ("https://gui-cs.github.io/Terminal.Gui/articles/overview.html"), null, null, Key.F1),
+						new MenuItem ("gui.cs _README", "", (sender, e) => OpenUrl ("https://github.com/gui-cs/Terminal.Gui"), null, null, Key.F2),
 						new MenuItem ("_About...",
-							"About UI Catalog", () =>  MessageBox.Query ("About UI Catalog", _aboutMessage.ToString(), "_Ok"), null, null, Key.CtrlMask | Key.A),
+							"About UI Catalog", (sender, e) =>  MessageBox.Query ("About UI Catalog", _aboutMessage.ToString(), "_Ok"), null, null, Key.CtrlMask | Key.A),
 					}),
 				});
 
@@ -190,7 +190,7 @@ namespace UICatalog {
 					Visible = true,
 				};
 				StatusBar.Items = new StatusItem [] {
-					new StatusItem(Key.Q | Key.CtrlMask, "~CTRL-Q~ Quit", () => {
+					new StatusItem(Key.Q | Key.CtrlMask, "~CTRL-Q~ Quit", (sender, e) => {
 						if (_selectedScenario is null){
 							// This causes GetScenarioToRun to return null
 							_selectedScenario = null;
@@ -199,7 +199,7 @@ namespace UICatalog {
 							_selectedScenario.RequestStop();
 						}
 					}),
-					new StatusItem(Key.F10, "~F10~ Status Bar", () => {
+					new StatusItem(Key.F10, "~F10~ Status Bar", (sender, e) => {
 						StatusBar.Visible = !StatusBar.Visible;
 						LeftPane.Height = Dim.Fill(StatusBar.Visible ? 1 : 0);
 						RightPane.Height = Dim.Fill(StatusBar.Visible ? 1 : 0);
@@ -326,7 +326,7 @@ namespace UICatalog {
 				miIsMouseDisabled.Title = "_Disable Mouse";
 				miIsMouseDisabled.Shortcut = Key.CtrlMask | Key.AltMask | (Key)miIsMouseDisabled.Title.ToString ().Substring (1, 1) [0];
 				miIsMouseDisabled.CheckType |= MenuItemCheckStyle.Checked;
-				miIsMouseDisabled.Action += () => {
+				miIsMouseDisabled.Action += (sender, e) => {
 					miIsMouseDisabled.Checked = Application.IsMouseDisabled = !miIsMouseDisabled.Checked;
 				};
 				menuItems.Add (miIsMouseDisabled);
@@ -340,7 +340,7 @@ namespace UICatalog {
 				var item = new MenuItem ();
 				item.Title = "_Key Bindings";
 				item.Help = "Change which keys do what";
-				item.Action += () => {
+				item.Action += (sender, e) => {
 					var dlg = new KeyBindingsDialog ();
 					Application.Run (dlg);
 				};
@@ -371,7 +371,7 @@ namespace UICatalog {
 					} else {
 						item.Checked = _diagnosticFlags.HasFlag (diag);
 					}
-					item.Action += () => {
+					item.Action += (sender, e) => {
 						var t = GetDiagnosticsTitle (ConsoleDriver.DiagnosticFlags.Off);
 						if (item.Title == t && !item.Checked) {
 							_diagnosticFlags &= ~(ConsoleDriver.DiagnosticFlags.FramePadding | ConsoleDriver.DiagnosticFlags.FrameRuler);
@@ -459,7 +459,7 @@ namespace UICatalog {
 					item.Shortcut = Key.AltMask | (Key)sc.Key.Substring (0, 1) [0];
 					item.CheckType |= MenuItemCheckStyle.Radio;
 					item.Checked = sc.Value == _colorScheme;
-					item.Action += () => {
+					item.Action += (sender, e) => {
 						ColorScheme = _colorScheme = sc.Value;
 						SetNeedsDisplay ();
 						foreach (var menuItem in menuItems) {

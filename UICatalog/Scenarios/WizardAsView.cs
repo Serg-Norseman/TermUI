@@ -16,9 +16,9 @@ namespace UICatalog.Scenarios {
 
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File", new MenuItem [] {
-					new MenuItem ("_Restart Configuration...", "", () => MessageBox.Query ("Wizaard", "Are you sure you want to reset the Wizard and start over?", "Ok", "Cancel")),
-					new MenuItem ("Re_boot Server...", "", () => MessageBox.Query ("Wizaard", "Are you sure you want to reboot the server start over?", "Ok", "Cancel")),
-					new MenuItem ("_Shutdown Server...", "", () => MessageBox.Query ("Wizaard", "Are you sure you want to cancel setup and shutdown?", "Ok", "Cancel")),
+					new MenuItem ("_Restart Configuration...", "", (sender, e) => MessageBox.Query ("Wizaard", "Are you sure you want to reset the Wizard and start over?", "Ok", "Cancel")),
+					new MenuItem ("Re_boot Server...", "", (sender, e) => MessageBox.Query ("Wizaard", "Are you sure you want to reboot the server start over?", "Ok", "Cancel")),
+					new MenuItem ("_Shutdown Server...", "", (sender, e) => MessageBox.Query ("Wizaard", "Are you sure you want to cancel setup and shutdown?", "Ok", "Cancel")),
 				})
 			});
 			Application.Top.Add (menu);

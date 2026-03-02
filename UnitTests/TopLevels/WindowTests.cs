@@ -262,7 +262,7 @@ namespace Terminal.Gui.TopLevelTests {
 
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("Child", new MenuItem [] {
-					new MenuItem ("_Create Child", "", () => {
+					new MenuItem ("_Create Child", "", (sender, e) => {
 						childWin = new Window () {
 							X = Pos.Center (),
 							Y = Pos.Center (),
@@ -274,7 +274,7 @@ namespace Terminal.Gui.TopLevelTests {
 				}),
 				new MenuBarItem ("View", new MenuBarItem [] {
 					new MenuBarItem ("Create", new MenuItem [] {
-						new MenuItem("_TextField", "", () => {
+						new MenuItem("_TextField", "", (sender, e) => {
 							var tf = new TextField ("Test") {
 								X = Pos.Center (),
 								Y = Pos.Center (),

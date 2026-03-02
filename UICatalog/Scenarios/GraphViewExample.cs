@@ -39,23 +39,23 @@ namespace UICatalog.Scenarios {
 
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File", new MenuItem [] {
-					new MenuItem ("Scatter _Plot", "",()=>graphs[currentGraph = 0]()),
-					new MenuItem ("_V Bar Graph", "", ()=>graphs[currentGraph = 1]()),
-					new MenuItem ("_H Bar Graph", "", ()=>graphs[currentGraph = 2]()) ,
-					new MenuItem ("P_opulation Pyramid","",()=>graphs[currentGraph = 3]()),
-					new MenuItem ("_Line Graph","",()=>graphs[currentGraph = 4]()),
-					new MenuItem ("Sine _Wave","",()=>graphs[currentGraph = 5]()),
-					new MenuItem ("Silent _Disco","",()=>graphs[currentGraph = 6]()),
-					new MenuItem ("_Multi Bar Graph","",()=>graphs[currentGraph = 7]()),
-					new MenuItem ("_Quit", "", () => Quit()),
+					new MenuItem ("Scatter _Plot", "",(sender, e)=>graphs[currentGraph = 0]()),
+					new MenuItem ("_V Bar Graph", "", (sender, e)=>graphs[currentGraph = 1]()),
+					new MenuItem ("_H Bar Graph", "", (sender, e)=>graphs[currentGraph = 2]()) ,
+					new MenuItem ("P_opulation Pyramid","",(sender, e)=>graphs[currentGraph = 3]()),
+					new MenuItem ("_Line Graph","",(sender, e)=>graphs[currentGraph = 4]()),
+					new MenuItem ("Sine _Wave","",(sender, e)=>graphs[currentGraph = 5]()),
+					new MenuItem ("Silent _Disco","",(sender, e)=>graphs[currentGraph = 6]()),
+					new MenuItem ("_Multi Bar Graph","",(sender, e)=>graphs[currentGraph = 7]()),
+					new MenuItem ("_Quit", "", (sender, e) => Quit()),
 				}),
 				new MenuBarItem ("_View", new MenuItem [] {
-					new MenuItem ("Zoom _In", "", () => Zoom(0.5f)),
-					 new MenuItem ("Zoom _Out", "", () =>  Zoom(2f)),
-					new MenuItem ("MarginLeft++", "", () => Margin(true,true)),
-					new MenuItem ("MarginLeft--", "", () => Margin(true,false)),
-					new MenuItem ("MarginBottom++", "", () => Margin(false,true)),
-					new MenuItem ("MarginBottom--", "", () => Margin(false,false)),
+					new MenuItem ("Zoom _In", "", (sender, e) => Zoom(0.5f)),
+					 new MenuItem ("Zoom _Out", "", (sender, e) =>  Zoom(2f)),
+					new MenuItem ("MarginLeft++", "", (sender, e) => Margin(true,true)),
+					new MenuItem ("MarginLeft--", "", (sender, e) => Margin(true,false)),
+					new MenuItem ("MarginBottom++", "", (sender, e) => Margin(false,true)),
+					new MenuItem ("MarginBottom--", "", (sender, e) => Margin(false,false)),
 				}),
 
 				});
@@ -89,8 +89,8 @@ namespace UICatalog.Scenarios {
 
 
 			var statusBar = new StatusBar (new StatusItem [] {
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit()),
-				new StatusItem(Key.CtrlMask | Key.G, "~^G~ Next", ()=>graphs[currentGraph++%graphs.Length]()),
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => Quit()),
+				new StatusItem(Key.CtrlMask | Key.G, "~^G~ Next", (sender, e)=>graphs[currentGraph++%graphs.Length]()),
 			});
 			Application.Top.Add (statusBar);
 		}

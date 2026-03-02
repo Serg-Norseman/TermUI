@@ -37,29 +37,29 @@ namespace UICatalog.Scenarios {
 
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File", new MenuItem [] {
-					new MenuItem ("_New", "", () => New()),
-					new MenuItem ("_Open", "", () => Open()),
-					new MenuItem ("_Save", "", () => Save()),
+					new MenuItem ("_New", "", (sender, e) => New()),
+					new MenuItem ("_Open", "", (sender, e) => Open()),
+					new MenuItem ("_Save", "", (sender, e) => Save()),
 					null,
-					new MenuItem ("_Quit", "", () => Quit()),
+					new MenuItem ("_Quit", "", (sender, e) => Quit()),
 				}),
 				new MenuBarItem ("_Edit", new MenuItem [] {
-					new MenuItem ("_Copy", "", () => Copy()),
-					new MenuItem ("C_ut", "", () => Cut()),
-					new MenuItem ("_Paste", "", () => Paste())
+					new MenuItem ("_Copy", "", (sender, e) => Copy()),
+					new MenuItem ("C_ut", "", (sender, e) => Cut()),
+					new MenuItem ("_Paste", "", (sender, e) => Paste())
 				}),
 				new MenuBarItem ("_Options", new MenuItem [] {
-					miAllowEdits = new MenuItem ("_AllowEdits", "", () => ToggleAllowEdits ()){Checked = _hexView.AllowEdits, CheckType = MenuItemCheckStyle.Checked}
+					miAllowEdits = new MenuItem ("_AllowEdits", "", (sender, e) => ToggleAllowEdits ()){Checked = _hexView.AllowEdits, CheckType = MenuItemCheckStyle.Checked}
 				})
 			});
 			Application.Top.Add (menu);
 
 			statusBar = new StatusBar (new StatusItem [] {
-				new StatusItem(Key.F2, "~F2~ Open", () => Open()),
-				new StatusItem(Key.F3, "~F3~ Save", () => Save()),
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit()),
+				new StatusItem(Key.F2, "~F2~ Open", (sender, e) => Open()),
+				new StatusItem(Key.F3, "~F3~ Save", (sender, e) => Save()),
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => Quit()),
 				siPositionChanged = new StatusItem(Key.Null,
-					$"Position: {_hexView.Position} Line: {_hexView.CursorPosition.Y} Col: {_hexView.CursorPosition.X} Line length: {_hexView.BytesPerLine}", () => {})
+					$"Position: {_hexView.Position} Line: {_hexView.CursorPosition.Y} Col: {_hexView.CursorPosition.X} Line length: {_hexView.BytesPerLine}", (sender, e) => {})
 			});
 			Application.Top.Add (statusBar);
 		}

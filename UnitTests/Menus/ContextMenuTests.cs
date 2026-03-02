@@ -924,7 +924,7 @@ namespace Terminal.Gui.MenuTests {
 					cm.Show ();
 					Assert.True (ContextMenu.IsShow);
 					mi = cm.MenuBar.Menus [0];
-					mi.Action = () => {
+					mi.Action += (sender, e) => {
 						var dialog1 = new Dialog ();
 						Application.Run (dialog1);
 
@@ -935,7 +935,7 @@ namespace Terminal.Gui.MenuTests {
 					cm.MenuBar.MenuAllClosed += () => isMenuAllClosed = true;
 
 				} else if (iterations == 1) {
-					mi.Action ();
+					mi.PerformAction ();
 				} else if (iterations == 2) {
 					Application.RequestStop ();
 				} else if (iterations == 3) {

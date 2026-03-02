@@ -528,7 +528,8 @@ namespace UICatalog.Scenarios {
 				}
 				_statusItem = statusItem;
 				_txtTitle.Text = statusItem?.Title ?? "";
-				_txtAction.Text = statusItem != null && statusItem.Action != null ? GetTargetAction (statusItem.Action) : ustring.Empty;
+				// FIXME
+				//_txtAction.Text = statusItem != null && statusItem.HasAction () ? GetTargetAction (statusItem.Action) : ustring.Empty;
 				_txtShortcut.Text = ShortcutHelper.GetShortcutTag (statusItem.Shortcut, StatusBar.ShortcutDelimiter) ?? "";
 			}
 
@@ -539,7 +540,7 @@ namespace UICatalog.Scenarios {
 				_txtShortcut.Text = "";
 			}
 
-			ustring GetTargetAction (Action action)
+			ustring GetTargetAction (EventHandler action)
 			{
 				var me = action.Target;
 
@@ -555,9 +556,9 @@ namespace UICatalog.Scenarios {
 				return v == null || !(v is DynamicStatusItem item) ? ustring.Empty : item.action;
 			}
 
-			public Action CreateAction (DynamicStatusItem item)
+			public EventHandler CreateAction (DynamicStatusItem item)
 			{
-				return new Action (() => MessageBox.ErrorQuery (item.title, item.action, "Ok"));
+				return new EventHandler ((sender, e) => MessageBox.ErrorQuery (item.title, item.action, "Ok"));
 			}
 		}
 

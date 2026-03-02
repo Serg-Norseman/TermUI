@@ -21,7 +21,7 @@ namespace UICatalog.Scenarios {
 
 			var menu = new MenuBar (new MenuBarItem [] {
 			new MenuBarItem ("_File", new MenuItem [] {
-				new MenuItem ("_Quit", "", () => Quit()),
+				new MenuItem ("_Quit", "", (sender, e) => Quit()),
 			})
 			});
 			Application.Top.Add (menu);
@@ -92,7 +92,7 @@ namespace UICatalog.Scenarios {
 			Win.Add (verticalArrow);
 
 			var statusBar = new StatusBar (new StatusItem [] {
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit())
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => Quit())
 			});
 			Application.Top.Add (statusBar);
 

@@ -28,9 +28,9 @@ namespace UICatalog.Scenarios {
 
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File", new MenuItem [] {
-					miMultiline =  new MenuItem ("_Multiline", "", () => Multiline()){CheckType = MenuItemCheckStyle.Checked},
-					miWrap =  new MenuItem ("_Word Wrap", "", () => WordWrap()){CheckType = MenuItemCheckStyle.Checked},
-					new MenuItem ("_Quit", "", () => Quit())
+					miMultiline =  new MenuItem ("_Multiline", "", (sender, e) => Multiline()){CheckType = MenuItemCheckStyle.Checked},
+					miWrap =  new MenuItem ("_Word Wrap", "", (sender, e) => WordWrap()){CheckType = MenuItemCheckStyle.Checked},
+					new MenuItem ("_Quit", "", (sender, e) => Quit())
 				})
 			});
 			Application.Top.Add (menu);
@@ -85,7 +85,7 @@ namespace UICatalog.Scenarios {
 			miWrap.Checked = textViewTopLeft.WordWrap;
 
 			var statusBar = new StatusBar (new StatusItem [] {
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit()),
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => Quit()),
 				siMultiline = new StatusItem(Key.Null, "", null),
 				siWrap = new StatusItem(Key.Null, "", null)
 			});

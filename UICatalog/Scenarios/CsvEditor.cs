@@ -44,38 +44,38 @@ namespace UICatalog.Scenarios {
 			};
 
 			var fileMenu = new MenuBarItem ("_File", new MenuItem [] {
-					new MenuItem ("_Open CSV", "", () => Open()),
-					new MenuItem ("_Save", "", () => Save()),
-					new MenuItem ("_Quit", "Quits The App", () => Quit()),
+					new MenuItem ("_Open CSV", "", (sender, e) => Open()),
+					new MenuItem ("_Save", "", (sender, e) => Save()),
+					new MenuItem ("_Quit", "Quits The App", (sender, e) => Quit()),
 				});
 			//fileMenu.Help = "Help";
 			var menu = new MenuBar (new MenuBarItem [] {
 				fileMenu,
 				new MenuBarItem ("_Edit", new MenuItem [] {
-					new MenuItem ("_New Column", "", () => AddColumn()),
-					new MenuItem ("_New Row", "", () => AddRow()),
-					new MenuItem ("_Rename Column", "", () => RenameColumn()),
-					new MenuItem ("_Delete Column", "", () => DeleteColum()),
-					new MenuItem ("_Move Column", "", () => MoveColumn()),
-					new MenuItem ("_Move Row", "", () => MoveRow()),
-					new MenuItem ("_Sort Asc", "", () => Sort(true)),
-					new MenuItem ("_Sort Desc", "", () => Sort(false)),
+					new MenuItem ("_New Column", "", (sender, e) => AddColumn()),
+					new MenuItem ("_New Row", "", (sender, e) => AddRow()),
+					new MenuItem ("_Rename Column", "", (sender, e) => RenameColumn()),
+					new MenuItem ("_Delete Column", "", (sender, e) => DeleteColum()),
+					new MenuItem ("_Move Column", "", (sender, e) => MoveColumn()),
+					new MenuItem ("_Move Row", "", (sender, e) => MoveRow()),
+					new MenuItem ("_Sort Asc", "", (sender, e) => Sort(true)),
+					new MenuItem ("_Sort Desc", "", (sender, e) => Sort(false)),
 				}),
 				new MenuBarItem ("_View", new MenuItem [] {
-					miLeft = new MenuItem ("_Align Left", "", () => Align(TextAlignment.Left)),
-					miRight = new MenuItem ("_Align Right", "", () => Align(TextAlignment.Right)),
-					miCentered = new MenuItem ("_Align Centered", "", () => Align(TextAlignment.Centered)),
+					miLeft = new MenuItem ("_Align Left", "", (sender, e) => Align(TextAlignment.Left)),
+					miRight = new MenuItem ("_Align Right", "", (sender, e) => Align(TextAlignment.Right)),
+					miCentered = new MenuItem ("_Align Centered", "", (sender, e) => Align(TextAlignment.Centered)),
 					
 					// Format requires hard typed data table, when we read a CSV everything is untyped (string) so this only works for new columns in this demo
-					miCentered = new MenuItem ("_Set Format Pattern", "", () => SetFormat()),
+					miCentered = new MenuItem ("_Set Format Pattern", "", (sender, e) => SetFormat()),
 				})
 			});
 			Application.Top.Add (menu);
 
 			var statusBar = new StatusBar (new StatusItem [] {
-				new StatusItem(Key.CtrlMask | Key.O, "~^O~ Open", () => Open()),
-				new StatusItem(Key.CtrlMask | Key.S, "~^S~ Save", () => Save()),
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit()),
+				new StatusItem(Key.CtrlMask | Key.O, "~^O~ Open", (sender, e) => Open()),
+				new StatusItem(Key.CtrlMask | Key.S, "~^S~ Save", (sender, e) => Save()),
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => Quit()),
 			});
 			Application.Top.Add (statusBar);
 

@@ -70,7 +70,7 @@ namespace UICatalog.Scenarios {
 			_win.Add (_label, _text, _button, _labelR, _labelV);
 			Application.Top.Add (menu, _win);
 
-			WideRunes ();
+			WideRunes (null, null);
 			//NarrowRunes ();
 			//MixedRunes ();
 			Application.Run ();
@@ -106,7 +106,7 @@ namespace UICatalog.Scenarios {
 			MessageBox.Query ("こんにちはと言う", $"こんにちは {_text.Text}", "Ok");
 		}
 
-		private void MixedRunes ()
+		private void MixedRunes (object sender, EventArgs e)
 		{
 			UnsetClickedEvent ();
 			_label.Text = "Enter your name 你:";
@@ -124,7 +124,7 @@ namespace UICatalog.Scenarios {
 			Application.Refresh ();
 		}
 
-		private void NarrowRunes ()
+		private void NarrowRunes (object sender, EventArgs e)
 		{
 			UnsetClickedEvent ();
 			_label.Text = "Enter your name:";
@@ -142,7 +142,7 @@ namespace UICatalog.Scenarios {
 			Application.Refresh ();
 		}
 
-		private void WideRunes ()
+		private void WideRunes (object sender, EventArgs e)
 		{
 			UnsetClickedEvent ();
 			_label.Text = "あなたの名前を入力してください：";
@@ -160,19 +160,19 @@ namespace UICatalog.Scenarios {
 			Application.Refresh ();
 		}
 
-		private void WithoutDrawMargin ()
+		private void WithoutDrawMargin (object sender, EventArgs e)
 		{
 			_win.Border.BorderStyle = BorderStyle.None;
 			_win.Border.DrawMarginFrame = false;
 		}
 
-		private void WithDrawMargin ()
+		private void WithDrawMargin (object sender, EventArgs e)
 		{
 			_win.Border.DrawMarginFrame = true;
 			_win.Border.BorderStyle = BorderStyle.Single;
 		}
 
-		private void WithoutMargin ()
+		private void WithoutMargin (object sender, EventArgs e)
 		{
 			_win.X = 0;
 			_win.Y = 0;
@@ -180,7 +180,7 @@ namespace UICatalog.Scenarios {
 			_win.Height = Dim.Fill ();
 		}
 
-		private void WithMargin ()
+		private void WithMargin (object sender, EventArgs e)
 		{
 			_win.X = 5;
 			_win.Y = 5;

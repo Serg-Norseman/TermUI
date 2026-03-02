@@ -25,8 +25,8 @@ namespace UICatalog.Scenarios {
 
 			var menu = new MenuBar (new MenuBarItem [] {
 			new MenuBarItem ("_File", new MenuItem [] {
-				miWrap =  new MenuItem ("_Word Wrap", "", () => WordWrap()){CheckType = MenuItemCheckStyle.Checked},
-				new MenuItem ("_Quit", "", () => Quit()),
+				miWrap =  new MenuItem ("_Word Wrap", "", (sender, e) => WordWrap()){CheckType = MenuItemCheckStyle.Checked},
+				new MenuItem ("_Quit", "", (sender, e) => Quit()),
 			})
 			});
 			Application.Top.Add (menu);
@@ -45,7 +45,7 @@ namespace UICatalog.Scenarios {
 			Win.Add (textView);
 
 			var statusBar = new StatusBar (new StatusItem [] {
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit()),
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => Quit()),
 			});
 
 

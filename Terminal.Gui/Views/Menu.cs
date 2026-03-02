@@ -55,7 +55,7 @@ namespace Terminal.Gui {
 		/// <param name="canExecute">Function to determine if the action can currently be executed.</param>
 		/// <param name="parent">The <see cref="Parent"/> of this menu item.</param>
 		/// <param name="shortcut">The <see cref="Shortcut"/> keystroke combination.</param>
-		public MenuItem (ustring title, ustring help, Action action, Func<bool> canExecute = null, MenuItem parent = null, Key shortcut = Key.Null)
+		public MenuItem (ustring title, ustring help, EventHandler action, Func<bool> canExecute = null, MenuItem parent = null, Key shortcut = Key.Null)
 		{
 			Title = title ?? "";
 			Help = help ?? "";
@@ -130,7 +130,7 @@ namespace Terminal.Gui {
 		/// Gets or sets the action to be invoked when the menu item is triggered.
 		/// </summary>
 		/// <value>Method to invoke.</value>
-		public Action Action { get; set; }
+		public event EventHandler Action;
 
 		/// <summary>
 		/// Gets or sets the action to be invoked to determine if the menu can be triggered. If <see cref="CanExecute"/> returns <see langword="true"/>
@@ -227,6 +227,17 @@ namespace Terminal.Gui {
 
 			return len;
 		}
+
+		public bool HasAction ()
+		{
+			var action = Action;
+			return action != null;
+		}
+
+		public void PerformAction ()
+		{
+			Action?.Invoke (this, new EventArgs ());
+		}
 	}
 
 	/// <summary>
@@ -242,7 +253,7 @@ namespace Terminal.Gui {
 		/// <param name="action">Action to invoke when the menu item is activated.</param>
 		/// <param name="canExecute">Function to determine if the action can currently be executed.</param>
 		/// <param name="parent">The parent <see cref="MenuItem"/> of this if exist, otherwise is null.</param>
-		public MenuBarItem (ustring title, ustring help, Action action, Func<bool> canExecute = null, MenuItem parent = null) : base (title, help, action, canExecute, parent)
+		public MenuBarItem (ustring title, ustring help, EventHandler action, Func<bool> canExecute = null, MenuItem parent = null) : base (title, help, action, canExecute, parent)
 		{
 			Initialize (title, null, null, true);
 		}
@@ -374,7 +385,7 @@ namespace Terminal.Gui {
 		/// <value>The children.</value>
 		public MenuItem [] Children { get; set; }
 
-		internal bool IsTopLevel { get => Parent == null && (Children == null || Children.Length == 0) && Action != null; }
+		internal bool IsTopLevel { get => Parent == null && (Children == null || Children.Length == 0) && HasAction(); }
 	}
 
 	class Menu : View {
@@ -581,16 +592,19 @@ namespace Terminal.Gui {
 				host.PositionCursor ();
 		}
 
-		public void Run (Action action)
+		public void Run (MenuItem item)
 		{
-			if (action == null || host == null)
+			if (item == null)
+				return;
+
+			if (!item.HasAction () || host == null)
 				return;
 
 			Application.UngrabMouse ();
 			host.CloseAllMenus ();
 			Application.Refresh ();
 
-			host.Run (action);
+			host.Run (item);
 		}
 
 		public override bool OnLeave (View view)
@@ -646,9 +660,9 @@ namespace Terminal.Gui {
 		void RunSelected ()
 		{
 			if (barItems.IsTopLevel) {
-				Run (barItems.Action);
-			} else if (current > -1 && barItems.Children [current].Action != null) {
-				Run (barItems.Children [current].Action);
+				Run (barItems);
+			} else if (current > -1 && barItems.Children [current].HasAction ()) {
+				Run (barItems.Children [current]);
 			} else if (current == 0 && host.UseSubMenusSingleFrame
 				&& barItems.Children [current].Parent.Parent != null) {
 
@@ -1150,21 +1164,22 @@ namespace Terminal.Gui {
 
 		void Selected (MenuItem item)
 		{
-			var action = item.Action;
-
-			if (action == null)
+			if (!item.HasAction())
 				return;
 
 			Application.UngrabMouse ();
 			CloseAllMenus ();
 			Application.Refresh ();
-			Run (action);
+			Run (item);
 		}
 
-		internal void Run (Action action)
+		internal void Run (MenuItem item)
 		{
+			if (item == null)
+				return;
+
 			Application.MainLoop.AddIdle (() => {
-				action ();
+				item.PerformAction ();
 				return false;
 			});
 
@@ -1706,9 +1721,8 @@ namespace Terminal.Gui {
 				if (p != -1 && p + 1 < mi.Title.RuneCount) {
 					if (Char.ToUpperInvariant ((char)mi.Title [p + 1]) == c) {
 						if (mi.IsEnabled ()) {
-							var action = mi.Action;
-							if (action != null) {
-								Run (action);
+							if (mi.HasAction ()) {
+								Run (mi);
 							}
 						}
 						return true;
@@ -1742,9 +1756,8 @@ namespace Terminal.Gui {
 				}
 				if ((!(mi is MenuBarItem mbiTopLevel) || mbiTopLevel.IsTopLevel) && mi.Shortcut != Key.Null && mi.Shortcut == (Key)key) {
 					if (mi.IsEnabled ()) {
-						var action = mi.Action;
-						if (action != null) {
-							Run (action);
+						if (mi.HasAction ()) {
+							Run (mi);
 						}
 					}
 					return true;
@@ -1765,7 +1778,7 @@ namespace Terminal.Gui {
 
 			if (mi.IsTopLevel) {
 				var menu = new Menu (this, i, 0, mi);
-				menu.Run (mi.Action);
+				menu.Run (mi);
 				menu.Dispose ();
 			} else {
 				openedByHotKey = true;
@@ -1887,7 +1900,7 @@ namespace Terminal.Gui {
 						if (me.Flags == MouseFlags.Button1Clicked) {
 							if (Menus [i].IsTopLevel) {
 								var menu = new Menu (this, i, 0, Menus [i]);
-								menu.Run (Menus [i].Action);
+								menu.Run (Menus [i]);
 								menu.Dispose ();
 							} else if (!IsMenuOpen) {
 								Activate (i);

@@ -275,5 +275,16 @@ class TestHelpers {
 		var a = new Attribute (userExpected);
 		return $"{a.Foreground},{a.Background}";
 	}
+
+	public static void VerifySubscription (object obj, string eventName, Delegate expectedHandler)
+	{
+		var field = obj.GetType ().GetField (eventName,
+		    BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+
+		var eventDelegate = field?.GetValue (obj) as Delegate;
+		var subscribers = eventDelegate?.GetInvocationList ();
+
+		Assert.Contains (expectedHandler, subscribers);
+	}
 }
 

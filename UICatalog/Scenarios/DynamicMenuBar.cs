@@ -567,14 +567,14 @@ namespace UICatalog.Scenarios {
 					} else if (parent != null) {
 						newMenu = new MenuItem (item.title, item.help, null, null, parent);
 						newMenu.CheckType = item.checkStyle;
-						newMenu.Action = _frmMenuDetails.CreateAction (newMenu, item);
+						newMenu.Action += _frmMenuDetails.CreateAction (newMenu, item);
 						newMenu.Shortcut = ShortcutHelper.GetShortcutFromTag (item.shortcut);
 					} else if (item.isTopLevel) {
 						newMenu = new MenuBarItem (item.title, item.help, null);
-						newMenu.Action = _frmMenuDetails.CreateAction (newMenu, item);
+						newMenu.Action += _frmMenuDetails.CreateAction (newMenu, item);
 					} else {
 						newMenu = new MenuBarItem (item.title, item.help, null);
-						((MenuBarItem)newMenu).Children [0].Action = _frmMenuDetails.CreateAction (newMenu, item);
+						((MenuBarItem)newMenu).Children [0].Action += _frmMenuDetails.CreateAction (newMenu, item);
 						((MenuBarItem)newMenu).Children [0].Shortcut = ShortcutHelper.GetShortcutFromTag (item.shortcut);
 					}
 
@@ -592,10 +592,10 @@ namespace UICatalog.Scenarios {
 					}
 					if (menuItem.isTopLevel && _currentEditMenuBarItem is MenuBarItem) {
 						((MenuBarItem)_currentEditMenuBarItem).Children = null;
-						_currentEditMenuBarItem.Action = _frmMenuDetails.CreateAction (_currentEditMenuBarItem, menuItem);
+						_currentEditMenuBarItem.Action += _frmMenuDetails.CreateAction (_currentEditMenuBarItem, menuItem);
 						SetListViewSource (_currentEditMenuBarItem, true);
 					} else if (menuItem.hasSubMenu) {
-						_currentEditMenuBarItem.Action = null;
+						_currentEditMenuBarItem.Action += null;
 						if (_currentEditMenuBarItem is MenuBarItem && ((MenuBarItem)_currentEditMenuBarItem).Children == null) {
 							((MenuBarItem)_currentEditMenuBarItem).Children = new MenuItem [] { };
 						} else if (_currentEditMenuBarItem.Parent != null) {
@@ -612,7 +612,7 @@ namespace UICatalog.Scenarios {
 							((MenuBarItem)_currentEditMenuBarItem).Children = null;
 							DataContext.Menus = new List<DynamicMenuItemList> ();
 						}
-						_currentEditMenuBarItem.Action = _frmMenuDetails.CreateAction (_currentEditMenuBarItem, menuItem);
+						_currentEditMenuBarItem.Action += _frmMenuDetails.CreateAction (_currentEditMenuBarItem, menuItem);
 						_currentEditMenuBarItem.Shortcut = ShortcutHelper.GetShortcutFromTag (menuItem.shortcut);
 					}
 
@@ -905,7 +905,8 @@ namespace UICatalog.Scenarios {
 				_menuItem = menuItem;
 				_txtTitle.Text = menuItem?.Title ?? "";
 				_txtHelp.Text = menuItem?.Help ?? "";
-				_txtAction.Text = menuItem != null && menuItem.Action != null ? GetTargetAction (menuItem.Action) : ustring.Empty;
+				// FIXME
+				//_txtAction.Text = menuItem != null && menuItem.HasAction () ? GetTargetAction (menuItem.Action) : ustring.Empty;
 				_ckbIsTopLevel.Checked = IsTopLevel (menuItem);
 				_ckbSubMenu.Checked = HasSubMenus (menuItem);
 				_txtHelp.Enabled = !_ckbSubMenu.Checked;
@@ -926,7 +927,7 @@ namespace UICatalog.Scenarios {
 				_txtShortcut.Text = "";
 			}
 
-			ustring GetTargetAction (Action action)
+			ustring GetTargetAction (EventHandler action)
 			{
 				var me = action.Target;
 
@@ -945,7 +946,7 @@ namespace UICatalog.Scenarios {
 			bool IsTopLevel (MenuItem menuItem)
 			{
 				var topLevel = menuItem as MenuBarItem;
-				if (topLevel != null && topLevel.Parent == null && (topLevel.Children == null || topLevel.Children.Length == 0) && topLevel.Action != null) {
+				if (topLevel != null && topLevel.Parent == null && (topLevel.Children == null || topLevel.Children.Length == 0) && topLevel.HasAction()) {
 					return true;
 				} else {
 					return false;
@@ -955,24 +956,24 @@ namespace UICatalog.Scenarios {
 			bool HasSubMenus (MenuItem menuItem)
 			{
 				var menuBarItem = menuItem as MenuBarItem;
-				if (menuBarItem != null && menuBarItem.Children != null && (menuBarItem.Children.Length > 0 || menuBarItem.Action == null)) {
+				if (menuBarItem != null && menuBarItem.Children != null && (menuBarItem.Children.Length > 0 || !menuBarItem.HasAction ())) {
 					return true;
 				} else {
 					return false;
 				}
 			}
 
-			public Action CreateAction (MenuItem menuItem, DynamicMenuItem item)
+			public EventHandler CreateAction (MenuItem menuItem, DynamicMenuItem item)
 			{
 				switch (menuItem.CheckType) {
 				case MenuItemCheckStyle.NoCheck:
-					return new Action (() => MessageBox.ErrorQuery (item.title, item.action, "Ok"));
+					return new EventHandler ((sender, e) => MessageBox.ErrorQuery (item.title, item.action, "Ok"));
 				case MenuItemCheckStyle.Checked:
-					return new Action (() => menuItem.Checked = !menuItem.Checked);
+					return new EventHandler ((sender, e) => menuItem.Checked = !menuItem.Checked);
 				case MenuItemCheckStyle.Radio:
 					break;
 				}
-				return new Action (() => {
+				return new EventHandler ((sender, e) => {
 					menuItem.Checked = true;
 					var parent = menuItem?.Parent as MenuBarItem;
 					if (parent != null) {

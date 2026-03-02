@@ -49,12 +49,12 @@ namespace UICatalog.Scenarios {
 		public override void Setup ()
 		{
 			var statusBar = new StatusBar (new StatusItem [] {
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit()),
-				new StatusItem(Key.F2, "~F2~ Toggle Frame Ruler", () => {
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => Quit()),
+				new StatusItem(Key.F2, "~F2~ Toggle Frame Ruler", (sender, e) => {
 					ConsoleDriver.Diagnostics ^= ConsoleDriver.DiagnosticFlags.FrameRuler;
 					Application.Top.SetNeedsDisplay ();
 				}),
-				new StatusItem(Key.F3, "~F3~ Toggle Frame Padding", () => {
+				new StatusItem(Key.F3, "~F3~ Toggle Frame Padding", (sender, e) => {
 					ConsoleDriver.Diagnostics ^= ConsoleDriver.DiagnosticFlags.FramePadding;
 					Application.Top.SetNeedsDisplay ();
 				}),

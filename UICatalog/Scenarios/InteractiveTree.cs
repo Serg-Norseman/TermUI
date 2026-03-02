@@ -24,7 +24,7 @@ namespace UICatalog.Scenarios {
 
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File", new MenuItem [] {
-					new MenuItem ("_Quit", "", () => Quit()),
+					new MenuItem ("_Quit", "", (sender, e) => Quit()),
 				})
 				});
 			Application.Top.Add (menu);
@@ -40,10 +40,10 @@ namespace UICatalog.Scenarios {
 			Win.Add (treeView);
 
 			var statusBar = new StatusBar (new StatusItem [] {
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit()),
-				new StatusItem(Key.CtrlMask | Key.C, "~^C~ Add Child", () => AddChildNode()),
-				new StatusItem(Key.CtrlMask | Key.T, "~^T~ Add Root", () => AddRootNode()),
-				new StatusItem(Key.CtrlMask | Key.R, "~^R~ Rename Node", () => RenameNode()),
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => Quit()),
+				new StatusItem(Key.CtrlMask | Key.C, "~^C~ Add Child", (sender, e) => AddChildNode()),
+				new StatusItem(Key.CtrlMask | Key.T, "~^T~ Add Root", (sender, e) => AddRootNode()),
+				new StatusItem(Key.CtrlMask | Key.R, "~^R~ Rename Node", (sender, e) => RenameNode()),
 			});
 			Application.Top.Add (statusBar);
 

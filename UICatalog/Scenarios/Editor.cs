@@ -63,28 +63,28 @@ namespace UICatalog.Scenarios {
 
 			var menu = new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File", new MenuItem [] {
-					new MenuItem ("_New", "", () => New()),
-					new MenuItem ("_Open", "", () => Open()),
-					new MenuItem ("_Save", "", () => Save()),
-					new MenuItem ("_Save As", "", () => SaveAs()),
-					new MenuItem ("_Close", "", () => CloseFile()),
+					new MenuItem ("_New", "", (sender, e) => New()),
+					new MenuItem ("_Open", "", (sender, e) => Open()),
+					new MenuItem ("_Save", "", (sender, e) => Save()),
+					new MenuItem ("_Save As", "", (sender, e) => SaveAs()),
+					new MenuItem ("_Close", "", (sender, e) => CloseFile()),
 					null,
-					new MenuItem ("_Quit", "", () => Quit()),
+					new MenuItem ("_Quit", "", (sender, e) => Quit()),
 				}),
 				new MenuBarItem ("_Edit", new MenuItem [] {
-					new MenuItem ("_Copy", "", () => Copy(),null,null, Key.CtrlMask | Key.C),
-					new MenuItem ("C_ut", "", () => Cut(),null,null, Key.CtrlMask | Key.W),
-					new MenuItem ("_Paste", "", () => Paste(),null,null, Key.CtrlMask | Key.Y),
+					new MenuItem ("_Copy", "", (sender, e) => Copy(),null,null, Key.CtrlMask | Key.C),
+					new MenuItem ("C_ut", "", (sender, e) => Cut(),null,null, Key.CtrlMask | Key.W),
+					new MenuItem ("_Paste", "", (sender, e) => Paste(),null,null, Key.CtrlMask | Key.Y),
 					null,
-					new MenuItem ("_Find", "", () => Find(),null,null, Key.CtrlMask | Key.S),
-					new MenuItem ("Find _Next", "", () => FindNext(),null,null, Key.CtrlMask | Key.ShiftMask | Key.S),
-					new MenuItem ("Find P_revious", "", () => FindPrevious(),null,null, Key.CtrlMask | Key.ShiftMask | Key.AltMask | Key.S),
-					new MenuItem ("_Replace", "", () => Replace(),null,null, Key.CtrlMask | Key.R),
-					new MenuItem ("Replace Ne_xt", "", () => ReplaceNext(),null,null, Key.CtrlMask | Key.ShiftMask | Key.R),
-					new MenuItem ("Replace Pre_vious", "", () => ReplacePrevious(),null,null, Key.CtrlMask | Key.ShiftMask | Key.AltMask | Key.R),
-					new MenuItem ("Replace _All", "", () => ReplaceAll(),null,null, Key.CtrlMask | Key.ShiftMask | Key.AltMask | Key.A),
+					new MenuItem ("_Find", "", (sender, e) => Find(),null,null, Key.CtrlMask | Key.S),
+					new MenuItem ("Find _Next", "", (sender, e) => FindNext(),null,null, Key.CtrlMask | Key.ShiftMask | Key.S),
+					new MenuItem ("Find P_revious", "", (sender, e) => FindPrevious(),null,null, Key.CtrlMask | Key.ShiftMask | Key.AltMask | Key.S),
+					new MenuItem ("_Replace", "", (sender, e) => Replace(),null,null, Key.CtrlMask | Key.R),
+					new MenuItem ("Replace Ne_xt", "", (sender, e) => ReplaceNext(),null,null, Key.CtrlMask | Key.ShiftMask | Key.R),
+					new MenuItem ("Replace Pre_vious", "", (sender, e) => ReplacePrevious(),null,null, Key.CtrlMask | Key.ShiftMask | Key.AltMask | Key.R),
+					new MenuItem ("Replace _All", "", (sender, e) => ReplaceAll(),null,null, Key.CtrlMask | Key.ShiftMask | Key.AltMask | Key.A),
 					null,
-					new MenuItem ("_Select All", "", () => SelectAll(),null,null, Key.CtrlMask | Key.T)
+					new MenuItem ("_Select All", "", (sender, e) => SelectAll(),null,null, Key.CtrlMask | Key.T)
 				}),
 				new MenuBarItem ("_ScrollBarView", CreateKeepChecked ()),
 				new MenuBarItem ("_Cursor", CreateCursorRadio ()),
@@ -100,7 +100,7 @@ namespace UICatalog.Scenarios {
 					CreateVisibleChecked ()
 				}),
 				new MenuBarItem ("Conte_xtMenu", new MenuItem [] {
-					_miForceMinimumPosToZero = new MenuItem ("ForceMinimumPosTo_Zero", "", () => {
+					_miForceMinimumPosToZero = new MenuItem ("ForceMinimumPosTo_Zero", "", (sender, e) => {
 						_miForceMinimumPosToZero.Checked = _forceMinimumPosToZero = !_forceMinimumPosToZero;
 						_textView.ContextMenu.ForceMinimumPosToZero = _forceMinimumPosToZero;
 					}) { CheckType = MenuItemCheckStyle.Checked, Checked = _forceMinimumPosToZero },
@@ -114,10 +114,10 @@ namespace UICatalog.Scenarios {
 
 			var statusBar = new StatusBar (new StatusItem [] {
 				siCursorPosition,
-				new StatusItem(Key.F2, "~F2~ Open", () => Open()),
-				new StatusItem(Key.F3, "~F3~ Save", () => Save()),
-				new StatusItem(Key.F4, "~F4~ Save As", () => SaveAs()),
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => Quit()),
+				new StatusItem(Key.F2, "~F2~ Open", (sender, e) => Open()),
+				new StatusItem(Key.F3, "~F3~ Save", (sender, e) => Save()),
+				new StatusItem(Key.F4, "~F4~ Save As", (sender, e) => SaveAs()),
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => Quit()),
 				new StatusItem(Key.Null, $"OS Clipboard IsSupported : {Clipboard.IsSupported}", null)
 			});
 
@@ -501,7 +501,7 @@ namespace UICatalog.Scenarios {
 
 			void CreateAction (List<MenuItem> supportedCultures, MenuItem culture)
 			{
-				culture.Action += () => {
+				culture.Action += (sender, e) => {
 					Thread.CurrentThread.CurrentUICulture = new CultureInfo (culture.Help.ToString ());
 					culture.Checked = true;
 					foreach (var item in supportedCultures) {
@@ -517,7 +517,7 @@ namespace UICatalog.Scenarios {
 			item.Title = "Keep Content Always In Viewport";
 			item.CheckType |= MenuItemCheckStyle.Checked;
 			item.Checked = true;
-			item.Action += () => _scrollBar.KeepContentAlwaysInViewport = item.Checked = !item.Checked;
+			item.Action += (sender, e) => _scrollBar.KeepContentAlwaysInViewport = item.Checked = !item.Checked;
 
 			return new MenuItem [] { item };
 		}
@@ -529,7 +529,7 @@ namespace UICatalog.Scenarios {
 			};
 			item.CheckType |= MenuItemCheckStyle.Checked;
 			item.Checked = _textView.WordWrap;
-			item.Action += () => {
+			item.Action += (sender, e) => {
 				_textView.WordWrap = item.Checked = !item.Checked;
 				if (_textView.WordWrap) {
 					_scrollBar.OtherScrollBarView.ShowScrollIndicator = false;
@@ -548,7 +548,7 @@ namespace UICatalog.Scenarios {
 			auto.Title = "Autocomplete";
 			auto.CheckType |= MenuItemCheckStyle.Checked;
 			auto.Checked = false;
-			auto.Action += () => {
+			auto.Action += (sender, e) => {
 				if (auto.Checked = !auto.Checked) {
 					// setup autocomplete with all words currently in the editor
 					_textView.Autocomplete.AllSuggestions =
@@ -572,7 +572,7 @@ namespace UICatalog.Scenarios {
 			};
 			item.CheckType |= MenuItemCheckStyle.Checked;
 			item.Checked = _textView.AllowsTab;
-			item.Action += () => {
+			item.Action += (sender, e) => {
 				_textView.AllowsTab = item.Checked = !item.Checked;
 			};
 
@@ -586,7 +586,7 @@ namespace UICatalog.Scenarios {
 			};
 			item.CheckType |= MenuItemCheckStyle.Checked;
 			item.Checked = _textView.ReadOnly;
-			item.Action += () => _textView.ReadOnly = item.Checked = !item.Checked;
+			item.Action += (sender, e) => _textView.ReadOnly = item.Checked = !item.Checked;
 
 			return item;
 		}
@@ -598,7 +598,7 @@ namespace UICatalog.Scenarios {
 			};
 			item.CheckType |= MenuItemCheckStyle.Checked;
 			item.Checked = _textView.CanFocus;
-			item.Action += () => {
+			item.Action += (sender, e) => {
 				_textView.CanFocus = item.Checked = !item.Checked;
 				if (_textView.CanFocus) {
 					_textView.SetFocus ();
@@ -615,7 +615,7 @@ namespace UICatalog.Scenarios {
 			};
 			item.CheckType |= MenuItemCheckStyle.Checked;
 			item.Checked = _textView.Enabled;
-			item.Action += () => {
+			item.Action += (sender, e) => {
 				_textView.Enabled = item.Checked = !item.Checked;
 				if (_textView.Enabled) {
 					_textView.SetFocus ();
@@ -632,7 +632,7 @@ namespace UICatalog.Scenarios {
 			};
 			item.CheckType |= MenuItemCheckStyle.Checked;
 			item.Checked = _textView.Visible;
-			item.Action += () => {
+			item.Action += (sender, e) => {
 				_textView.Visible = item.Checked = !item.Checked;
 				if (_textView.Visible) {
 					_textView.SetFocus ();
@@ -645,38 +645,38 @@ namespace UICatalog.Scenarios {
 		MenuItem [] CreateCursorRadio ()
 		{
 			List<MenuItem> menuItems = new List<MenuItem> ();
-			menuItems.Add (new MenuItem ("_Invisible", "", () => SetCursor (CursorVisibility.Invisible)) {
+			menuItems.Add (new MenuItem ("_Invisible", "", (sender, e) => SetCursor (CursorVisibility.Invisible)) {
 				CheckType = MenuItemCheckStyle.Radio,
 				Checked = _textView.DesiredCursorVisibility == CursorVisibility.Invisible
 			});
-			menuItems.Add (new MenuItem ("_Box", "", () => SetCursor (CursorVisibility.Box)) {
+			menuItems.Add (new MenuItem ("_Box", "", (sender, e) => SetCursor (CursorVisibility.Box)) {
 				CheckType = MenuItemCheckStyle.Radio,
 				Checked = _textView.DesiredCursorVisibility == CursorVisibility.Box
 			});
-			menuItems.Add (new MenuItem ("_Underline", "", () => SetCursor (CursorVisibility.Underline)) {
+			menuItems.Add (new MenuItem ("_Underline", "", (sender, e) => SetCursor (CursorVisibility.Underline)) {
 				CheckType = MenuItemCheckStyle.Radio,
 				Checked = _textView.DesiredCursorVisibility == CursorVisibility.Underline
 			});
-			menuItems.Add (new MenuItem ("", "", () => { }, () => false));
-			menuItems.Add (new MenuItem ("xTerm :", "", () => { }, () => false));
-			menuItems.Add (new MenuItem ("", "", () => { }, () => false));
-			menuItems.Add (new MenuItem ("  _Default", "", () => SetCursor (CursorVisibility.Default)) {
+			menuItems.Add (new MenuItem ("", "", (sender, e) => { }, () => false));
+			menuItems.Add (new MenuItem ("xTerm :", "", (sender, e) => { }, () => false));
+			menuItems.Add (new MenuItem ("", "", (sender, e) => { }, () => false));
+			menuItems.Add (new MenuItem ("  _Default", "", (sender, e) => SetCursor (CursorVisibility.Default)) {
 				CheckType = MenuItemCheckStyle.Radio,
 				Checked = _textView.DesiredCursorVisibility == CursorVisibility.Default
 			});
-			menuItems.Add (new MenuItem ("  _Vertical", "", () => SetCursor (CursorVisibility.Vertical)) {
+			menuItems.Add (new MenuItem ("  _Vertical", "", (sender, e) => SetCursor (CursorVisibility.Vertical)) {
 				CheckType = MenuItemCheckStyle.Radio,
 				Checked = _textView.DesiredCursorVisibility == CursorVisibility.Vertical
 			});
-			menuItems.Add (new MenuItem ("  V_ertical Fix", "", () => SetCursor (CursorVisibility.VerticalFix)) {
+			menuItems.Add (new MenuItem ("  V_ertical Fix", "", (sender, e) => SetCursor (CursorVisibility.VerticalFix)) {
 				CheckType = MenuItemCheckStyle.Radio,
 				Checked = _textView.DesiredCursorVisibility == CursorVisibility.VerticalFix
 			});
-			menuItems.Add (new MenuItem ("  B_ox Fix", "", () => SetCursor (CursorVisibility.BoxFix)) {
+			menuItems.Add (new MenuItem ("  B_ox Fix", "", (sender, e) => SetCursor (CursorVisibility.BoxFix)) {
 				CheckType = MenuItemCheckStyle.Radio,
 				Checked = _textView.DesiredCursorVisibility == CursorVisibility.BoxFix
 			});
-			menuItems.Add (new MenuItem ("  U_nderline Fix", "", () => SetCursor (CursorVisibility.UnderlineFix)) {
+			menuItems.Add (new MenuItem ("  U_nderline Fix", "", (sender, e) => SetCursor (CursorVisibility.UnderlineFix)) {
 				CheckType = MenuItemCheckStyle.Radio,
 				Checked = _textView.DesiredCursorVisibility == CursorVisibility.UnderlineFix
 			});

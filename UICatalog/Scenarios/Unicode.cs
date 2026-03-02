@@ -26,7 +26,7 @@ namespace UICatalog.Scenarios {
 					new MenuItem ("_Создать", "Creates new file", null),
 					new MenuItem ("_Открыть", "", null),
 					new MenuItem ("Со_хранить", "", null),
-					new MenuItem ("_Выход", "", () => Application.RequestStop() )
+					new MenuItem ("_Выход", "", (sender, e) => Application.RequestStop() )
 				}),
 				new MenuBarItem ("_Edit", new MenuItem [] {
 					new MenuItem ("_Copy", "", null),
@@ -37,7 +37,7 @@ namespace UICatalog.Scenarios {
 			Application.Top.Add (menu);
 
 			var statusBar = new StatusBar (new StatusItem [] {
-				new StatusItem (Key.CtrlMask | Key.Q, "~^Q~ Выход", () => Application.RequestStop()),
+				new StatusItem (Key.CtrlMask | Key.Q, "~^Q~ Выход", (sender, e) => Application.RequestStop()),
 				new StatusItem (Key.Unknown, "~F2~ Создать", null),
 				new StatusItem(Key.Unknown, "~F3~ Со_хранить", null),
 			});

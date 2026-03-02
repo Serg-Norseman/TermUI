@@ -2105,7 +2105,7 @@ Y
 			var tfQuiting = false;
 			var topQuiting = false;
 			var sb = new StatusBar (new StatusItem [] {
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => sbQuiting = true )
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => sbQuiting = true )
 			});
 			var tf = new TextField ();
 			tf.KeyPress += Tf_KeyPress;
@@ -2165,7 +2165,7 @@ Y
 			var sbQuiting = false;
 			var tfQuiting = false;
 			var sb = new StatusBar (new StatusItem [] {
-				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", () => sbQuiting = true )
+				new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", (sender, e) => sbQuiting = true )
 			});
 			var tf = new TextField ();
 			tf.KeyPress += Tf_KeyPress;

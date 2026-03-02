@@ -319,8 +319,8 @@ namespace UICatalog.Scenarios {
 				SelectedGlyph = (uint)val;
 				_contextMenu = new ContextMenu (me.X + 1, me.Y + 1,
 					new MenuBarItem (new MenuItem [] {
-					new MenuItem ("_Copy Glyph", "", () => CopyGlyph (), null, null, Key.C | Key.CtrlMask),
-					new MenuItem ("Copy _Value", "", () => CopyValue (), null, null, Key.C | Key.ShiftMask | Key.CtrlMask),
+					new MenuItem ("_Copy Glyph", "", (sender, e) => CopyGlyph (), null, null, Key.C | Key.CtrlMask),
+					new MenuItem ("Copy _Value", "", (sender, e) => CopyValue (), null, null, Key.C | Key.ShiftMask | Key.CtrlMask),
 					}) {
 
 					}

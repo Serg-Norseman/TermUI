@@ -91,13 +91,13 @@ namespace UICatalog.Scenarios {
 		{
 			contextMenu = new ContextMenu (x, y,
 				new MenuBarItem (new MenuItem [] {
-					new MenuItem ("_Configuration", "Show configuration", () => MessageBox.Query (50, 5, "Info", "This would open settings dialog", "Ok")),
+					new MenuItem ("_Configuration", "Show configuration", (sender, e) => MessageBox.Query (50, 5, "Info", "This would open settings dialog", "Ok")),
 					new MenuBarItem ("More options", new MenuItem [] {
-						new MenuItem ("_Setup", "Change settings", () => MessageBox.Query (50, 5, "Info", "This would open setup dialog", "Ok")),
-						new MenuItem ("_Maintenance", "Maintenance mode", () => MessageBox.Query (50, 5, "Info", "This would open maintenance dialog", "Ok")),
+						new MenuItem ("_Setup", "Change settings", (sender, e) => MessageBox.Query (50, 5, "Info", "This would open setup dialog", "Ok")),
+						new MenuItem ("_Maintenance", "Maintenance mode", (sender, e) => MessageBox.Query (50, 5, "Info", "This would open maintenance dialog", "Ok")),
 					}),
 					new MenuBarItem ("_Languages", GetSupportedCultures ()),
-					miForceMinimumPosToZero = new MenuItem ("ForceMinimumPosToZero", "", () => {
+					miForceMinimumPosToZero = new MenuItem ("ForceMinimumPosToZero", "", (sender, e) => {
 						miForceMinimumPosToZero.Checked = forceMinimumPosToZero = !forceMinimumPosToZero;
 						tfTopLeft.ContextMenu.ForceMinimumPosToZero = forceMinimumPosToZero;
 						tfTopRight.ContextMenu.ForceMinimumPosToZero = forceMinimumPosToZero;
@@ -106,11 +106,11 @@ namespace UICatalog.Scenarios {
 						tfBottomRight.ContextMenu.ForceMinimumPosToZero = forceMinimumPosToZero;
 					}) { CheckType = MenuItemCheckStyle.Checked, Checked = forceMinimumPosToZero },
 					miUseSubMenusSingleFrame = new MenuItem ("Use_SubMenusSingleFrame", "",
-						() => contextMenu.UseSubMenusSingleFrame = miUseSubMenusSingleFrame.Checked = useSubMenusSingleFrame = !useSubMenusSingleFrame) {
+						(sender, e) => contextMenu.UseSubMenusSingleFrame = miUseSubMenusSingleFrame.Checked = useSubMenusSingleFrame = !useSubMenusSingleFrame) {
 							CheckType = MenuItemCheckStyle.Checked, Checked = useSubMenusSingleFrame
 						},
 					null,
-					new MenuItem ("_Quit", "", () => Application.RequestStop ())
+					new MenuItem ("_Quit", "", (sender, e) => Application.RequestStop ())
 				})
 			) { ForceMinimumPosToZero = forceMinimumPosToZero, UseSubMenusSingleFrame = useSubMenusSingleFrame };
 
@@ -153,7 +153,7 @@ namespace UICatalog.Scenarios {
 
 			void CreateAction (List<MenuItem> supportedCultures, MenuItem culture)
 			{
-				culture.Action += () => {
+				culture.Action += (sender, e) => {
 					Thread.CurrentThread.CurrentUICulture = new CultureInfo (culture.Help.ToString ());
 					culture.Checked = true;
 					foreach (var item in supportedCultures) {

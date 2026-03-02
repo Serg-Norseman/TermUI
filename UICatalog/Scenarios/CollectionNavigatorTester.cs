@@ -83,13 +83,13 @@ namespace UICatalog.Scenarios {
 				CheckType = MenuItemCheckStyle.Checked,
 				Checked = false
 			};
-			allowMarking.Action = () => allowMarking.Checked = _listView.AllowsMarking = !_listView.AllowsMarking;
+			allowMarking.Action += (sender, e) => allowMarking.Checked = _listView.AllowsMarking = !_listView.AllowsMarking;
 
 			var allowMultiSelection = new MenuItem ("Allow Multi _Selection", "", null) {
 				CheckType = MenuItemCheckStyle.Checked,
 				Checked = false
 			};
-			allowMultiSelection.Action = () => allowMultiSelection.Checked = _listView.AllowsMultipleSelection = !_listView.AllowsMultipleSelection;
+			allowMultiSelection.Action += (sender, e) => allowMultiSelection.Checked = _listView.AllowsMultipleSelection = !_listView.AllowsMultipleSelection;
 			allowMultiSelection.CanExecute = () => allowMarking.Checked;
 
 			var menu = new MenuBar (new MenuBarItem [] {
@@ -97,9 +97,9 @@ namespace UICatalog.Scenarios {
 					allowMarking,
 					allowMultiSelection,
 					null,
-					new MenuItem ("_Quit", "", () => Quit(), null, null, Key.Q | Key.CtrlMask),
+					new MenuItem ("_Quit", "", (sender, e) => Quit(), null, null, Key.Q | Key.CtrlMask),
 				}),
-				new MenuBarItem("_Quit", "CTRL-Q", () => Quit()),
+				new MenuBarItem("_Quit", "CTRL-Q", (sender, e) => Quit()),
 			});
 
 			Application.Top.Add (menu);
