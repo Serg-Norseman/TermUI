@@ -25,7 +25,7 @@ namespace UICatalog.Scenarios {
 
 			public MdiMain ()
 			{
-				Data = "MdiMain";
+				Tag = "MdiMain";
 
 				IsMdiContainer = true;
 
@@ -84,12 +84,12 @@ namespace UICatalog.Scenarios {
 
 			private void MdiMain_Deactivate (Toplevel top)
 			{
-				workerApp.WriteLog ($"{top.Data} deactivate.");
+				workerApp.WriteLog ($"{top.Tag} deactivate.");
 			}
 
 			private void MdiMain_Activate (Toplevel top)
 			{
-				workerApp.WriteLog ($"{top.Data} activate.");
+				workerApp.WriteLog ($"{top.Tag} activate.");
 			}
 
 			private MenuBarItem View ()
@@ -99,12 +99,12 @@ namespace UICatalog.Scenarios {
 					Title = "WorkerApp",
 					CheckType = MenuItemCheckStyle.Checked
 				};
-				var top = Application.MdiChildes?.Find ((x) => x.Data.ToString () == "WorkerApp");
+				var top = Application.MdiChildes?.Find ((x) => x.Tag.ToString () == "WorkerApp");
 				if (top != null) {
 					item.Checked = top.Visible;
 				}
 				item.Action += (sender, e) => {
-					var top = Application.MdiChildes.Find ((x) => x.Data.ToString () == "WorkerApp");
+					var top = Application.MdiChildes.Find ((x) => x.Tag.ToString () == "WorkerApp");
 					item.Checked = top.Visible = !item.Checked;
 					if (top.Visible) {
 						top.ShowChild ();
@@ -124,14 +124,14 @@ namespace UICatalog.Scenarios {
 				var sortedChildes = Application.MdiChildes;
 				sortedChildes.Sort (new ToplevelComparer ());
 				foreach (var top in sortedChildes) {
-					if (top.Data.ToString () == "WorkerApp" && !top.Visible) {
+					if (top.Tag.ToString () == "WorkerApp" && !top.Visible) {
 						continue;
 					}
 					var item = new MenuItem ();
-					item.Title = top is Window ? $"{index} {((Window)top).Title}" : $"{index} {top.Data}";
+					item.Title = top is Window ? $"{index} {((Window)top).Title}" : $"{index} {top.Tag}";
 					index++;
 					item.CheckType |= MenuItemCheckStyle.Checked;
-					var topTitle = top is Window ? ((Window)top).Title : top.Data.ToString ();
+					var topTitle = top is Window ? ((Window)top).Title : top.Tag.ToString ();
 					var itemTitle = item.Title.Substring (index.ToString ().Length + 1);
 					if (top == top.GetTopMdiChild () && topTitle == itemTitle) {
 						item.Checked = true;
@@ -164,7 +164,7 @@ namespace UICatalog.Scenarios {
 
 			public WorkerApp ()
 			{
-				Data = "WorkerApp";
+				Tag = "WorkerApp";
 
 				Width = Dim.Percent (80);
 				Height = Dim.Percent (50);
@@ -222,7 +222,7 @@ namespace UICatalog.Scenarios {
 						var stagingUI = new StagingUIController (staging, e.Result as List<string>) {
 							Modal = false,
 							Title = $"Worker started at {staging.StartStaging}.{staging.StartStaging:fff}",
-							Data = $"{staging.StartStaging}.{staging.StartStaging:fff}"
+							Tag = $"{staging.StartStaging}.{staging.StartStaging:fff}"
 						};
 
 						stagingUI.ReportClosed += StagingUI_ReportClosed;

@@ -1018,10 +1018,10 @@ namespace Terminal.Gui {
 
 			foreach (var top in Application.MdiChildes) {
 				if (type != null && top.GetType () == type
-					&& exclude?.Contains (top.Data.ToString ()) == false) {
+					&& exclude?.Contains (top.Tag.ToString ()) == false) {
 					return top;
 				} else if ((type != null && top.GetType () != type)
-					|| (exclude?.Contains (top.Data.ToString ()) == true)) {
+					|| (exclude?.Contains (top.Tag.ToString ()) == true)) {
 					continue;
 				}
 				return top;

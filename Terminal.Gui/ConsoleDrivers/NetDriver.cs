@@ -1248,7 +1248,7 @@ namespace Terminal.Gui {
 				ChangeWin (inputEvent.WindowSizeEvent.Size);
 				break;
 			case NetEvents.EventType.RequestResponse:
-				Application.Top.Data = inputEvent.RequestResponseEvent.ResultTuple;
+				Application.Top.Tag = inputEvent.RequestResponseEvent.ResultTuple;
 				break;
 			}
 		}

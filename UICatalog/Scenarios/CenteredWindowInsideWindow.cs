@@ -194,7 +194,7 @@ namespace UICatalog.Scenarios {
 			this.menuBar.Height = 1;
 			this.menuBar.X = 0;
 			this.menuBar.Y = 0;
-			this.menuBar.Data = "menuBar";
+			this.menuBar.Tag = "menuBar";
 			this.menuBar.TextAlignment = Terminal.Gui.TextAlignment.Left;
 			this.childMenu = new Terminal.Gui.MenuBarItem ();
 			this.childMenu.Title = "Ch_ild";
@@ -204,16 +204,16 @@ namespace UICatalog.Scenarios {
 					this.childMenu, this.parentMenu};
 			this.createChildMenuItem = new Terminal.Gui.MenuItem ();
 			this.createChildMenuItem.Title = "_Create Child";
-			this.createChildMenuItem.Data = "createChildMenuItem";
+			this.createChildMenuItem.Tag = "createChildMenuItem";
 			this.centerChildMenuItem = new Terminal.Gui.MenuItem ();
 			this.centerChildMenuItem.Title = "C_enter Child";
-			this.centerChildMenuItem.Data = "centerChildMenuItem";
+			this.centerChildMenuItem.Tag = "centerChildMenuItem";
 			this.hideShowChildMenuItem = new Terminal.Gui.MenuItem ();
 			this.hideShowChildMenuItem.Title = "_Hide Child";
-			this.hideShowChildMenuItem.Data = "hideChildMenuItem";
+			this.hideShowChildMenuItem.Tag = "hideChildMenuItem";
 			this.borderChildMenuItem = new Terminal.Gui.MenuItem ();
 			this.borderChildMenuItem.Title = "_Borderless Child";
-			this.borderChildMenuItem.Data = "borderChildMenuItem";
+			this.borderChildMenuItem.Tag = "borderChildMenuItem";
 			this.childMenu.Children = new Terminal.Gui.MenuItem [] {
 					this.createChildMenuItem, this.centerChildMenuItem, this.hideShowChildMenuItem, this.borderChildMenuItem};
 			this.Add (this.menuBar);
@@ -222,18 +222,18 @@ namespace UICatalog.Scenarios {
 			this.statusBar.Height = 1;
 			this.statusBar.X = 0;
 			this.statusBar.Y = Pos.AnchorEnd (1);
-			this.statusBar.Data = "statusBar";
+			this.statusBar.Tag = "statusBar";
 			this.statusBar.TextAlignment = Terminal.Gui.TextAlignment.Left;
 			this.createChildStatusItem = new Terminal.Gui.StatusItem (Key.F5 | Key.CtrlMask, "~CTRL-F5~ Create Child", null);
-			this.createChildStatusItem.Data = "createChildStatusItem";
+			this.createChildStatusItem.Tag = "createChildStatusItem";
 			this.centerChildStatusItem = new Terminal.Gui.StatusItem (Key.F6 | Key.CtrlMask, "~CTRL-F6~ Center Child", null);
-			this.centerChildStatusItem.Data = "centerChildStatusItem";
+			this.centerChildStatusItem.Tag = "centerChildStatusItem";
 			this.hideShowChildStatusItem = new Terminal.Gui.StatusItem (Key.F7 | Key.CtrlMask, "~CTRL-F7~ Hide Child", null);
-			this.hideShowChildStatusItem.Data = "hideChildStatusItem";
+			this.hideShowChildStatusItem.Tag = "hideChildStatusItem";
 			this.borderChildStatusItem = new Terminal.Gui.StatusItem (Key.F2 | Key.CtrlMask, "~CTRL-F2~ Borderless Child", null);
-			this.borderChildStatusItem.Data = "borderChildStatusItem";
+			this.borderChildStatusItem.Tag = "borderChildStatusItem";
 			this.borderParentStatusItem = new Terminal.Gui.StatusItem (Key.F1 | Key.CtrlMask, "~CTRL-F1~ Borderless Parent", null);
-			this.borderParentStatusItem.Data = "borderParentStatusItem";
+			this.borderParentStatusItem.Tag = "borderParentStatusItem";
 			this.statusBar.Items = new StatusItem [] {
 					this.createChildStatusItem, this.centerChildStatusItem, this.hideShowChildStatusItem, this.borderChildStatusItem, this.borderParentStatusItem};
 			this.Add (statusBar);

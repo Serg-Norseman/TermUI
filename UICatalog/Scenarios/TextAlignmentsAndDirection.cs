@@ -80,7 +80,7 @@ namespace UICatalog.Scenarios {
 
 			// Save Alignments in Data
 			foreach (var t in mtxts) {
-				t.Data = new { h = t.TextAlignment, v = t.VerticalTextAlignment };
+				t.Tag = new { h = t.TextAlignment, v = t.VerticalTextAlignment };
 			}
 
 			container.Add (txtLabelTL);
@@ -144,17 +144,17 @@ namespace UICatalog.Scenarios {
 			justifyCheckbox.Toggled += (prevtoggled) => {
 				if (prevtoggled) {
 					foreach (var t in mtxts) {
-						t.TextAlignment = (TextAlignment)((dynamic)t.Data).h;
-						t.VerticalTextAlignment = (VerticalTextAlignment)((dynamic)t.Data).v;
+						t.TextAlignment = (TextAlignment)((dynamic)t.Tag).h;
+						t.VerticalTextAlignment = (VerticalTextAlignment)((dynamic)t.Tag).v;
 					}
 				} else {
 					foreach (var t in mtxts) {
 						if (TextFormatter.IsVerticalDirection (t.TextDirection)) {
 							t.VerticalTextAlignment = VerticalTextAlignment.Justified;
-							t.TextAlignment = ((dynamic)t.Data).h;
+							t.TextAlignment = ((dynamic)t.Tag).h;
 						} else {
 							t.TextAlignment = TextAlignment.Justified;
-							t.VerticalTextAlignment = ((dynamic)t.Data).v;
+							t.VerticalTextAlignment = ((dynamic)t.Tag).v;
 						}
 					}
 				}

@@ -39,7 +39,7 @@ namespace Terminal.Gui {
 		/// Gets or sets arbitrary data for the menu item.
 		/// </summary>
 		/// <remarks>This property is not used internally.</remarks>
-		public object Data { get; set; }
+		public object Tag { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="MenuItem"/>

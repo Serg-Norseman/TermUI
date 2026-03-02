@@ -86,7 +86,7 @@ namespace Terminal.Gui {
 		/// Gets or sets arbitrary data for the status item.
 		/// </summary>
 		/// <remarks>This property is not used internally.</remarks>
-		public object Data { get; set; }
+		public object Tag { get; set; }
 
 		public bool HasAction ()
 		{
