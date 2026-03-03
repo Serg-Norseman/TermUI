@@ -113,38 +113,38 @@ namespace Terminal.Gui {
 		/// </summary>
 		public event Action<Size> Resized;
 
-		internal virtual void OnResized (Size size)
+		protected internal virtual void OnResized (Size size)
 		{
 			Resized?.Invoke (size);
 		}
 
-		internal virtual void OnChildUnloaded (Toplevel top)
+		protected internal virtual void OnChildUnloaded (Toplevel top)
 		{
 			ChildUnloaded?.Invoke (top);
 		}
 
-		internal virtual void OnChildLoaded (Toplevel top)
+		protected internal virtual void OnChildLoaded (Toplevel top)
 		{
 			ChildLoaded?.Invoke (top);
 		}
 
-		internal virtual void OnClosed (Toplevel top)
+		protected internal virtual void OnClosed (Toplevel top)
 		{
 			Closed?.Invoke (top);
 		}
 
-		internal virtual bool OnClosing (ToplevelClosingEventArgs ev)
+		protected internal virtual bool OnClosing (ToplevelClosingEventArgs ev)
 		{
 			Closing?.Invoke (ev);
 			return ev.Cancel;
 		}
 
-		internal virtual void OnAllChildClosed ()
+		protected internal virtual void OnAllChildClosed ()
 		{
 			AllChildClosed?.Invoke ();
 		}
 
-		internal virtual void OnChildClosed (Toplevel top)
+		protected internal virtual void OnChildClosed (Toplevel top)
 		{
 			if (IsMdiContainer) {
 				SetChildNeedsDisplay ();
@@ -152,12 +152,12 @@ namespace Terminal.Gui {
 			ChildClosed?.Invoke (top);
 		}
 
-		internal virtual void OnDeactivate (Toplevel activated)
+		protected internal virtual void OnDeactivate (Toplevel activated)
 		{
 			Deactivate?.Invoke (activated);
 		}
 
-		internal virtual void OnActivate (Toplevel deactivated)
+		protected internal virtual void OnActivate (Toplevel deactivated)
 		{
 			Activate?.Invoke (deactivated);
 		}
@@ -165,7 +165,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Called from <see cref="Application.Begin(Toplevel)"/> before the <see cref="Toplevel"/> redraws for the first time. 
 		/// </summary>
-		virtual public void OnLoaded ()
+		protected internal void OnLoaded ()
 		{
 			foreach (Toplevel tl in Subviews.Where (v => v is Toplevel)) {
 				tl.OnLoaded ();
@@ -177,7 +177,7 @@ namespace Terminal.Gui {
 		/// Called from <see cref="Application.RunLoop"/> after the <see cref="Toplevel"/> has entered the 
 		/// first iteration of the loop.
 		/// </summary>
-		internal virtual void OnReady ()
+		protected internal virtual void OnReady ()
 		{
 			foreach (Toplevel tl in Subviews.Where (v => v is Toplevel)) {
 				tl.OnReady ();
@@ -188,7 +188,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Called from <see cref="Application.End(Application.RunState)"/> before the <see cref="Toplevel"/> is disposed.
 		/// </summary>
-		internal virtual void OnUnloaded ()
+		protected internal virtual void OnUnloaded ()
 		{
 			foreach (Toplevel tl in Subviews.Where (v => v is Toplevel)) {
 				tl.OnUnloaded ();
