@@ -35,7 +35,7 @@ namespace Terminal.Gui {
 		/// All tabs currently hosted by the control
 		/// </summary>
 		/// <value></value>
-		public IReadOnlyCollection<Tab> Tabs { get => tabs.AsReadOnly (); }
+		public IReadOnlyList<Tab> Tabs { get => tabs.AsReadOnly (); }
 
 		/// <summary>
 		/// When there are too many tabs to render, this indicates the first

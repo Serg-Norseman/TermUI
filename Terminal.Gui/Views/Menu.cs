@@ -50,6 +50,17 @@ namespace Terminal.Gui {
 		/// Initializes a new instance of <see cref="MenuItem"/>.
 		/// </summary>
 		/// <param name="title">Title for the menu item.</param>
+		/// <param name="action">Action to invoke when the menu item is activated.</param>
+		/// <param name="canExecute">Function to determine if the action can currently be executed.</param>
+		/// <param name="parent">The <see cref="Parent"/> of this menu item.</param>
+		/// <param name="shortcut">The <see cref="Shortcut"/> keystroke combination.</param>
+		public MenuItem (ustring title, EventHandler action, Func<bool> canExecute = null, MenuItem parent = null, Key shortcut = Key.Null)
+			: this (title, "", action, canExecute, parent, shortcut) { }
+
+		/// <summary>
+		/// Initializes a new instance of <see cref="MenuItem"/>.
+		/// </summary>
+		/// <param name="title">Title for the menu item.</param>
 		/// <param name="help">Help text to display.</param>
 		/// <param name="action">Action to invoke when the menu item is activated.</param>
 		/// <param name="canExecute">Function to determine if the action can currently be executed.</param>
