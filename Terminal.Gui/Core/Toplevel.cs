@@ -165,7 +165,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Called from <see cref="Application.Begin(Toplevel)"/> before the <see cref="Toplevel"/> redraws for the first time. 
 		/// </summary>
-		protected internal void OnLoaded ()
+		protected internal virtual void OnLoaded ()
 		{
 			foreach (Toplevel tl in Subviews.Where (v => v is Toplevel)) {
 				tl.OnLoaded ();
