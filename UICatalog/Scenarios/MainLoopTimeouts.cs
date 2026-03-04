@@ -48,14 +48,14 @@ namespace UICatalog.Scenarios {
 		{
 		}
 
-		private static void Start ()
+		private static void Start (object sender, EventArgs e)
 		{
 			_listToken = Application.MainLoop.AddTimeout (TimeSpan.FromMilliseconds (100), Add);
 			_blinkToken = Application.MainLoop.AddTimeout (TimeSpan.FromMilliseconds (1000), Blink);
 			_countToken = Application.MainLoop.AddTimeout (TimeSpan.FromMilliseconds (1000), Count);
 		}
 
-		private static void Stop ()
+		private static void Stop (object sender, EventArgs e)
 		{
 			Application.MainLoop.RemoveTimeout (_listToken);
 			Application.MainLoop.RemoveTimeout (_blinkToken);

@@ -328,7 +328,7 @@ namespace UICatalog.Scenarios {
 				Add (listView);
 
 				start = new Button ("Start") { IsDefault = true, ClearOnVisibleFalse = false };
-				start.Clicked += () => {
+				start.Clicked += (sender, e) => {
 					Staging = new Staging (DateTime.Now);
 					RequestStop ();
 				};
@@ -340,7 +340,7 @@ namespace UICatalog.Scenarios {
 
 				KeyPress += (e) => {
 					if (e.KeyEvent.Key == Key.Esc) {
-						OnReportClosed ();
+						OnReportClosed (null, null);
 					}
 				};
 
@@ -358,7 +358,7 @@ namespace UICatalog.Scenarios {
 				};
 			}
 
-			private void OnReportClosed ()
+			private void OnReportClosed (object sender, EventArgs e)
 			{
 				if (Staging?.StartStaging != null) {
 					ReportClosed?.Invoke (this);

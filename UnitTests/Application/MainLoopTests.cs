@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 using System.Threading.Tasks;
@@ -607,7 +608,7 @@ namespace Terminal.Gui.ApplicationTests {
 
 			var btnLaunch = new Button ("Open Window");
 
-			btnLaunch.Clicked += () => action ();
+			btnLaunch.Clicked += (sender, e) => action ();
 
 			Application.Top.Add (btnLaunch);
 
@@ -671,7 +672,7 @@ namespace Terminal.Gui.ApplicationTests {
 				Text = "total"
 			};
 
-			totalbtn.Clicked += () => {
+			totalbtn.Clicked += (sender, e) => {
 				MessageBox.Query ("Count", $"Count is {total}", "Ok");
 			};
 
@@ -686,7 +687,7 @@ namespace Terminal.Gui.ApplicationTests {
 			Application.RequestStop ();
 		}
 
-		private static async void RunAsyncTest ()
+		private static async void RunAsyncTest (object sender, EventArgs e)
 		{
 			Assert.Equal (clickMe, btn.Text);
 			Assert.Equal (zero, total);

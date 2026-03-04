@@ -33,7 +33,7 @@ namespace UICatalog.Scenarios {
 				X = Pos.Center (),
 				Y = foreColors.Length + 1,
 			};
-			button.Clicked += () => {
+			button.Clicked += (sender, e) => {
 
 				foreach (var label in labels) {
 					var color = label.ColorScheme.Normal;

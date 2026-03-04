@@ -235,11 +235,11 @@ namespace Terminal.Gui {
 		/// </summary>
 		public virtual void OnClicked ()
 		{
-			Clicked?.Invoke ();
+			Clicked?.Invoke (this, new EventArgs());
 		}
 
 		/// <summary>
-		///   Clicked <see cref="Action"/>, raised when the user clicks the primary mouse button within the Bounds of this <see cref="View"/>
+		///   Clicked <see cref="EventHandler"/>, raised when the user clicks the primary mouse button within the Bounds of this <see cref="View"/>
 		///   or if the user presses the action key while this view is focused. (TODO: IsDefault)
 		/// </summary>
 		/// <remarks>
@@ -247,7 +247,7 @@ namespace Terminal.Gui {
 		///   raised when the button is activated either with
 		///   the mouse or the keyboard.
 		/// </remarks>
-		public event Action Clicked;
+		public event EventHandler Clicked;
 
 		///<inheritdoc/>
 		public override bool MouseEvent (MouseEvent me)

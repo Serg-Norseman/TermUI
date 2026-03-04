@@ -191,7 +191,7 @@ namespace UICatalog.Scenarios {
 				X = Pos.Center () - 35,
 				Y = 5
 			};
-			replacePadding.Clicked += () => {
+			replacePadding.Clicked += (sender, e) => {
 				smartPanel.Child.Border.Padding = new Thickness (smartPanel.Child.Border.Padding.Top);
 				smartView.Border.Padding = new Thickness (smartView.Border.Padding.Top);
 				if (paddingTopEdit.Text.IsEmpty) {
@@ -310,7 +310,7 @@ namespace UICatalog.Scenarios {
 				X = Pos.Center () + 1,
 				Y = 5
 			};
-			replaceBorder.Clicked += () => {
+			replaceBorder.Clicked += (sender, e) => {
 				smartPanel.Child.Border.BorderThickness = new Thickness (smartPanel.Child.Border.BorderThickness.Top);
 				smartView.Border.BorderThickness = new Thickness (smartView.Border.BorderThickness.Top);
 				if (borderTopEdit.Text.IsEmpty) {

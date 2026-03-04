@@ -147,7 +147,7 @@ namespace UICatalog.Scenarios {
 				};
 				Add (_frmStatusBarDetails);
 
-				_btnUp.Clicked += () => {
+				_btnUp.Clicked += (sender, e) => {
 					var i = _lstItems.SelectedItem;
 					var statusItem = DataContext.Items.Count > 0 ? DataContext.Items [i].StatusItem : null;
 					if (statusItem != null) {
@@ -163,7 +163,7 @@ namespace UICatalog.Scenarios {
 					}
 				};
 
-				_btnDown.Clicked += () => {
+				_btnDown.Clicked += (sender, e) => {
 					var i = _lstItems.SelectedItem;
 					var statusItem = DataContext.Items.Count > 0 ? DataContext.Items [i].StatusItem : null;
 					if (statusItem != null) {
@@ -189,7 +189,7 @@ namespace UICatalog.Scenarios {
 					X = Pos.Right (_btnOk) + 3,
 					Y = Pos.Top (_btnOk),
 				};
-				_btnCancel.Clicked += () => {
+				_btnCancel.Clicked += (sender, e) => {
 					SetFrameDetails (_currentEditStatusItem);
 				};
 				Add (_btnCancel);
@@ -198,7 +198,7 @@ namespace UICatalog.Scenarios {
 					SetFrameDetails ();
 				};
 
-				_btnOk.Clicked += () => {
+				_btnOk.Clicked += (sender, e) => {
 					if (ustring.IsNullOrEmpty (_frmStatusBarDetails._txtTitle.Text) && _currentEditStatusItem != null) {
 						MessageBox.ErrorQuery ("Invalid title", "Must enter a valid title!.", "Ok");
 					} else if (_currentEditStatusItem != null) {
@@ -211,7 +211,7 @@ namespace UICatalog.Scenarios {
 					}
 				};
 
-				_btnAdd.Clicked += () => {
+				_btnAdd.Clicked += (sender, e) => {
 					if (StatusBar == null) {
 						MessageBox.ErrorQuery ("StatusBar Bar Error", "Must add a StatusBar first!", "Ok");
 						_btnAddStatusBar.SetFocus ();
@@ -232,7 +232,7 @@ namespace UICatalog.Scenarios {
 					SetFrameDetails ();
 				};
 
-				_btnRemove.Clicked += () => {
+				_btnRemove.Clicked += (sender, e) => {
 					var statusItem = DataContext.Items.Count > 0 ? DataContext.Items [_lstItems.SelectedItem].StatusItem : null;
 					if (statusItem != null) {
 						_statusBar.RemoveItem (_currentSelectedStatusBar);
@@ -250,7 +250,7 @@ namespace UICatalog.Scenarios {
 					SetFrameDetails (statusItem);
 				};
 
-				_btnAddStatusBar.Clicked += () => {
+				_btnAddStatusBar.Clicked += (sender, e) => {
 					if (_statusBar != null) {
 						return;
 					}
@@ -259,7 +259,7 @@ namespace UICatalog.Scenarios {
 					Add (_statusBar);
 				};
 
-				_btnRemoveStatusBar.Clicked += () => {
+				_btnRemoveStatusBar.Clicked += (sender, e) => {
 					if (_statusBar == null) {
 						return;
 					}
@@ -462,7 +462,7 @@ namespace UICatalog.Scenarios {
 					X = Pos.X (_lblShortcut),
 					Y = Pos.Bottom (_txtShortcut) + 1
 				};
-				_btnShortcut.Clicked += () => {
+				_btnShortcut.Clicked += (sender, e) => {
 					_txtShortcut.Text = "";
 				};
 				Add (_btnShortcut);
@@ -484,7 +484,7 @@ namespace UICatalog.Scenarios {
 				var _btnOk = new Button ("Ok") {
 					IsDefault = true,
 				};
-				_btnOk.Clicked += () => {
+				_btnOk.Clicked += (sender, e) => {
 					if (ustring.IsNullOrEmpty (_txtTitle.Text)) {
 						MessageBox.ErrorQuery ("Invalid title", "Must enter a valid title!.", "Ok");
 					} else {
@@ -497,7 +497,7 @@ namespace UICatalog.Scenarios {
 					}
 				};
 				var _btnCancel = new Button ("Cancel");
-				_btnCancel.Clicked += () => {
+				_btnCancel.Clicked += (sender, e) => {
 					_txtTitle.Text = ustring.Empty;
 					Application.RequestStop ();
 				};

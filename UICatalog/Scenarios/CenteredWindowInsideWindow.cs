@@ -257,7 +257,7 @@ namespace UICatalog.Scenarios {
 			this.button1.Clicked += Button1_Clicked;
 		}
 
-		private void Button1_Clicked ()
+		private void Button1_Clicked (object sender, EventArgs e)
 		{
 			Terminal.Gui.MessageBox.Query ("Press Me", "I hope you like the child window behavior!", "Ok");
 		}

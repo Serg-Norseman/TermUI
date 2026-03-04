@@ -699,7 +699,7 @@ namespace Terminal.Gui.TopLevelTests {
 			var count = 0;
 			var mdi = new Mdi ();
 			var button = new Button ();
-			button.Clicked += () => count++;
+			button.Clicked += (sender, e) => count++;
 			var child = new Window ();
 			child.Add (button);
 			var iterations = -1;

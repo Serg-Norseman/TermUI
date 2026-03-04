@@ -698,7 +698,7 @@ namespace Terminal.Gui {
 			dirListView.FileChanged = (file) => nameEntry.Text = file == ".." ? "" : file;
 			dirListView.SelectedChanged = (file) => nameEntry.Text = file.Item1 == ".." ? "" : file.Item1;
 			this.cancel = new Button ("Cancel");
-			this.cancel.Clicked += () => {
+			this.cancel.Clicked += (sender, e) => {
 				Cancel ();
 			};
 			AddButton (cancel);
@@ -707,7 +707,7 @@ namespace Terminal.Gui {
 				IsDefault = true,
 				Enabled = nameEntry.Text.IsEmpty ? false : true
 			};
-			this.prompt.Clicked += () => {
+			this.prompt.Clicked += (sender, e) => {
 				if (this is OpenDialog) {
 					if (!dirListView.GetValidFilesName (nameEntry.Text.ToString (), out string res)) {
 						nameEntry.Text = res;

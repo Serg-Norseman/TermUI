@@ -1753,7 +1753,7 @@ Y
 		{
 			var wasClicked = false;
 			var view = new Button ("Click Me");
-			view.Clicked += () => wasClicked = !wasClicked;
+			view.Clicked += (sender, e) => wasClicked = !wasClicked;
 			Application.Top.Add (view);
 
 			view.ProcessKey (new KeyEvent (Key.Enter, null));
@@ -1782,7 +1782,7 @@ Y
 		{
 			var wasClicked = false;
 			var button = new Button ("Click Me");
-			button.Clicked += () => wasClicked = !wasClicked;
+			button.Clicked += (sender, e) => wasClicked = !wasClicked;
 			var win = new Window () { Width = Dim.Fill (), Height = Dim.Fill () };
 			win.Add (button);
 			Application.Top.Add (win);

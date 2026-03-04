@@ -287,9 +287,9 @@ namespace UICatalog.Scenarios {
 			}
 			var accepted = false;
 			var ok = new Button ("Ok", is_default: true);
-			ok.Clicked += () => { accepted = true; Application.RequestStop (); };
+			ok.Clicked += (sender, e) => { accepted = true; Application.RequestStop (); };
 			var cancel = new Button ("Cancel");
-			cancel.Clicked += () => { Application.RequestStop (); };
+			cancel.Clicked += (sender, e) => { Application.RequestStop (); };
 			var d = new Dialog (prompt, 60, 20, ok, cancel);
 
 			var style = tableView.Style.GetOrCreateColumnStyle (col);
@@ -774,9 +774,9 @@ namespace UICatalog.Scenarios {
 			bool okPressed = false;
 
 			var ok = new Button ("Ok", is_default: true);
-			ok.Clicked += () => { okPressed = true; Application.RequestStop (); };
+			ok.Clicked += (sender, e) => { okPressed = true; Application.RequestStop (); };
 			var cancel = new Button ("Cancel");
-			cancel.Clicked += () => { Application.RequestStop (); };
+			cancel.Clicked += (sender, e) => { Application.RequestStop (); };
 			var d = new Dialog (title, 60, 20, ok, cancel);
 
 			var lbl = new Label() {

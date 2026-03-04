@@ -77,7 +77,7 @@ namespace Terminal.Gui.ViewTests {
 		{
 			var clicked = false;
 			Button btn = new Button ("Test");
-			btn.Clicked += () => clicked = true;
+			btn.Clicked += (sender, e) => clicked = true;
 			Application.Top.Add (btn);
 			Application.Begin (Application.Top);
 
@@ -120,7 +120,7 @@ namespace Terminal.Gui.ViewTests {
 		{
 			var clicked = false;
 			Button btn = new Button ("Test");
-			btn.Clicked += () => clicked = true;
+			btn.Clicked += (sender, e) => clicked = true;
 			Application.Top.Add (btn);
 			Application.Begin (Application.Top);
 
@@ -147,7 +147,7 @@ namespace Terminal.Gui.ViewTests {
 		{
 			int pressed = 0;
 			var btn = new Button ("Press Me");
-			btn.Clicked += () => pressed++;
+			btn.Clicked += (sender, e) => pressed++;
 
 			// The Button class supports the Accept command
 			Assert.Contains (Command.Accept, btn.GetSupportedCommands ());
@@ -592,7 +592,7 @@ namespace Terminal.Gui.ViewTests {
 			var wasClicked = false;
 			var view = new View { CanFocus = true };
 			var btn = new Button { Text = "Ok", IsDefault = true };
-			btn.Clicked += () => wasClicked = true;
+			btn.Clicked += (sender, e) => wasClicked = true;
 			Application.Top.Add (view, btn);
 			Application.Begin (Application.Top);
 			Assert.True (view.HasFocus);

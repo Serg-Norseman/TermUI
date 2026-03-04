@@ -114,7 +114,7 @@ namespace UICatalog.Scenarios {
 				txtInput.SetFocus ();
 			}
 
-			button.Clicked += () => ProcessInput ();
+			button.Clicked += (sender, e) => ProcessInput ();
 
 			Win.KeyPress += (e) => {
 				if (e.KeyEvent.Key == Key.Enter) {

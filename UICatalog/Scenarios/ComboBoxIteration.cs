@@ -55,7 +55,7 @@ namespace UICatalog.Scenarios {
 			var btnTwo = new Button ("Two") {
 				X = Pos.Right (comboBox) + 1,
 			};
-			btnTwo.Clicked += () => {
+			btnTwo.Clicked += (sender, e) => {
 				items = new List<string> () { "one", "two" };
 				comboBox.SetSource (items);
 				listview.SetSource (items);
@@ -67,7 +67,7 @@ namespace UICatalog.Scenarios {
 				X = Pos.Right (comboBox) + 1,
 				Y = Pos.Top (comboBox)
 			};
-			btnThree.Clicked += () => {
+			btnThree.Clicked += (sender, e) => {
 				items = new List<string> () { "one", "two", "three" };
 				comboBox.SetSource (items);
 				listview.SetSource (items);
