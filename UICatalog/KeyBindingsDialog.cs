@@ -198,7 +198,7 @@ namespace UICatalog {
 			SetNeedsDisplay ();
 		}
 
-		private void CommandsListView_SelectedItemChanged (ListViewItemEventArgs obj)
+		private void CommandsListView_SelectedItemChanged (object sender, ListViewItemEventArgs obj)
 		{
 			SetTextBoxToShowBinding ((Command)obj.Value);
 		}

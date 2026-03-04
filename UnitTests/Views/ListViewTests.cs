@@ -175,7 +175,7 @@ namespace Terminal.Gui.ViewTests {
 			Assert.True (lv.ProcessKey (new KeyEvent (Key.Space, new KeyModifiers ())));
 			Assert.True (lv.Source.IsMarked (lv.SelectedItem));
 			var opened = false;
-			lv.OpenSelectedItem += (_) => opened = true;
+			lv.OpenSelectedItem += (sender, _) => opened = true;
 			Assert.True (lv.ProcessKey (new KeyEvent (Key.Enter, new KeyModifiers ())));
 			Assert.True (opened);
 			Assert.True (lv.ProcessKey (new KeyEvent (Key.End, new KeyModifiers ())));
@@ -191,7 +191,7 @@ namespace Terminal.Gui.ViewTests {
 			var rendered = false;
 			var source = new List<string> () { "one", "two", "three" };
 			var lv = new ListView () { Width = Dim.Fill (), Height = Dim.Fill () };
-			lv.RowRender += _ => rendered = true;
+			lv.RowRender += (_, _) => rendered = true;
 			Application.Top.Add (lv);
 			Application.Begin (Application.Top);
 			Assert.False (rendered);
@@ -551,7 +551,7 @@ Item 6", output);
 		{
 			var itemChanged = 0;
 			var lv = new ListView (new List<string> () { "Item1", "Item2", "Item3" }) { Width = 5, Height = 3, AllowsMarking = true };
-			lv.SelectedItemChanged += (e) => itemChanged = e.Item;
+			lv.SelectedItemChanged += (sender, e) => itemChanged = e.Item;
 
 			Assert.Equal (0, lv.SelectedItem);
 			Assert.Equal (lv.SelectedItem, itemChanged);

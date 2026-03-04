@@ -678,7 +678,7 @@ namespace Terminal.Gui {
 				HideDropdownListOnClick = true
 			};
 			cmbAllowedTypes.SetSource (allowedTypes ?? new List<string> ());
-			cmbAllowedTypes.OpenSelectedItem += (e) => {
+			cmbAllowedTypes.OpenSelectedItem += (sender, e) => {
 				dirListView.AllowedFileTypes = cmbAllowedTypes.Text.ToString ().Split (';');
 				dirListView.Reload ();
 			};

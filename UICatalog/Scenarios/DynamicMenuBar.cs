@@ -305,7 +305,7 @@ namespace UICatalog.Scenarios {
 				};
 				Add (_btnCancel);
 
-				_lstMenus.SelectedItemChanged += (e) => {
+				_lstMenus.SelectedItemChanged += (sender, e) => {
 					SetFrameDetails ();
 				};
 
@@ -394,7 +394,7 @@ namespace UICatalog.Scenarios {
 					}
 				};
 
-				_lstMenus.OpenSelectedItem += (e) => {
+				_lstMenus.OpenSelectedItem += (sender, e) => {
 					_currentMenuBarItem = DataContext.Menus [e.Item].MenuItem;
 					if (!(_currentMenuBarItem is MenuBarItem)) {
 						MessageBox.ErrorQuery ("Menu Open Error", "Must allows sub menus first!", "Ok");

@@ -229,7 +229,7 @@ namespace UICatalog {
 					AllowsMarking = false,
 					CanFocus = true,
 				};
-				CategoryListView.OpenSelectedItem += (a) => {
+				CategoryListView.OpenSelectedItem += (sender, a) => {
 					RightPane.SetFocus ();
 				};
 				CategoryListView.SelectedItemChanged += CategoryListView_SelectedChanged;
@@ -295,7 +295,7 @@ namespace UICatalog {
 			/// Launches the selected scenario, setting the global _selectedScenario
 			/// </summary>
 			/// <param name="e"></param>
-			void ScenarioListView_OpenSelectedItem (EventArgs e)
+			void ScenarioListView_OpenSelectedItem (object sender, ListViewItemEventArgs e)
 			{
 				if (_selectedScenario is null) {
 					// Save selected item state
@@ -498,7 +498,7 @@ namespace UICatalog {
 				}
 			}
 
-			void CategoryListView_SelectedChanged (ListViewItemEventArgs e)
+			void CategoryListView_SelectedChanged (object sender, ListViewItemEventArgs e)
 			{
 				var item = _categories [e.Item];
 				List<Scenario> newlist;

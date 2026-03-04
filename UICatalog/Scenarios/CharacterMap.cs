@@ -84,7 +84,7 @@ namespace UICatalog.Scenarios {
 				Height = Dim.Fill(1),
 				SelectedItem = 0
 			};
-			jumpList.SelectedItemChanged += (args) => {
+			jumpList.SelectedItemChanged += (sender, args) => {
 				_charMap.StartGlyph = radioItems [jumpList.SelectedItem].start;
 			};
 

@@ -205,22 +205,22 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// This event is raised when the selected item in the <see cref="ComboBox"/> has changed.
 		/// </summary>
-		public event Action<ListViewItemEventArgs> SelectedItemChanged;
+		public event EventHandler<ListViewItemEventArgs> SelectedItemChanged;
 
 		/// <summary>
 		/// This event is raised when the drop-down list is expanded.
 		/// </summary>
-		public event Action Expanded;
+		public event EventHandler Expanded;
 
 		/// <summary>
 		/// This event is raised when the drop-down list is collapsed.
 		/// </summary>
-		public event Action Collapsed;
+		public event EventHandler Collapsed;
 
 		/// <summary>
 		/// This event is raised when the user Double Clicks on an item or presses ENTER to open the selected item.
 		/// </summary>
-		public event Action<ListViewItemEventArgs> OpenSelectedItem;
+		public event EventHandler<ListViewItemEventArgs> OpenSelectedItem;
 
 		readonly IList searchset = new List<object> ();
 		ustring text = "";
@@ -294,6 +294,8 @@ namespace Terminal.Gui {
 
 		private void Initialize ()
 		{
+			//listview.Border = new Border () { BorderStyle = BorderStyle.None };
+
 			if (Bounds.Height < minimumHeight && (Height == null || Height is Dim.DimAbsolute)) {
 				Height = minimumHeight;
 			}
@@ -301,7 +303,7 @@ namespace Terminal.Gui {
 			search.TextChanged += Search_Changed;
 
 			listview.Y = Pos.Bottom (search);
-			listview.OpenSelectedItem += (ListViewItemEventArgs a) => Selected ();
+			listview.OpenSelectedItem += (object sender, ListViewItemEventArgs a) => Selected ();
 
 			this.Add (search, listview);
 
@@ -316,7 +318,7 @@ namespace Terminal.Gui {
 				}
 			};
 
-			listview.SelectedItemChanged += (ListViewItemEventArgs e) => {
+			listview.SelectedItemChanged += (object sender, ListViewItemEventArgs e) => {
 				if (!HideDropdownListOnClick && searchset.Count > 0) {
 					SetValue (searchset [listview.SelectedItem]);
 				}
@@ -469,7 +471,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		public virtual void OnExpanded ()
 		{
-			Expanded?.Invoke ();
+			Expanded?.Invoke (this, new EventArgs());
 		}
 
 		/// <summary>
@@ -477,7 +479,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		public virtual void OnCollapsed ()
 		{
-			Collapsed?.Invoke ();
+			Collapsed?.Invoke (this, new EventArgs ());
 		}
 
 		///<inheritdoc/>
@@ -518,7 +520,7 @@ namespace Terminal.Gui {
 		{
 			// Note: Cannot rely on "listview.SelectedItem != lastSelectedItem" because the list is dynamic. 
 			// So we cannot optimize. Ie: Don't call if not changed
-			SelectedItemChanged?.Invoke (new ListViewItemEventArgs (SelectedItem, search.Text));
+			SelectedItemChanged?.Invoke (this, new ListViewItemEventArgs (SelectedItem, search.Text));
 
 			return true;
 		}
@@ -531,7 +533,7 @@ namespace Terminal.Gui {
 		{
 			var value = search.Text;
 			lastSelectedItem = SelectedItem;
-			OpenSelectedItem?.Invoke (new ListViewItemEventArgs (SelectedItem, value));
+			OpenSelectedItem?.Invoke (this, new ListViewItemEventArgs (SelectedItem, value));
 
 			return true;
 		}
@@ -891,8 +893,10 @@ namespace Terminal.Gui {
 		/// <returns></returns>
 		private int CalculatetHeight ()
 		{
+			//int borders = (DropDownBorderStyle == BorderStyle.None) ? 0 : 2;
+
 			actualVisualLimit = Math.Min (maxDropDownItems, searchset.Count);
-			return actualVisualLimit;
+			return actualVisualLimit /*+ borders*/;
 		}
 
 		private int actualVisualLimit;
@@ -905,5 +909,10 @@ namespace Terminal.Gui {
 			get { return maxDropDownItems; }
 			set { maxDropDownItems = value; }
 		}
+
+		/*public BorderStyle DropDownBorderStyle {
+			get { return listview.Border.BorderStyle; }
+			set { listview.Border = new Border () { BorderStyle = value }; }
+		}*/
 	}
 }

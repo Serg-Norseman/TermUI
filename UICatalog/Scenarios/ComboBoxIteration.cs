@@ -30,6 +30,7 @@ namespace UICatalog.Scenarios {
 			};
 
 			var comboBox = new ComboBox () {
+				//DropDownBorderStyle = BorderStyle.Single,
 				MaxDropDownItems = 5,
 				X = Pos.Right (listview) + 1,
 				Y = Pos.Bottom (lbListView) + 1,
@@ -38,12 +39,12 @@ namespace UICatalog.Scenarios {
 			};
 			comboBox.SetSource (items);
 
-			listview.SelectedItemChanged += (e) => {
+			listview.SelectedItemChanged += (sender, e) => {
 				lbListView.Text = items [e.Item];
 				comboBox.SelectedItem = e.Item;
 			};
 
-			comboBox.SelectedItemChanged += (ListViewItemEventArgs text) => {
+			comboBox.SelectedItemChanged += (object sender, ListViewItemEventArgs text) => {
 				if (text.Item != -1) {
 					lbComboBox.Text = text.Value.ToString ();
 					listview.SelectedItem = text.Item;
@@ -76,6 +77,14 @@ namespace UICatalog.Scenarios {
 				listview.SelectedItem = 0;
 			};
 			Win.Add (btnThree);
+
+			var chkReadOnly = new CheckBox ("ReadOnly", false) { X = Pos.Right (comboBox) + 1, Y = Pos.Bottom (btnThree) + 3 };
+			chkReadOnly.Toggled += (previousState) => {
+				if (comboBox != null) {
+					comboBox.ReadOnly = chkReadOnly.Checked;
+				}
+			};
+			Win.Add (chkReadOnly);
 		}
 	}
 }

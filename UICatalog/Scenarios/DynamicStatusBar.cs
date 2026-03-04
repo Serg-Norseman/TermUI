@@ -194,7 +194,7 @@ namespace UICatalog.Scenarios {
 				};
 				Add (_btnCancel);
 
-				_lstItems.SelectedItemChanged += (e) => {
+				_lstItems.SelectedItemChanged += (sender, e) => {
 					SetFrameDetails ();
 				};
 
