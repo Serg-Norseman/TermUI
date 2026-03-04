@@ -20,32 +20,25 @@ namespace Terminal.Gui {
 			private int highlighted = -1;
 			private bool isFocusing;
 			private ComboBox container;
-			private bool hideDropdownListOnClick;
 
-			public ComboListView (ComboBox container, bool hideDropdownListOnClick)
+			public ComboListView (ComboBox container)
 			{
-				Initialize (container, hideDropdownListOnClick);
+				Initialize (container);
 			}
 
-			public ComboListView (ComboBox container, Rect rect, IList source, bool hideDropdownListOnClick) : base (rect, source)
+			public ComboListView (ComboBox container, Rect rect, IList source) : base (rect, source)
 			{
-				Initialize (container, hideDropdownListOnClick);
+				Initialize (container);
 			}
 
-			public ComboListView (ComboBox container, IList source, bool hideDropdownListOnClick) : base (source)
+			public ComboListView (ComboBox container, IList source) : base (source)
 			{
-				Initialize (container, hideDropdownListOnClick);
+				Initialize (container);
 			}
 
-			private void Initialize (ComboBox container, bool hideDropdownListOnClick)
+			private void Initialize (ComboBox container)
 			{
 				this.container = container ?? throw new ArgumentNullException (nameof(container), "ComboBox container cannot be null.");
-				HideDropdownListOnClick = hideDropdownListOnClick;
-			}
-
-			public bool HideDropdownListOnClick {
-				get => hideDropdownListOnClick;
-				set => hideDropdownListOnClick = WantContinuousButtonPressed = value;
 			}
 
 			public override bool MouseEvent (MouseEvent me)
@@ -57,7 +50,7 @@ namespace Terminal.Gui {
 					res = base.MouseEvent (me);
 				}
 
-				if (HideDropdownListOnClick && me.Flags == MouseFlags.Button1Clicked) {
+				if (container.HideDropdownListOnClick && me.Flags == MouseFlags.Button1Clicked) {
 					if (!isMousePositionValid && !isFocusing) {
 						container.isShow = false;
 						container.HideList ();
@@ -67,7 +60,7 @@ namespace Terminal.Gui {
 						isFocusing = false;
 					}
 					return true;
-				} else if (me.Flags == MouseFlags.ReportMousePosition && HideDropdownListOnClick) {
+				} else if (me.Flags == MouseFlags.ReportMousePosition && container.HideDropdownListOnClick) {
 					if (isMousePositionValid) {
 						highlighted = Math.Min (TopItem + me.Y, Source.Count);
 						SetNeedsDisplay ();
@@ -97,6 +90,7 @@ namespace Terminal.Gui {
 				bool focused = HasFocus;
 				int col = AllowsMarking ? 2 : 0;
 				int start = LeftItem;
+				var hideDropdownListOnClick = container.HideDropdownListOnClick;
 
 				for (int row = 0; row < f.Height; row++, item++) {
 					bool isSelected = item == container.SelectedItem;
@@ -138,7 +132,7 @@ namespace Terminal.Gui {
 
 			public override bool OnEnter (View view)
 			{
-				if (hideDropdownListOnClick) {
+				if (container.HideDropdownListOnClick) {
 					isFocusing = true;
 					highlighted = container.SelectedItem;
 					Application.GrabMouse (this);
@@ -149,7 +143,7 @@ namespace Terminal.Gui {
 
 			public override bool OnLeave (View view)
 			{
-				if (hideDropdownListOnClick) {
+				if (container.HideDropdownListOnClick) {
 					isFocusing = false;
 					highlighted = container.SelectedItem;
 					Application.UngrabMouse ();
@@ -236,6 +230,22 @@ namespace Terminal.Gui {
 		readonly int minimumHeight = 2;
 
 		/// <summary>
+		/// Overriding to properly handle event propagation.
+		/// </summary>
+		public override Rect Frame {
+			get {
+				var selfFrame = base.Frame;
+				if (isShow) {
+					selfFrame.Height += actualVisualLimit;
+				}
+				return selfFrame;
+			}
+			set {
+				base.Frame = value;
+			}
+		}
+
+		/// <summary>
 		/// Public constructor
 		/// </summary>
 		public ComboBox () : this (string.Empty)
@@ -249,7 +259,7 @@ namespace Terminal.Gui {
 		public ComboBox (ustring text) : base ()
 		{
 			search = new TextField ("");
-			listview = new ComboListView (this, HideDropdownListOnClick) { LayoutStyle = LayoutStyle.Computed, CanFocus = true, TabStop = false };
+			listview = new ComboListView (this) { LayoutStyle = LayoutStyle.Computed, CanFocus = true, TabStop = false };
 
 			Initialize ();
 			Text = text;
@@ -263,7 +273,7 @@ namespace Terminal.Gui {
 		public ComboBox (Rect rect, IList source) : base (rect)
 		{
 			search = new TextField ("") { Width = rect.Width };
-			listview = new ComboListView (this, rect, source, HideDropdownListOnClick) { LayoutStyle = LayoutStyle.Computed, ColorScheme = Colors.Base };
+			listview = new ComboListView (this, rect, source) { LayoutStyle = LayoutStyle.Computed, ColorScheme = Colors.Base };
 
 			Initialize ();
 			SetSource (source);
@@ -276,7 +286,7 @@ namespace Terminal.Gui {
 		public ComboBox (IList source) : this (string.Empty)
 		{
 			search = new TextField ("");
-			listview = new ComboListView (this, source, HideDropdownListOnClick) { LayoutStyle = LayoutStyle.Computed, ColorScheme = Colors.Base };
+			listview = new ComboListView (this, source) { LayoutStyle = LayoutStyle.Computed, ColorScheme = Colors.Base };
 
 			Initialize ();
 			SetSource (source);
@@ -307,14 +317,12 @@ namespace Terminal.Gui {
 			};
 
 			listview.SelectedItemChanged += (ListViewItemEventArgs e) => {
-
 				if (!HideDropdownListOnClick && searchset.Count > 0) {
 					SetValue (searchset [listview.SelectedItem]);
 				}
 			};
 
 			Added += (View v) => {
-
 				// Determine if this view is hosted inside a dialog and is the only control
 				for (View view = this.SuperView; view != null; view = view.SuperView) {
 					if (view is Dialog && SuperView != null && SuperView.Subviews.Count == 1 && SuperView.Subviews [0] == this) {
@@ -418,15 +426,13 @@ namespace Terminal.Gui {
 		/// </summary>
 		public bool HideDropdownListOnClick {
 			get => hideDropdownListOnClick;
-			set => hideDropdownListOnClick = listview.HideDropdownListOnClick = value;
+			set => hideDropdownListOnClick = listview.WantContinuousButtonPressed = value;
 		}
 
 		///<inheritdoc/>
 		public override bool MouseEvent (MouseEvent me)
 		{
-			if (me.X == Bounds.Right - 1 && me.Y == Bounds.Top && me.Flags == MouseFlags.Button1Pressed
-				&& autoHide) {
-
+			if (me.X == Bounds.Right - 1 && me.Y == Bounds.Top && me.Flags == MouseFlags.Button1Pressed && autoHide) {
 				if (isShow) {
 					isShow = false;
 					HideList ();
@@ -622,7 +628,7 @@ namespace Terminal.Gui {
 				return true;
 			}
 
-			if (listview.HasFocus && listview.SelectedItem == 0 && searchset?.Count > 0) // jump back to search
+			if (listview.HasFocus && listview.SelectedItem == 0 && searchset.Count > 0) // jump back to search
 			{
 				search.CursorPosition = search.Text.RuneCount;
 				search.SetFocus ();
@@ -634,7 +640,7 @@ namespace Terminal.Gui {
 		bool? MoveDown ()
 		{
 			if (search.HasFocus) { // jump to list
-				if (searchset?.Count > 0) {
+				if (searchset.Count > 0) {
 					listview.TabStop = true;
 					listview.SetFocus ();
 					SetValue (searchset [listview.SelectedItem]);
@@ -751,7 +757,7 @@ namespace Terminal.Gui {
 			isShow = false;
 			listview.TabStop = false;
 
-			if (listview.Source.Count == 0 || (searchset?.Count ?? 0) == 0) {
+			if (listview.Source.Count == 0 || searchset.Count == 0) {
 				text = "";
 				HideList ();
 				return;
@@ -885,10 +891,19 @@ namespace Terminal.Gui {
 		/// <returns></returns>
 		private int CalculatetHeight ()
 		{
-			if (Bounds.Height == 0)
-				return 0;
+			actualVisualLimit = Math.Min (maxDropDownItems, searchset.Count);
+			return actualVisualLimit;
+		}
 
-			return Math.Min (Math.Max (Bounds.Height - 1, minimumHeight - 1), searchset?.Count > 0 ? searchset.Count : isShow ? Math.Max (Bounds.Height - 1, minimumHeight - 1) : 0);
+		private int actualVisualLimit;
+		private int maxDropDownItems = 10;
+
+		/// <summary>
+		/// Maximum number of items in the drop-down list.
+		/// </summary>
+		public int MaxDropDownItems {
+			get { return maxDropDownItems; }
+			set { maxDropDownItems = value; }
 		}
 	}
 }

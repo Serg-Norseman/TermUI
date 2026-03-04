@@ -876,22 +876,6 @@ namespace Terminal.Gui {
 			return true;
 		}
 
-		int GetSubMenuIndex (MenuBarItem subMenu)
-		{
-			int pos = -1;
-			if (this != null && Subviews.Count > 0) {
-				Menu v = null;
-				foreach (var menu in Subviews) {
-					if (((Menu)menu).barItems == subMenu)
-						v = (Menu)menu;
-				}
-				if (v != null)
-					pos = Subviews.IndexOf (v);
-			}
-
-			return pos;
-		}
-
 		///<inheritdoc/>
 		public override bool OnEnter (View view)
 		{
@@ -1622,10 +1606,10 @@ namespace Terminal.Gui {
 		View FindDeepestMenu (View view, ref int count)
 		{
 			count = count > 0 ? count : 0;
-			foreach (var menu in view.Subviews) {
-				if (menu is Menu) {
+			foreach (var subview in view.Subviews) {
+				if (subview is Menu menu) {
 					count++;
-					return FindDeepestMenu ((Menu)menu, ref count);
+					return FindDeepestMenu (menu, ref count);
 				}
 			}
 			return view;
@@ -2039,18 +2023,18 @@ namespace Terminal.Gui {
 			}
 
 			MenuBar hostView = null;
-			if (view is MenuBar) {
-				hostView = (MenuBar)view;
-			} else if (view is Menu) {
-				hostView = ((Menu)view).host;
+			if (view is MenuBar viewMenuBar) {
+				hostView = viewMenuBar;
+			} else if (view is Menu viewMenu) {
+				hostView = viewMenu.host;
 			}
 
 			var grabView = Application.MouseGrabView;
 			MenuBar hostGrabView = null;
-			if (grabView is MenuBar) {
-				hostGrabView = (MenuBar)grabView;
-			} else if (grabView is Menu) {
-				hostGrabView = ((Menu)grabView).host;
+			if (grabView is MenuBar grabMenuBar) {
+				hostGrabView = grabMenuBar;
+			} else if (grabView is Menu grabMenu) {
+				hostGrabView = grabMenu.host;
 			}
 
 			return hostView != hostGrabView ? hostGrabView : null;

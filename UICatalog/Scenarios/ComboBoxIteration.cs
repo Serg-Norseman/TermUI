@@ -7,7 +7,7 @@ namespace UICatalog.Scenarios {
 	public class ComboBoxIteration : Scenario {
 		public override void Setup ()
 		{
-			var items = new List<string> () { "one", "two", "three" };
+			var items = new List<string> () { "one", "two", "three", "four", "five", "six", "seven" };
 
 			var lbListView = new Label () {
 				AutoSize = false,
@@ -30,9 +30,9 @@ namespace UICatalog.Scenarios {
 			};
 
 			var comboBox = new ComboBox () {
+				MaxDropDownItems = 5,
 				X = Pos.Right (listview) + 1,
 				Y = Pos.Bottom (lbListView) + 1,
-				Height = Dim.Fill (2),
 				Width = Dim.Percent (40),
 				HideDropdownListOnClick = true
 			};
@@ -50,6 +50,8 @@ namespace UICatalog.Scenarios {
 				}
 			};
 			Win.Add (lbComboBox, comboBox);
+
+			// Debugging clicks on a drop-down list (falls into the component below it)!
 			Win.Add (new TextField { X = Pos.Right (listview) + 1, Y = Pos.Top (comboBox) + 3, Height = 1, Width = 20 });
 
 			var btnTwo = new Button ("Two") {
