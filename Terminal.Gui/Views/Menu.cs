@@ -416,7 +416,7 @@ namespace Terminal.Gui {
 		internal bool IsTopLevel { get => Parent == null && (Children == null || Children.Length == 0) && HasAction(); }
 	}
 
-	class Menu : View {
+	class Menu : View, IPopover {
 		internal MenuBarItem barItems;
 		internal MenuBar host;
 		internal int current;
@@ -508,11 +508,19 @@ namespace Terminal.Gui {
 			return GetNormalColor ();
 		}
 
-		// Draws the Menu, within the Frame
+		/// <summary>
+		/// Draws the Menu, within the Frame.
+		/// See also (<see cref="View.SetClip"/>) for View as IPopover.
+		/// </summary>
 		public override void Redraw (Rect bounds)
 		{
 			Driver.SetAttribute (GetNormalColor ());
 			DrawFrame (Bounds, padding: 0, fill: true);
+
+			// To draw over the borders of the owner elements.
+			var intBounds = Bounds;
+			intBounds.Inflate (-1, -1);
+			var savedClip = SetClip (intBounds);
 
 			for (int i = Bounds.Y; i < barItems.Children.Length; i++) {
 				if (i < 0)
@@ -606,6 +614,8 @@ namespace Terminal.Gui {
 					}
 				}
 			}
+
+			Driver.Clip = savedClip;
 			PositionCursor ();
 		}
 

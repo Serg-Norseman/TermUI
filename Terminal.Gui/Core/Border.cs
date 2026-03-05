@@ -973,6 +973,9 @@ namespace Terminal.Gui {
 
 		private void SetBorderBrush (ConsoleDriver driver)
 		{
+			if (driver == null)
+				return;
+
 			if (borderBrush != null) {
 				driver.SetAttribute (new Attribute (BorderBrush));
 			} else {

@@ -5,6 +5,10 @@ using System.Linq;
 using NStack;
 
 namespace Terminal.Gui {
+	public interface IPopover
+	{
+	}
+
 	/// <summary>
 	/// Determines the LayoutStyle for a <see cref="View"/>, if Absolute, during <see cref="View.LayoutSubviews"/>, the
 	/// value from the <see cref="View.Frame"/> will be used, if the value is Computed, then <see cref="View.Frame"/>
@@ -1204,7 +1208,13 @@ namespace Terminal.Gui {
 		public Rect SetClip (Rect region)
 		{
 			var previous = Driver.Clip;
-			Driver.Clip = Rect.Intersect (previous, ViewToScreen (region));
+
+			if (this is IPopover) {
+				Driver.Clip = ViewToScreen (region);
+			} else {
+				Driver.Clip = Rect.Intersect (previous, ViewToScreen (region));
+			}
+
 			return previous;
 		}
 

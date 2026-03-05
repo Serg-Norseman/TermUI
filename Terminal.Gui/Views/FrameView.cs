@@ -229,15 +229,17 @@ namespace Terminal.Gui {
 				Clear ();
 			}
 
+			// If this is located after the content output, as in the original,
+			// then when the overlapping (Popover) is output, the border is output on top
+			Driver.SetAttribute (GetNormalColor ());
+			Border.DrawContent (this, false);
+
 			var savedClip = contentView.ClipToBounds ();
 			contentView.Redraw (!NeedDisplay.IsEmpty ? contentView.Bounds : bounds);
 			Driver.Clip = savedClip;
 
 			ClearLayoutNeeded ();
 			ClearNeedsDisplay ();
-
-			Driver.SetAttribute (GetNormalColor ());
-			Border.DrawContent (this, false);
 		}
 
 		/// <summary>

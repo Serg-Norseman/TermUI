@@ -16,7 +16,7 @@ namespace Terminal.Gui {
 	/// </summary>
 	public class ComboBox : View {
 
-		private class ComboListView : ListView {
+		private class ComboListView : ListView, IPopover {
 			private int highlighted = -1;
 			private bool isFocusing;
 			private ComboBox container;
@@ -263,6 +263,7 @@ namespace Terminal.Gui {
 
 			Initialize ();
 			Text = text;
+			HideDropdownListOnClick = true;
 		}
 
 		/// <summary>
@@ -490,6 +491,9 @@ namespace Terminal.Gui {
 			}
 
 			search.CursorPosition = search.Text.RuneCount;
+
+			/*if (ReadOnly)
+				Application.Driver.SetCursorVisibility (CursorVisibility.Invisible);*/
 
 			return base.OnEnter (view);
 		}
@@ -865,6 +869,7 @@ namespace Terminal.Gui {
 			listview.SetSource (searchset);
 			listview.Clear (); // Ensure list shrinks in Dialog as you type
 			listview.Height = CalculatetHeight ();
+			listview.Visible = true;
 			SuperView?.BringSubviewToFront (this);
 		}
 
@@ -882,6 +887,7 @@ namespace Terminal.Gui {
 			Reset (keepSearchText: true);
 			listview.Clear (rect);
 			listview.TabStop = false;
+			listview.Visible = false;
 			SuperView?.SendSubviewToBack (this);
 			SuperView?.SetNeedsDisplay (rect);
 			OnCollapsed ();

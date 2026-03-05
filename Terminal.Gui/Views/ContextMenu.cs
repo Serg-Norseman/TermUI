@@ -201,10 +201,26 @@ namespace Terminal.Gui {
 			}
 		}
 
+		private static bool isShow;
+
 		/// <summary>
 		/// Gets whether the ContextMenu is showing or not.
 		/// </summary>
-		public static bool IsShow { get; private set; }
+		public static bool IsShow {
+			get { return isShow; }
+			private set {
+				if (isShow != value) {
+					isShow = value;
+
+					// Necessary to restore the screen outside the current window
+					// from which the menu was called with output over and beyond
+					// the window border.
+					if (!isShow) {
+						Application.Refresh ();
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// The host <see cref="View "/> which position will be used,

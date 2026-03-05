@@ -318,17 +318,19 @@ namespace Terminal.Gui {
 				}
 				contentView.SetNeedsDisplay ();
 			}
-			var savedClip = contentView.ClipToBounds ();
 
+			// If this is located after the content output, as in the original,
+			// then when the overlapping (Popover) is output, the border is output on top
+			Driver.SetAttribute (GetNormalColor ());
+			Border.DrawContent (this, false);
+
+			var savedClip = contentView.ClipToBounds ();
 			// Redraw our contentView
 			contentView.Redraw (!NeedDisplay.IsEmpty || ChildNeedsDisplay || LayoutNeeded ? contentView.Bounds : bounds);
 			Driver.Clip = savedClip;
 
 			ClearLayoutNeeded ();
 			ClearNeedsDisplay ();
-
-			Driver.SetAttribute (GetNormalColor ());
-			Border.DrawContent (this, false);
 		}
 
 		/// <inheritdoc/>

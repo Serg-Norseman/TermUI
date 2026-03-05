@@ -41,6 +41,9 @@ namespace Terminal.Gui {
 		/// <returns>The <see cref="KeyEvent.Key"/> with all the keys modifiers.</returns>
 		public static Key GetModifiersKey (KeyEvent kb)
 		{
+			if (kb == null)
+				return Key.Null;
+
 			var key = kb.Key;
 			if (kb.IsAlt && (key & Key.AltMask) == 0) {
 				key |= Key.AltMask;

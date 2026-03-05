@@ -674,7 +674,7 @@ namespace Terminal.Gui {
 			return start;
 		}
 
-		static View FindTopFromView (View view)
+		internal static View FindTopFromView (View view)
 		{
 			View top = view?.SuperView != null && view?.SuperView != Top
 				? view.SuperView : view;
