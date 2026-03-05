@@ -10,19 +10,6 @@ This is a particular fork - sandbox for the development of Terminal.Gui v1.
 
 ![Sample app](docfx/images/sample.gif)
 
-## Quick Start
-
-Paste these commands into your favorite terminal on Windows, Mac, or Linux. This will install the [Terminal.Gui.Templates](https://github.com/gui-cs/Terminal.Gui.templates), create a new "Hello World" TUI app, and run it.
-
-(Press `CTRL-Q` to exit the app)
-
-```powershell
-dotnet new --install Terminal.Gui.templates
-dotnet new tui -n myproj
-cd myproj
-dotnet run
-```
-
 ## Documentation 
 
 * [Documentation Home](https://gui-cs.github.io/Terminal.Gui/index.html)
@@ -139,8 +126,6 @@ When run the application looks as follows:
 _Sample application running_
 
 ## Installing
-
-Use NuGet to install the `Terminal.Gui` NuGet package: https://www.nuget.org/packages/Terminal.Gui
 
 ### Installation in .NET Core Projects
 
