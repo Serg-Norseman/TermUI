@@ -3,6 +3,7 @@
 //
 // Authors:
 //   Ross Ferguson (ross.c.ferguson@btinternet.com)
+//   Serg V. Zhdanovskikh
 //
 
 using NStack;
@@ -13,6 +14,8 @@ using System.Collections.Generic;
 namespace Terminal.Gui {
 	/// <summary>
 	/// Provides a drop-down list of items the user can select from.
+	/// 
+	/// To get the "classic" behavior, you need HideDropdownListOnClick = true and SearchMode = false.
 	/// </summary>
 	public class ComboBox : View {
 
@@ -179,7 +182,7 @@ namespace Terminal.Gui {
 				if (SuperView != null && SuperView.Subviews.Contains (this)) {
 					SelectedItem = -1;
 					search.Text = "";
-					Search_Changed ("");
+					Search_Changed (this, "");
 					SetNeedsDisplay ();
 				}
 			}
@@ -236,7 +239,7 @@ namespace Terminal.Gui {
 			get {
 				var selfFrame = base.Frame;
 				if (isShow) {
-					selfFrame.Height += actualVisualLimit;
+					selfFrame.Height += actualDropHeight;
 				}
 				return selfFrame;
 			}
@@ -244,6 +247,12 @@ namespace Terminal.Gui {
 				base.Frame = value;
 			}
 		}
+
+		/// <summary>
+		/// Switch between the classic mode - ComboBox works without search filtering
+		/// and the default mode of this framework - ComboBox works as a SearchBox.
+		/// </summary>
+		public bool SearchMode { get; set; }
 
 		/// <summary>
 		/// Public constructor
@@ -263,7 +272,6 @@ namespace Terminal.Gui {
 
 			Initialize ();
 			Text = text;
-			HideDropdownListOnClick = true;
 		}
 
 		/// <summary>
@@ -295,11 +303,20 @@ namespace Terminal.Gui {
 
 		private void Initialize ()
 		{
+			SearchMode = true;
+
 			//listview.Border = new Border () { BorderStyle = BorderStyle.None };
 
 			if (Bounds.Height < minimumHeight && (Height == null || Height is Dim.DimAbsolute)) {
 				Height = minimumHeight;
 			}
+
+			search.MouseClick += (e) => {
+				if (ReadOnly) {
+					Expand ();
+					e.Handled = true;
+				}
+			};
 
 			search.TextChanged += Search_Changed;
 
@@ -309,7 +326,7 @@ namespace Terminal.Gui {
 			this.Add (search, listview);
 
 			// On resize
-			LayoutComplete += (LayoutEventArgs a) => {
+			LayoutComplete += (object s, LayoutEventArgs a) => {
 				if ((!autoHide && Bounds.Width > 0 && search.Frame.Width != Bounds.Width) ||
 					(autoHide && Bounds.Width > 0 && search.Frame.Width != Bounds.Width - 1)) {
 					search.Width = listview.Width = autoHide ? Bounds.Width - 1 : Bounds.Width;
@@ -336,7 +353,7 @@ namespace Terminal.Gui {
 
 				SetNeedsLayout ();
 				SetNeedsDisplay ();
-				Search_Changed (Text);
+				Search_Changed (this, Text);
 			};
 
 			// Things this view knows how to do
@@ -437,14 +454,9 @@ namespace Terminal.Gui {
 		{
 			if (me.X == Bounds.Right - 1 && me.Y == Bounds.Top && me.Flags == MouseFlags.Button1Pressed && autoHide) {
 				if (isShow) {
-					isShow = false;
-					HideList ();
+					Collapse ();
 				} else {
-					SetSearchSet ();
-
-					isShow = true;
-					ShowList ();
-					FocusSelectedItem ();
+					Expand ();
 				}
 
 				return true;
@@ -472,7 +484,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		public virtual void OnExpanded ()
 		{
-			Expanded?.Invoke (this, new EventArgs());
+			Expanded?.Invoke (this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -480,7 +492,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		public virtual void OnCollapsed ()
 		{
-			Collapsed?.Invoke (this, new EventArgs ());
+			Collapsed?.Invoke (this, EventArgs.Empty);
 		}
 
 		///<inheritdoc/>
@@ -771,7 +783,7 @@ namespace Terminal.Gui {
 
 			SetValue (searchset [listview.SelectedItem]);
 			search.CursorPosition = search.Text.ConsoleWidth;
-			Search_Changed (search.Text);
+			Search_Changed (this, search.Text);
 			OnOpenSelectedItem ();
 			Reset (keepSearchText: true);
 			HideList ();
@@ -832,7 +844,7 @@ namespace Terminal.Gui {
 			}
 		}
 
-		private void Search_Changed (ustring text)
+		private void Search_Changed (object sender, ustring text)
 		{
 			if (source == null) { // Object initialization		
 				return;
@@ -869,7 +881,7 @@ namespace Terminal.Gui {
 			listview.SetSource (searchset);
 			listview.Clear (); // Ensure list shrinks in Dialog as you type
 			listview.Height = CalculatetHeight ();
-			listview.Visible = true;
+			//listview.Visible = true;
 			SuperView?.BringSubviewToFront (this);
 		}
 
@@ -887,7 +899,7 @@ namespace Terminal.Gui {
 			Reset (keepSearchText: true);
 			listview.Clear (rect);
 			listview.TabStop = false;
-			listview.Visible = false;
+			//listview.Visible = false;
 			SuperView?.SendSubviewToBack (this);
 			SuperView?.SetNeedsDisplay (rect);
 			OnCollapsed ();
@@ -899,13 +911,20 @@ namespace Terminal.Gui {
 		/// <returns></returns>
 		private int CalculatetHeight ()
 		{
-			//int borders = (DropDownBorderStyle == BorderStyle.None) ? 0 : 2;
-
-			actualVisualLimit = Math.Min (maxDropDownItems, searchset.Count);
-			return actualVisualLimit /*+ borders*/;
+			if (!SearchMode) {
+				//int borders = (DropDownBorderStyle == BorderStyle.None) ? 0 : 2;
+				actualDropHeight = Math.Min (maxDropDownItems, searchset.Count) /*+ borders*/;
+			} else {
+				if (Bounds.Height == 0) {
+					actualDropHeight = 0;
+				} else {
+					actualDropHeight = Math.Min (Math.Max (Bounds.Height - 1, minimumHeight - 1), searchset?.Count > 0 ? searchset.Count : isShow ? Math.Max (Bounds.Height - 1, minimumHeight - 1) : 0);
+				}
+			}
+			return actualDropHeight;
 		}
 
-		private int actualVisualLimit;
+		private int actualDropHeight;
 		private int maxDropDownItems = 10;
 
 		/// <summary>

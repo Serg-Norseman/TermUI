@@ -99,7 +99,7 @@ namespace UICatalog.Scenarios {
 			SetupScrollBar ();
 		}
 
-		private void SelectedCellLabel_TextChanged (ustring last)
+		private void SelectedCellLabel_TextChanged (object sender, ustring last)
 		{
 			// if user is in the text control and editing the selected cell
 			if (!selectedCellLabel.HasFocus)
@@ -114,7 +114,7 @@ namespace UICatalog.Scenarios {
 			}
 		}
 
-		private void OnSelectedCellChanged (TableView.SelectedCellChangedEventArgs e)
+		private void OnSelectedCellChanged (object sender, TableView.SelectedCellChangedEventArgs e)
 		{
 			// only update the text box if the user is not manually editing it
 			if (!selectedCellLabel.HasFocus)
@@ -472,7 +472,7 @@ namespace UICatalog.Scenarios {
 
 		}
 
-		private void TableViewKeyPress (View.KeyEventEventArgs e)
+		private void TableViewKeyPress (object sender, View.KeyEventEventArgs e)
 		{
 			if (e.KeyEvent.Key == Key.DeleteChar) {
 
@@ -540,7 +540,7 @@ namespace UICatalog.Scenarios {
 			enteredText = okPressed ? tf.Text.ToString () : null;
 			return okPressed;
 		}
-		private void EditCurrentCell (TableView.CellActivatedEventArgs e)
+		private void EditCurrentCell (object sender, TableView.CellActivatedEventArgs e)
 		{
 			if (e.Table == null)
 				return;

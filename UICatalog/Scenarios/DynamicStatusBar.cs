@@ -82,7 +82,7 @@ namespace UICatalog.Scenarios {
 					X = Pos.Center (),
 					Width = 2,
 				};
-				_txtDelimiter.TextChanged += (_) => StatusBar.ShortcutDelimiter = _txtDelimiter.Text;
+				_txtDelimiter.TextChanged += (s, _) => StatusBar.ShortcutDelimiter = _txtDelimiter.Text;
 				_frmDelimiter.Add (_txtDelimiter);
 
 				Add (_frmDelimiter);
@@ -245,7 +245,7 @@ namespace UICatalog.Scenarios {
 					}
 				};
 
-				_lstItems.Enter += (_) => {
+				_lstItems.Enter += (s, _) => {
 					var statusItem = DataContext.Items.Count > 0 ? DataContext.Items [_lstItems.SelectedItem].StatusItem : null;
 					SetFrameDetails (statusItem);
 				};
@@ -406,7 +406,7 @@ namespace UICatalog.Scenarios {
 					Width = Dim.Fill (),
 					ReadOnly = true
 				};
-				_txtShortcut.KeyDown += (e) => {
+				_txtShortcut.KeyDown += (s, e) => {
 					if (!ProcessKey (e.KeyEvent)) {
 						return;
 					}
@@ -450,7 +450,7 @@ namespace UICatalog.Scenarios {
 					return true;
 				}
 
-				_txtShortcut.KeyUp += (e) => {
+				_txtShortcut.KeyUp += (s, e) => {
 					var k = ShortcutHelper.GetModifiersKey (e.KeyEvent);
 					if (CheckShortcut (k, false)) {
 						e.Handled = true;

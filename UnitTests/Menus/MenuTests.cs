@@ -112,7 +112,7 @@ namespace Terminal.Gui.MenuTests {
 					new MenuItem ("_New", "Creates new file.", New)
 				})
 			});
-			menu.MenuOpening += (e) => {
+			menu.MenuOpening += (s, e) => {
 				Assert.Equal ("_File", e.CurrentMenu.Title);
 				Assert.Equal ("_New", e.CurrentMenu.Children [0].Title);
 				Assert.Equal ("Creates new file.", e.CurrentMenu.Children [0].Help);
@@ -122,14 +122,14 @@ namespace Terminal.Gui.MenuTests {
 					new MenuItem ("_Copy", "Copies the selection.", Copy)
 				});
 			};
-			menu.MenuOpened += (e) => {
+			menu.MenuOpened += (s, e) => {
 				Assert.Equal ("_Edit", e.Parent.Title);
 				Assert.Equal ("_Copy", e.Title);
 				Assert.Equal ("Copies the selection.", e.Help);
 				e.PerformAction ();
 				Assert.Equal ("Copy", miAction);
 			};
-			menu.MenuClosing += (e) => {
+			menu.MenuClosing += (s, e) => {
 				Assert.False (isMenuClosed);
 				if (cancelClosing) {
 					e.Cancel = true;
@@ -195,7 +195,7 @@ Edit
 					new MenuItem ("_Save", "Saves the file.", null, null)
 				})
 			});
-			menu.MenuOpened += (e) => {
+			menu.MenuOpened += (s, e) => {
 				miCurrent = e;
 				mCurrent = menu.openMenu;
 			};
@@ -288,7 +288,7 @@ Edit
 					new MenuItem ("_Paste", "", null)
 				})
 			});
-			menu.MenuOpened += (e) => {
+			menu.MenuOpened += (s, e) => {
 				miCurrent = e;
 				mCurrent = menu.openCurrentMenu;
 			};
@@ -376,12 +376,12 @@ Edit
 				}),
 				new MenuBarItem ("_About", "Top-Level", (sender, e) => miAction ="About")
 			});
-			menu.MenuOpening += (e) => mbiCurrent = e.CurrentMenu;
-			menu.MenuOpened += (e) => {
+			menu.MenuOpening += (s, e) => mbiCurrent = e.CurrentMenu;
+			menu.MenuOpened += (s, e) => {
 				miCurrent = e;
 				mCurrent = menu.openCurrentMenu;
 			};
-			menu.MenuClosing += (_) => {
+			menu.MenuClosing += (s, _) => {
 				mbiCurrent = null;
 				miCurrent = null;
 				mCurrent = null;

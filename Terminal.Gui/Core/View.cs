@@ -131,12 +131,12 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Event fired when the view gets focus.
 		/// </summary>
-		public event Action<FocusEventArgs> Enter;
+		public event EventHandler<FocusEventArgs> Enter;
 
 		/// <summary>
 		/// Event fired when the view looses focus.
 		/// </summary>
-		public event Action<FocusEventArgs> Leave;
+		public event EventHandler<FocusEventArgs> Leave;
 
 		/// <summary>
 		/// Event fired when the view receives the mouse event for the first time.
@@ -161,12 +161,12 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Event fired when the <see cref="Enabled"/> value is being changed.
 		/// </summary>
-		public event Action EnabledChanged;
+		public event EventHandler EnabledChanged;
 
 		/// <summary>
 		/// Event fired when the <see cref="Visible"/> value is being changed.
 		/// </summary>
-		public event Action VisibleChanged;
+		public event EventHandler VisibleChanged;
 
 		/// <summary>
 		/// Event invoked when the <see cref="HotKey"/> is changed.
@@ -1390,7 +1390,7 @@ namespace Terminal.Gui {
 		public override bool OnEnter (View view)
 		{
 			var args = new FocusEventArgs (view);
-			Enter?.Invoke (args);
+			Enter?.Invoke (this, args);
 			if (args.Handled)
 				return true;
 			if (base.OnEnter (view))
@@ -1403,7 +1403,7 @@ namespace Terminal.Gui {
 		public override bool OnLeave (View view)
 		{
 			var args = new FocusEventArgs (view);
-			Leave?.Invoke (args);
+			Leave?.Invoke (this, args);
 			if (args.Handled)
 				return true;
 			if (base.OnLeave (view))
@@ -1720,7 +1720,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Invoked when a character key is pressed and occurs after the key up event.
 		/// </summary>
-		public event Action<KeyEventEventArgs> KeyPress;
+		public event EventHandler<KeyEventEventArgs> KeyPress;
 
 		/// <inheritdoc/>
 		public override bool ProcessKey (KeyEvent keyEvent)
@@ -1730,11 +1730,11 @@ namespace Terminal.Gui {
 			}
 
 			var args = new KeyEventEventArgs (keyEvent);
-			KeyPress?.Invoke (args);
+			KeyPress?.Invoke (this, args);
 			if (args.Handled)
 				return true;
 			if (Focused?.Enabled == true) {
-				Focused?.KeyPress?.Invoke (args);
+				Focused?.KeyPress?.Invoke (this, args);
 				if (args.Handled)
 					return true;
 			}
@@ -1906,7 +1906,7 @@ namespace Terminal.Gui {
 
 			var args = new KeyEventEventArgs (keyEvent);
 			if (MostFocused?.Enabled == true) {
-				MostFocused?.KeyPress?.Invoke (args);
+				MostFocused?.KeyPress?.Invoke (this, args);
 				if (args.Handled)
 					return true;
 			}
@@ -1929,11 +1929,11 @@ namespace Terminal.Gui {
 			}
 
 			var args = new KeyEventEventArgs (keyEvent);
-			KeyPress?.Invoke (args);
+			KeyPress?.Invoke (this, args);
 			if (args.Handled)
 				return true;
 			if (MostFocused?.Enabled == true) {
-				MostFocused?.KeyPress?.Invoke (args);
+				MostFocused?.KeyPress?.Invoke (this, args);
 				if (args.Handled)
 					return true;
 			}
@@ -1951,7 +1951,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Invoked when a key is pressed.
 		/// </summary>
-		public event Action<KeyEventEventArgs> KeyDown;
+		public event EventHandler<KeyEventEventArgs> KeyDown;
 
 		/// <inheritdoc/>
 		public override bool OnKeyDown (KeyEvent keyEvent)
@@ -1961,12 +1961,12 @@ namespace Terminal.Gui {
 			}
 
 			var args = new KeyEventEventArgs (keyEvent);
-			KeyDown?.Invoke (args);
+			KeyDown?.Invoke (this, args);
 			if (args.Handled) {
 				return true;
 			}
 			if (Focused?.Enabled == true) {
-				Focused.KeyDown?.Invoke (args);
+				Focused.KeyDown?.Invoke (this, args);
 				if (args.Handled) {
 					return true;
 				}
@@ -1981,7 +1981,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Invoked when a key is released.
 		/// </summary>
-		public event Action<KeyEventEventArgs> KeyUp;
+		public event EventHandler<KeyEventEventArgs> KeyUp;
 
 		/// <inheritdoc/>
 		public override bool OnKeyUp (KeyEvent keyEvent)
@@ -1991,12 +1991,12 @@ namespace Terminal.Gui {
 			}
 
 			var args = new KeyEventEventArgs (keyEvent);
-			KeyUp?.Invoke (args);
+			KeyUp?.Invoke (this, args);
 			if (args.Handled) {
 				return true;
 			}
 			if (Focused?.Enabled == true) {
-				Focused.KeyUp?.Invoke (args);
+				Focused.KeyUp?.Invoke (this, args);
 				if (args.Handled) {
 					return true;
 				}
@@ -2346,14 +2346,14 @@ namespace Terminal.Gui {
 		/// <remarks>
 		/// Subscribe to this event to perform tasks when the <see cref="View"/> has been resized or the layout has otherwise changed.
 		/// </remarks>
-		public event Action<LayoutEventArgs> LayoutStarted;
+		public event EventHandler<LayoutEventArgs> LayoutStarted;
 
 		/// <summary>
 		/// Raises the <see cref="LayoutStarted"/> event. Called from  <see cref="LayoutSubviews"/> before any subviews have been laid out.
 		/// </summary>
 		internal virtual void OnLayoutStarted (LayoutEventArgs args)
 		{
-			LayoutStarted?.Invoke (args);
+			LayoutStarted?.Invoke (this, args);
 		}
 
 		/// <summary>
@@ -2362,7 +2362,7 @@ namespace Terminal.Gui {
 		/// <remarks>
 		/// Subscribe to this event to perform tasks when the <see cref="View"/> has been resized or the layout has otherwise changed.
 		/// </remarks>
-		public event Action<LayoutEventArgs> LayoutComplete;
+		public event EventHandler<LayoutEventArgs> LayoutComplete;
 
 		/// <summary>
 		/// Event called only once when the <see cref="View"/> is being initialized for the first time.
@@ -2376,7 +2376,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		internal virtual void OnLayoutComplete (LayoutEventArgs args)
 		{
-			LayoutComplete?.Invoke (args);
+			LayoutComplete?.Invoke (this, args);
 		}
 
 		/// <summary>
@@ -2947,10 +2947,10 @@ namespace Terminal.Gui {
 		public override void OnCanFocusChanged () => CanFocusChanged?.Invoke ();
 
 		/// <inheritdoc/>
-		public override void OnEnabledChanged () => EnabledChanged?.Invoke ();
+		public override void OnEnabledChanged () => EnabledChanged?.Invoke (this, EventArgs.Empty);
 
 		/// <inheritdoc/>
-		public override void OnVisibleChanged () => VisibleChanged?.Invoke ();
+		public override void OnVisibleChanged () => VisibleChanged?.Invoke (this, EventArgs.Empty);
 
 		/// <inheritdoc/>
 		protected override void Dispose (bool disposing)
@@ -3163,6 +3163,29 @@ namespace Terminal.Gui {
 			}
 
 			return top;
+		}
+
+
+		public Point Location {
+			get {
+				var frame = this.Frame;
+				return new Point (frame.X, frame.Y);
+			}
+			set {
+				this.X = value.X;
+				this.Y = value.Y;
+			}
+		}
+
+		public Size Size {
+			get {
+				var frame = this.Frame;
+				return new Size (frame.Width, frame.Height);
+			}
+			set {
+				this.Width = value.Width;
+				this.Height = value.Height;
+			}
 		}
 	}
 }

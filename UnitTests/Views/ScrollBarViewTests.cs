@@ -654,12 +654,12 @@ namespace Terminal.Gui.ViewTests {
 
 			private void OtherScrollBarView_Initialized (object sender, EventArgs e)
 			{
-				OtherScrollBarView_VisibleChanged ();
+				OtherScrollBarView_VisibleChanged (sender, e);
 			}
 
 			private void TextViewScrollBarView_Initialized (object sender, EventArgs e)
 			{
-				TextViewScrollBarView_VisibleChanged ();
+				TextViewScrollBarView_VisibleChanged (sender, e);
 			}
 
 			private void TextView_DrawContent (Rect obj)
@@ -674,7 +674,7 @@ namespace Terminal.Gui.ViewTests {
 				Refresh ();
 			}
 
-			private void OtherScrollBarView_VisibleChanged ()
+			private void OtherScrollBarView_VisibleChanged (object sender, EventArgs e)
 			{
 				if (OtherScrollBarView.Visible && _textView.BottomOffset == 0) {
 					_textView.BottomOffset = 1;
@@ -683,7 +683,7 @@ namespace Terminal.Gui.ViewTests {
 				}
 			}
 
-			private void TextViewScrollBarView_VisibleChanged ()
+			private void TextViewScrollBarView_VisibleChanged (object sender, EventArgs e)
 			{
 				if (Visible && _textView.RightOffset == 0) {
 					_textView.RightOffset = 1;

@@ -92,7 +92,7 @@ namespace UICatalog.Scenarios {
 					X = Pos.Center (),
 					Width = 2,
 				};
-				_txtDelimiter.TextChanged += (_) => MenuBar.ShortcutDelimiter = _txtDelimiter.Text;
+				_txtDelimiter.TextChanged += (s, _) => MenuBar.ShortcutDelimiter = _txtDelimiter.Text;
 				_frmDelimiter.Add (_txtDelimiter);
 
 				Add (_frmDelimiter);
@@ -407,7 +407,7 @@ namespace UICatalog.Scenarios {
 					SetFrameDetails (menuBarItem);
 				};
 
-				_lstMenus.Enter += (_) => {
+				_lstMenus.Enter += (s, _) => {
 					var menuBarItem = DataContext.Menus.Count > 0 ? DataContext.Menus [_lstMenus.SelectedItem].MenuItem : null;
 					SetFrameDetails (menuBarItem);
 				};
@@ -426,7 +426,7 @@ namespace UICatalog.Scenarios {
 					SelectCurrentMenuBarItem ();
 				};
 
-				_lblMenuBar.Enter += (e) => {
+				_lblMenuBar.Enter += (s, e) => {
 					if (_menuBar?.Menus != null) {
 						_currentMenuBarItem = _menuBar.Menus [_currentSelectedMenuBar];
 						SetFrameDetails (_menuBar.Menus [_currentSelectedMenuBar]);
@@ -724,7 +724,7 @@ namespace UICatalog.Scenarios {
 					Width = Dim.Fill (),
 					ReadOnly = true
 				};
-				_txtShortcut.KeyDown += (e) => {
+				_txtShortcut.KeyDown += (s, e) => {
 					if (!ProcessKey (e.KeyEvent)) {
 						return;
 					}
@@ -767,7 +767,7 @@ namespace UICatalog.Scenarios {
 					return true;
 				}
 
-				_txtShortcut.KeyUp += (e) => {
+				_txtShortcut.KeyUp += (s, e) => {
 					var k = ShortcutHelper.GetModifiersKey (e.KeyEvent);
 					if (CheckShortcut (k, false)) {
 						e.Handled = true;
@@ -784,7 +784,7 @@ namespace UICatalog.Scenarios {
 				};
 				Add (_btnShortcut);
 
-				_ckbIsTopLevel.Toggled += (e) => {
+				_ckbIsTopLevel.Toggled += (s, e) => {
 					if ((_menuItem != null && _menuItem.Parent != null && _ckbIsTopLevel.Checked) ||
 						_menuItem == null && hasParent && _ckbIsTopLevel.Checked) {
 						MessageBox.ErrorQuery ("Invalid IsTopLevel", "Only menu bar can have top level menu item!", "Ok");
@@ -809,7 +809,7 @@ namespace UICatalog.Scenarios {
 						_txtAction.Enabled = false;
 					}
 				};
-				_ckbSubMenu.Toggled += (e) => {
+				_ckbSubMenu.Toggled += (s, e) => {
 					if (_ckbSubMenu.Checked) {
 						_ckbIsTopLevel.Checked = false;
 						_ckbIsTopLevel.SetNeedsDisplay ();

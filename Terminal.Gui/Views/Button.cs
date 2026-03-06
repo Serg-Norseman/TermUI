@@ -235,7 +235,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		public virtual void OnClicked ()
 		{
-			Clicked?.Invoke (this, new EventArgs());
+			Clicked?.Invoke (this, EventArgs.Empty);
 		}
 
 		/// <summary>

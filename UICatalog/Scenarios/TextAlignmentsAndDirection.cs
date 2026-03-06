@@ -118,7 +118,7 @@ namespace UICatalog.Scenarios {
 				}
 			};
 
-			Win.KeyUp += (m) => {
+			Win.KeyUp += (s, m) => {
 				foreach (var v in txts) {
 					v.Text = editText.Text;
 				}
@@ -141,7 +141,7 @@ namespace UICatalog.Scenarios {
 				Height = 1
 			};
 
-			justifyCheckbox.Toggled += (prevtoggled) => {
+			justifyCheckbox.Toggled += (s, prevtoggled) => {
 				if (prevtoggled) {
 					foreach (var t in mtxts) {
 						t.TextAlignment = (TextAlignment)((dynamic)t.Tag).h;
@@ -175,7 +175,7 @@ namespace UICatalog.Scenarios {
 				HotKeySpecifier = '\xffff'
 			};
 
-			directionOptions.SelectedItemChanged += (ev) => {
+			directionOptions.SelectedItemChanged += (s, ev) => {
 				foreach (var v in mtxts) {
 					v.TextDirection = (TextDirection)ev.SelectedItem;
 				}

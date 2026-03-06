@@ -81,7 +81,7 @@ namespace UICatalog.Scenarios {
 			var _btnLambda = new Button (80, 12, "Load Data Lambda");
 			_btnLambda.Clicked += (sender, e) => _lambda.Invoke ();
 			var _btnHandler = new Button (80, 14, "Load Data Handler");
-			_btnHandler.Clicked += (sender, e) => _handler.Invoke (null, new EventArgs ());
+			_btnHandler.Clicked += (sender, e) => _handler.Invoke (null, EventArgs.Empty);
 			var _btnSync = new Button (80, 16, "Load Data Synchronous");
 			_btnSync.Clicked += (sender, e) => _sync.Invoke ();
 			var _btnMethod = new Button (80, 18, "Load Data Method");

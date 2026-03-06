@@ -471,7 +471,7 @@ namespace UICatalog {
 				return menuItems.ToArray ();
 			}
 
-			void KeyDownHandler (View.KeyEventEventArgs a)
+			void KeyDownHandler (object sender, View.KeyEventEventArgs a)
 			{
 				if (a.KeyEvent.IsCapslock) {
 					Capslock.Title = "Caps: On";

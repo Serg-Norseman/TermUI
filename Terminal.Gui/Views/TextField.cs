@@ -42,7 +42,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Changing event, raised before the <see cref="Text"/> changes and can be canceled or changing the new text.
 		/// </summary>
-		public event Action<TextChangingEventArgs> TextChanging;
+		public event EventHandler<TextChangingEventArgs> TextChanging;
 
 		/// <summary>
 		///   Changed event, raised when the text has changed.
@@ -53,7 +53,7 @@ namespace Terminal.Gui {
 		/// <remarks>
 		///   The passed <see cref="EventArgs"/> is a <see cref="ustring"/> containing the old value. 
 		/// </remarks>
-		public event Action<ustring> TextChanged;
+		public event EventHandler<ustring> TextChanged;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TextField"/> class using <see cref="LayoutStyle.Computed"/> positioning.
@@ -308,7 +308,7 @@ namespace Terminal.Gui {
 						, HistoryText.LineStatus.Replaced);
 				}
 
-				TextChanged?.Invoke (oldText);
+				TextChanged?.Invoke (this, oldText);
 
 				if (point > text.Count) {
 					point = Math.Max (TextModel.DisplaySize (text, 0).size - 1, 0);
@@ -1249,7 +1249,7 @@ namespace Terminal.Gui {
 		public virtual TextChangingEventArgs OnTextChanging (ustring newText)
 		{
 			var ev = new TextChangingEventArgs (newText);
-			TextChanging?.Invoke (ev);
+			TextChanging?.Invoke (this, ev);
 			return ev;
 		}
 

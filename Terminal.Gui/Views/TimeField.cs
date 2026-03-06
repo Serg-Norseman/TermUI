@@ -106,7 +106,7 @@ namespace Terminal.Gui {
 			AddKeyBinding (Key.F | Key.CtrlMask, Command.Right);
 		}
 
-		void TextField_TextChanged (ustring e)
+		void TextField_TextChanged (object sender, ustring e)
 		{
 			try {
 				if (!TimeSpan.TryParseExact (Text.ToString ().Trim (), format.Trim (), CultureInfo.CurrentCulture, TimeSpanStyles.None, out TimeSpan result))

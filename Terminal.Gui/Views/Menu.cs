@@ -264,7 +264,7 @@ namespace Terminal.Gui {
 
 		public void PerformAction ()
 		{
-			Action?.Invoke (this, new EventArgs ());
+			Action?.Invoke (this, EventArgs.Empty);
 		}
 	}
 
@@ -519,7 +519,7 @@ namespace Terminal.Gui {
 
 			// To draw over the borders of the owner elements.
 			var intBounds = Bounds;
-			intBounds.Inflate (-1, -1);
+			//intBounds.Inflate (-1, -1); // Breaks the merging of horizontal separator symbols and menu borders
 			var savedClip = SetClip (intBounds);
 
 			for (int i = Bounds.Y; i < barItems.Children.Length; i++) {
@@ -1211,22 +1211,22 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Raised as a menu is opening.
 		/// </summary>
-		public event Action<MenuOpeningEventArgs> MenuOpening;
+		public event EventHandler<MenuOpeningEventArgs> MenuOpening;
 
 		/// <summary>
 		/// Raised when a menu is opened.
 		/// </summary>
-		public event Action<MenuItem> MenuOpened;
+		public event EventHandler<MenuItem> MenuOpened;
 
 		/// <summary>
 		/// Raised when a menu is closing passing <see cref="MenuClosingEventArgs"/>.
 		/// </summary>
-		public event Action<MenuClosingEventArgs> MenuClosing;
+		public event EventHandler<MenuClosingEventArgs> MenuClosing;
 
 		/// <summary>
 		/// Raised when all the menu is closed.
 		/// </summary>
-		public event Action MenuAllClosed;
+		public event EventHandler MenuAllClosed;
 
 		internal Menu openMenu;
 		Menu ocm;
@@ -1259,7 +1259,7 @@ namespace Terminal.Gui {
 		public virtual MenuOpeningEventArgs OnMenuOpening (MenuBarItem currentMenu)
 		{
 			var ev = new MenuOpeningEventArgs (currentMenu);
-			MenuOpening?.Invoke (ev);
+			MenuOpening?.Invoke (this, ev);
 			return ev;
 		}
 
@@ -1278,7 +1278,7 @@ namespace Terminal.Gui {
 			} else if (openCurrentMenu?.current > -1) {
 				mi = openMenu.barItems.Children [openMenu.current];
 			}
-			MenuOpened?.Invoke (mi);
+			MenuOpened?.Invoke (this, mi);
 		}
 
 		/// <summary>
@@ -1290,7 +1290,7 @@ namespace Terminal.Gui {
 		public virtual MenuClosingEventArgs OnMenuClosing (MenuBarItem currentMenu, bool reopen, bool isSubMenu)
 		{
 			var ev = new MenuClosingEventArgs (currentMenu, reopen, isSubMenu);
-			MenuClosing?.Invoke (ev);
+			MenuClosing?.Invoke (this, ev);
 			return ev;
 		}
 
@@ -1299,7 +1299,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		public virtual void OnMenuAllClosed ()
 		{
-			MenuAllClosed?.Invoke ();
+			MenuAllClosed?.Invoke (this, EventArgs.Empty);
 		}
 
 		View lastFocused;

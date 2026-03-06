@@ -80,7 +80,7 @@ namespace UICatalog.Scenarios {
 				label = multipleLines [(int)alignment];
 			}
 
-			unicodeCheckBox.Toggled += (previous) => {
+			unicodeCheckBox.Toggled += (s, previous) => {
 				foreach (var alignment in alignments) {
 					singleLines [(int)alignment].Text = previous ? text : unicode;
 					multipleLines [(int)alignment].Text = previous ? text : unicode;

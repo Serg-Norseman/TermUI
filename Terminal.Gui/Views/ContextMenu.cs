@@ -61,7 +61,7 @@ namespace Terminal.Gui {
 			Position = new Point (x, y);
 		}
 
-		private void MenuBar_MenuAllClosed ()
+		private void MenuBar_MenuAllClosed (object sender, EventArgs e)
 		{
 			Dispose ();
 		}
@@ -215,7 +215,7 @@ namespace Terminal.Gui {
 					// Necessary to restore the screen outside the current window
 					// from which the menu was called with output over and beyond
 					// the window border.
-					if (!isShow) {
+					if (!isShow && Application.Initialized) {
 						Application.Refresh ();
 					}
 				}

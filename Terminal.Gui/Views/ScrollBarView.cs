@@ -120,7 +120,7 @@ namespace Terminal.Gui {
 			ClearOnVisibleFalse = false;
 		}
 
-		private void Host_VisibleChanged ()
+		private void Host_VisibleChanged (object sender, EventArgs e)
 		{
 			if (!Host.Visible) {
 				Visible = Host.Visible;
@@ -133,7 +133,7 @@ namespace Terminal.Gui {
 			}
 		}
 
-		private void Host_EnabledChanged ()
+		private void Host_EnabledChanged (object sender, EventArgs e)
 		{
 			Enabled = Host.Enabled;
 			if (otherScrollBarView != null) {

@@ -353,6 +353,8 @@ namespace Terminal.Gui {
 		internal static bool _initialized = false;
 		internal static int _mainThreadId = -1;
 
+		public static bool Initialized { get { return _initialized; } }
+
 		// INTERNAL function for initializing an app with a Toplevel factory object, driver, and mainloop.
 		//
 		// Called from:

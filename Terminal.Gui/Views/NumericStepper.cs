@@ -39,7 +39,7 @@ namespace Terminal.Gui {
 			_textField = new TextField () {
 				TextAlignment = TextAlignment.Right
 			};
-			_textField.Leave += (e) => {
+			_textField.Leave += (s, e) => {
 				if (int.TryParse (_textField.Text.ToString (), out var v)) {
 					Value = v;
 				} else {
@@ -49,7 +49,7 @@ namespace Terminal.Gui {
 			Add (_textField);
 
 			// On resize
-			LayoutComplete += (LayoutEventArgs a) => {
+			LayoutComplete += (object s, LayoutEventArgs a) => {
 				var bounds = Bounds;
 				if (bounds.Width > 0) {
 					_textField.X = 0;

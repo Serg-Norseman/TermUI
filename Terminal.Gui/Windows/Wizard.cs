@@ -233,7 +233,7 @@ namespace Terminal.Gui {
 					helpTextView.SetNeedsDisplay ();
 				};
 
-				scrollBar.VisibleChanged += () => {
+				scrollBar.VisibleChanged += (s, e) => {
 					if (scrollBar.Visible && helpTextView.RightOffset == 0) {
 						helpTextView.RightOffset = 1;
 					} else if (!scrollBar.Visible && helpTextView.RightOffset == 1) {
@@ -241,7 +241,7 @@ namespace Terminal.Gui {
 					}
 				};
 
-				scrollBar.OtherScrollBarView.VisibleChanged += () => {
+				scrollBar.OtherScrollBarView.VisibleChanged += (s, e) => {
 					if (scrollBar.OtherScrollBarView.Visible && helpTextView.BottomOffset == 0) {
 						helpTextView.BottomOffset = 1;
 					} else if (!scrollBar.OtherScrollBarView.Visible && helpTextView.BottomOffset == 1) {
@@ -602,10 +602,10 @@ namespace Terminal.Gui {
 			SizeStep (newStep);
 
 			newStep.EnabledChanged += UpdateButtonsAndTitle;
-			newStep.TitleChanged += (args) => UpdateButtonsAndTitle ();
+			newStep.TitleChanged += (args) => UpdateButtonsAndTitle (this, EventArgs.Empty);
 			steps.AddLast (newStep);
 			this.Add (newStep);
-			UpdateButtonsAndTitle ();
+			UpdateButtonsAndTitle (this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -777,7 +777,7 @@ namespace Terminal.Gui {
 				return false;
 			}
 
-			UpdateButtonsAndTitle ();
+			UpdateButtonsAndTitle (this, EventArgs.Empty);
 
 			// Set focus to the nav buttons
 			if (backBtn.HasFocus) {
@@ -794,7 +794,7 @@ namespace Terminal.Gui {
 			return true;
 		}
 
-		private void UpdateButtonsAndTitle ()
+		private void UpdateButtonsAndTitle (object sender, EventArgs e)
 		{
 			if (CurrentStep == null) return;
 

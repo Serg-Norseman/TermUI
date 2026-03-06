@@ -983,8 +983,8 @@ namespace Terminal.Gui.TopLevelTests {
 			var isEnter = false;
 			var isLeave = false;
 			var v = new View ();
-			v.Enter += (_) => isEnter = true;
-			v.Leave += (_) => isLeave = true;
+			v.Enter += (s, _) => isEnter = true;
+			v.Leave += (s, _) => isLeave = true;
 			var top = Application.Top;
 			top.Add (v);
 
@@ -1026,7 +1026,7 @@ namespace Terminal.Gui.TopLevelTests {
 			var top = Application.Top;
 			var diag = new Dialog ();
 
-			vt.Enter += (e) => {
+			vt.Enter += (s, e) => {
 				iterations++;
 				isEnterTop = true;
 				if (iterations == 1) {
@@ -1037,7 +1037,7 @@ namespace Terminal.Gui.TopLevelTests {
 					Assert.Equal (diag, e.View);
 				}
 			};
-			vt.Leave += (e) => {
+			vt.Leave += (s, e) => {
 				iterations++;
 				steps [1] = iterations;
 				isLeaveTop = true;
@@ -1061,13 +1061,13 @@ namespace Terminal.Gui.TopLevelTests {
 			var isEnterDiag = false;
 			var isLeaveDiag = false;
 			var vd = new View ();
-			vd.Enter += (e) => {
+			vd.Enter += (s, e) => {
 				iterations++;
 				steps [2] = iterations;
 				isEnterDiag = true;
 				Assert.Null (e.View);
 			};
-			vd.Leave += (e) => {
+			vd.Leave += (s, e) => {
 				iterations++;
 				steps [3] = iterations;
 				isLeaveDiag = true;

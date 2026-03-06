@@ -69,7 +69,7 @@ namespace UICatalog.Scenarios {
 				Y = 1,
 				Width = 5
 			};
-			paddingTopEdit.TextChanging += (e) => {
+			paddingTopEdit.TextChanging += (s, e) => {
 				try {
 					smartView.Border.Padding = new Thickness (smartView.Border.Padding.Left,
 						int.Parse (e.NewText.ToString ()), smartView.Border.Padding.Right,
@@ -89,7 +89,7 @@ namespace UICatalog.Scenarios {
 				Y = 2,
 				Width = 5
 			};
-			paddingLeftEdit.TextChanging += (e) => {
+			paddingLeftEdit.TextChanging += (s, e) => {
 				try {
 					smartView.Border.Padding = new Thickness (int.Parse (e.NewText.ToString ()),
 						smartView.Border.Padding.Top, smartView.Border.Padding.Right,
@@ -108,7 +108,7 @@ namespace UICatalog.Scenarios {
 				Y = 2,
 				Width = 5
 			};
-			paddingRightEdit.TextChanging += (e) => {
+			paddingRightEdit.TextChanging += (s, e) => {
 				try {
 					smartView.Border.Padding = new Thickness (smartView.Border.Padding.Left,
 						smartView.Border.Padding.Top, int.Parse (e.NewText.ToString ()),
@@ -127,7 +127,7 @@ namespace UICatalog.Scenarios {
 				Y = 3,
 				Width = 5
 			};
-			paddingBottomEdit.TextChanging += (e) => {
+			paddingBottomEdit.TextChanging += (s, e) => {
 				try {
 					smartView.Border.Padding = new Thickness (smartView.Border.Padding.Left,
 						smartView.Border.Padding.Top, smartView.Border.Padding.Right,
@@ -163,7 +163,7 @@ namespace UICatalog.Scenarios {
 				Y = 1,
 				Width = 5
 			};
-			borderTopEdit.TextChanging += (e) => {
+			borderTopEdit.TextChanging += (s, e) => {
 				try {
 					smartView.Border.BorderThickness = new Thickness (smartView.Border.BorderThickness.Left,
 						int.Parse (e.NewText.ToString ()), smartView.Border.BorderThickness.Right,
@@ -183,7 +183,7 @@ namespace UICatalog.Scenarios {
 				Y = 2,
 				Width = 5
 			};
-			borderLeftEdit.TextChanging += (e) => {
+			borderLeftEdit.TextChanging += (s, e) => {
 				try {
 					smartView.Border.BorderThickness = new Thickness (int.Parse (e.NewText.ToString ()),
 						smartView.Border.BorderThickness.Top, smartView.Border.BorderThickness.Right,
@@ -202,7 +202,7 @@ namespace UICatalog.Scenarios {
 				Y = 2,
 				Width = 5
 			};
-			borderRightEdit.TextChanging += (e) => {
+			borderRightEdit.TextChanging += (s, e) => {
 				try {
 					smartView.Border.BorderThickness = new Thickness (smartView.Border.BorderThickness.Left,
 						smartView.Border.BorderThickness.Top, int.Parse (e.NewText.ToString ()),
@@ -221,7 +221,7 @@ namespace UICatalog.Scenarios {
 				Y = 3,
 				Width = 5
 			};
-			borderBottomEdit.TextChanging += (e) => {
+			borderBottomEdit.TextChanging += (s, e) => {
 				try {
 					smartView.Border.BorderThickness = new Thickness (smartView.Border.BorderThickness.Left,
 						smartView.Border.BorderThickness.Top, smartView.Border.BorderThickness.Right,
@@ -265,7 +265,7 @@ namespace UICatalog.Scenarios {
 				Y = 0,
 				Width = 5
 			};
-			cbDrawMarginFrame.Toggled += (e) => {
+			cbDrawMarginFrame.Toggled += (s, e) => {
 				try {
 					smartView.Border.DrawMarginFrame = cbDrawMarginFrame.Checked;
 					if (cbDrawMarginFrame.Checked != smartView.Border.DrawMarginFrame) {
@@ -275,7 +275,7 @@ namespace UICatalog.Scenarios {
 			};
 			Win.Add (cbDrawMarginFrame);
 
-			rbBorderStyle.SelectedItemChanged += (e) => {
+			rbBorderStyle.SelectedItemChanged += (s, e) => {
 				smartView.Border.BorderStyle = (BorderStyle)e.SelectedItem;
 				smartView.SetNeedsDisplay ();
 				if (cbDrawMarginFrame.Checked != smartView.Border.DrawMarginFrame) {
@@ -304,7 +304,7 @@ namespace UICatalog.Scenarios {
 				Y = 3,
 				Width = 5
 			};
-			effect3DOffsetX.TextChanging += (e) => {
+			effect3DOffsetX.TextChanging += (s, e) => {
 				try {
 					smartView.Border.Effect3DOffset = new Point (int.Parse (e.NewText.ToString ()),
 						smartView.Border.Effect3DOffset.Y);
@@ -327,7 +327,7 @@ namespace UICatalog.Scenarios {
 				Y = 3,
 				Width = 5
 			};
-			effect3DOffsetY.TextChanging += (e) => {
+			effect3DOffsetY.TextChanging += (s, e) => {
 				try {
 					smartView.Border.Effect3DOffset = new Point (smartView.Border.Effect3DOffset.X,
 						int.Parse (e.NewText.ToString ()));
@@ -340,7 +340,7 @@ namespace UICatalog.Scenarios {
 			effect3DOffsetY.Text = $"{smartView.Border.Effect3DOffset.Y}";
 			Win.Add (effect3DOffsetY);
 
-			cbEffect3D.Toggled += (e) => {
+			cbEffect3D.Toggled += (s, e) => {
 				try {
 					smartView.Border.Effect3D = effect3DOffsetX.Enabled =
 						effect3DOffsetY.Enabled = cbEffect3D.Checked;
@@ -359,7 +359,7 @@ namespace UICatalog.Scenarios {
 				Y = 6,
 				SelectedItem = (int)smartView.Border.Background
 			};
-			rbBackground.SelectedItemChanged += (e) => {
+			rbBackground.SelectedItemChanged += (s, e) => {
 				smartView.Border.Background = (Color)e.SelectedItem;
 			};
 			Win.Add (rbBackground);
@@ -376,7 +376,7 @@ namespace UICatalog.Scenarios {
 				Y = 6,
 				SelectedItem = (int)smartView.Border.BorderBrush
 			};
-			rbBorderBrush.SelectedItemChanged += (e) => {
+			rbBorderBrush.SelectedItemChanged += (s, e) => {
 				smartView.Border.BorderBrush = (Color)e.SelectedItem;
 			};
 			Win.Add (rbBorderBrush);

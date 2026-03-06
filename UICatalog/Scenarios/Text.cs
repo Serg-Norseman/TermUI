@@ -26,7 +26,7 @@ namespace UICatalog.Scenarios {
 			};
 			textField.TextChanging += TextField_TextChanging;
 
-			void TextField_TextChanging (TextChangingEventArgs e)
+			void TextField_TextChanging (object sender, TextChangingEventArgs e)
 			{
 				textField.Autocomplete.AllSuggestions = Regex.Matches (e.NewText.ToString (), "\\w+")
 					.Select (s => s.Value)
@@ -41,7 +41,7 @@ namespace UICatalog.Scenarios {
 			};
 			Win.Add (labelMirroringTextField);
 
-			textField.TextChanged += (prev) => {
+			textField.TextChanged += (s, prev) => {
 				labelMirroringTextField.Text = textField.Text;
 			};
 
@@ -75,7 +75,7 @@ namespace UICatalog.Scenarios {
 			// Use ContentChanged to detect if the user has typed something in a TextView.
 			// The TextChanged property is only fired if the TextView.Text property is
 			// explicitly set
-			textView.ContentsChanged += (a) => {
+			textView.ContentsChanged += (s, a) => {
 				labelMirroringTextView.Enabled = !labelMirroringTextView.Enabled;
 				labelMirroringTextView.Text = textView.Text;
 			};
@@ -87,14 +87,14 @@ namespace UICatalog.Scenarios {
 				Y = Pos.Bottom (textView), 
 				Checked = true
 			};
-			chxMultiline.Toggled += (b) => textView.Multiline = b;
+			chxMultiline.Toggled += (s, b) => textView.Multiline = b;
 			Win.Add (chxMultiline);
 
 			var chxWordWrap = new CheckBox ("Word Wrap") {
 				X = Pos.Right (chxMultiline) + 2,
 				Y = Pos.Top (chxMultiline)
 			};
-			chxWordWrap.Toggled += (b) => textView.WordWrap = b;
+			chxWordWrap.Toggled += (s, b) => textView.WordWrap = b;
 			Win.Add (chxWordWrap);
 
 			// TextView captures Tabs (so users can enter /t into text) by default;
@@ -108,7 +108,7 @@ namespace UICatalog.Scenarios {
 
 			Key keyTab = textView.GetKeyFromCommand (Command.Tab);
 			Key keyBackTab = textView.GetKeyFromCommand (Command.BackTab);
-			chxCaptureTabs.Toggled += (b) => { 
+			chxCaptureTabs.Toggled += (s, b) => { 
 				if (b) {
 					textView.AddKeyBinding (keyTab, Command.Tab);
 					textView.AddKeyBinding (keyBackTab, Command.BackTab);
@@ -159,7 +159,7 @@ namespace UICatalog.Scenarios {
 			};
 			Win.Add (labelMirroringDateField);
 
-			dateField.TextChanged += (prev) => {
+			dateField.TextChanged += (s, prev) => {
 				labelMirroringDateField.Text = dateField.Text;
 			};
 

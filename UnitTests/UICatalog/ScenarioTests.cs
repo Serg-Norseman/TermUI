@@ -120,7 +120,7 @@ namespace UICatalog.Tests {
 			};
 			var token = Application.MainLoop.AddTimeout (TimeSpan.FromMilliseconds (ms), abortCallback);
 
-			Application.Top.KeyPress += (View.KeyEventEventArgs args) => {
+			Application.Top.KeyPress += (object sender, View.KeyEventEventArgs args) => {
 				Assert.Equal (Key.CtrlMask | Key.Q, args.KeyEvent.Key);
 			};
 
@@ -302,16 +302,16 @@ namespace UICatalog.Tests {
 				_curView = CreateClass (_viewClasses.Values.ToArray () [_classListView.SelectedItem]);
 			};
 
-			_computedCheckBox.Toggled += (previousState) => {
+			_computedCheckBox.Toggled += (s, previousState) => {
 				if (_curView != null) {
 					_curView.LayoutStyle = previousState ? LayoutStyle.Absolute : LayoutStyle.Computed;
 					_hostPane.LayoutSubviews ();
 				}
 			};
 
-			_xRadioGroup.SelectedItemChanged += (selected) => DimPosChanged (_curView);
+			_xRadioGroup.SelectedItemChanged += (s, selected) => DimPosChanged (_curView);
 
-			_xText.TextChanged += (args) => {
+			_xText.TextChanged += (s, args) => {
 				try {
 					_xVal = int.Parse (_xText.Text.ToString ());
 					DimPosChanged (_curView);
@@ -320,7 +320,7 @@ namespace UICatalog.Tests {
 				}
 			};
 
-			_yText.TextChanged += (args) => {
+			_yText.TextChanged += (s, args) => {
 				try {
 					_yVal = int.Parse (_yText.Text.ToString ());
 					DimPosChanged (_curView);
@@ -329,11 +329,11 @@ namespace UICatalog.Tests {
 				}
 			};
 
-			_yRadioGroup.SelectedItemChanged += (selected) => DimPosChanged (_curView);
+			_yRadioGroup.SelectedItemChanged += (s, selected) => DimPosChanged (_curView);
 
-			_wRadioGroup.SelectedItemChanged += (selected) => DimPosChanged (_curView);
+			_wRadioGroup.SelectedItemChanged += (s, selected) => DimPosChanged (_curView);
 
-			_wText.TextChanged += (args) => {
+			_wText.TextChanged += (s, args) => {
 				try {
 					_wVal = int.Parse (_wText.Text.ToString ());
 					DimPosChanged (_curView);
@@ -342,7 +342,7 @@ namespace UICatalog.Tests {
 				}
 			};
 
-			_hText.TextChanged += (args) => {
+			_hText.TextChanged += (s, args) => {
 				try {
 					_hVal = int.Parse (_hText.Text.ToString ());
 					DimPosChanged (_curView);
@@ -351,7 +351,7 @@ namespace UICatalog.Tests {
 				}
 			};
 
-			_hRadioGroup.SelectedItemChanged += (selected) => DimPosChanged (_curView);
+			_hRadioGroup.SelectedItemChanged += (s, selected) => DimPosChanged (_curView);
 
 			Top.Add (_leftPane, _settingsPane, _hostPane);
 
@@ -562,7 +562,7 @@ namespace UICatalog.Tests {
 				return view;
 			}
 
-			void LayoutCompleteHandler (View.LayoutEventArgs args)
+			void LayoutCompleteHandler (object sender, View.LayoutEventArgs args)
 			{
 				UpdateTitle (_curView);
 			}

@@ -104,7 +104,7 @@ namespace UICatalog.Scenarios {
 
 			Win.Add(selectedCellLabel);
 
-			tableView.SelectedCellChanged += (e) => { selectedCellLabel.Text = $"{tableView.SelectedRow},{tableView.SelectedColumn}"; };
+			tableView.SelectedCellChanged += (s, e) => { selectedCellLabel.Text = $"{tableView.SelectedRow},{tableView.SelectedColumn}"; };
 			tableView.CellActivated += EditCurrentCell;
 			tableView.KeyPress += TableViewKeyPress;
 
@@ -354,7 +354,7 @@ namespace UICatalog.Scenarios {
 		
 		}
 
-		private void TableViewKeyPress (View.KeyEventEventArgs e)
+		private void TableViewKeyPress (object sender, View.KeyEventEventArgs e)
 		{
 			if(e.KeyEvent.Key == Key.DeleteChar){
 
@@ -762,7 +762,7 @@ namespace UICatalog.Scenarios {
 			tableView.Table = BuildSimpleDataTable(big ? 30 : 5, big ? 1000 : 5);
 		}
 
-		private void EditCurrentCell (TableView.CellActivatedEventArgs e)
+		private void EditCurrentCell (object sender, TableView.CellActivatedEventArgs e)
 		{
 			if(e.Table == null)
 				return;

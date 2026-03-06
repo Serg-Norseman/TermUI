@@ -582,7 +582,7 @@ namespace Terminal.Gui {
 
 		protected virtual void OnScroll ()
 		{
-			Scroll?.Invoke (this, new EventArgs());
+			Scroll?.Invoke (this, EventArgs.Empty);
 		}
 
 		public event EventHandler Scroll;

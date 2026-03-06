@@ -46,6 +46,9 @@ namespace UICatalog.Scenarios {
 			};
 			comboBox.SetSource (items);
 
+			comboBox.HideDropdownListOnClick = true;
+			comboBox.SearchMode = false;
+
 			listview.SelectedItemChanged += (sender, e) => {
 				lbListView.Text = items [e.Item];
 				comboBox.SelectedItem = e.Item;
@@ -86,7 +89,7 @@ namespace UICatalog.Scenarios {
 			Win.Add (btnThree);
 
 			var chkReadOnly = new CheckBox ("ReadOnly", false) { X = Pos.Right (frameView) + 3, Y = Pos.Bottom (btnThree) + 3 };
-			chkReadOnly.Toggled += (previousState) => {
+			chkReadOnly.Toggled += (s, previousState) => {
 				if (comboBox != null) {
 					comboBox.ReadOnly = chkReadOnly.Checked;
 				}

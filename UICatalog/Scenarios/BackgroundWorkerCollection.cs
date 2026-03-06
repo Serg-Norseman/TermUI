@@ -69,7 +69,7 @@ namespace UICatalog.Scenarios {
 				Dispose ();
 			}
 
-			private void Menu_MenuOpening (MenuOpeningEventArgs menu)
+			private void Menu_MenuOpening (object sender, MenuOpeningEventArgs menu)
 			{
 				if (!canOpenWorkerApp) {
 					canOpenWorkerApp = true;
@@ -338,13 +338,13 @@ namespace UICatalog.Scenarios {
 				close.Clicked += OnReportClosed;
 				Add (close);
 
-				KeyPress += (e) => {
+				KeyPress += (s, e) => {
 					if (e.KeyEvent.Key == Key.Esc) {
 						OnReportClosed (null, null);
 					}
 				};
 
-				LayoutStarted += (_) => {
+				LayoutStarted += (s, _) => {
 					var btnsWidth = start.Bounds.Width + close.Bounds.Width + 2 - 1;
 					var shiftLeft = Math.Max ((Bounds.Width - btnsWidth) / 2 - 2, 0);
 

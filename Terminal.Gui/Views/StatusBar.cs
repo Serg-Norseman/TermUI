@@ -96,7 +96,7 @@ namespace Terminal.Gui {
 
 		public void PerformAction ()
 		{
-			Action?.Invoke (this, new EventArgs ());
+			Action?.Invoke (this, EventArgs.Empty);
 		}
 	};
 

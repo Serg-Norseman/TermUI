@@ -180,7 +180,7 @@ namespace Terminal.Gui.MenuTests {
 
 			var cm = new ContextMenu ();
 
-			lbl.KeyPress += (e) => {
+			lbl.KeyPress += (s, e) => {
 				if (e.KeyEvent.Key == cm.Key) {
 					lbl.Text = "Replaced";
 					e.Handled = true;
@@ -932,7 +932,7 @@ namespace Terminal.Gui.MenuTests {
 						Assert.True (isMenuAllClosed);
 					};
 
-					cm.MenuBar.MenuAllClosed += () => isMenuAllClosed = true;
+					cm.MenuBar.MenuAllClosed += (s, e) => isMenuAllClosed = true;
 
 				} else if (iterations == 1) {
 					mi.PerformAction ();
@@ -943,7 +943,7 @@ namespace Terminal.Gui.MenuTests {
 					cm.Show ();
 					Assert.True (ContextMenu.IsShow);
 
-					cm.MenuBar.MenuAllClosed += () => isMenuAllClosed = true;
+					cm.MenuBar.MenuAllClosed += (s, e) => isMenuAllClosed = true;
 				} else if (iterations == 4) {
 					var exception = Record.Exception (() => Application.RequestStop ());
 					Assert.Null (exception);

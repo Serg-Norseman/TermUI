@@ -93,7 +93,7 @@ namespace UICatalog.Scenarios {
 			}
 		}
 
-		private void ParentWindowClass_KeyPress (KeyEventEventArgs obj)
+		private void ParentWindowClass_KeyPress (object sender, KeyEventEventArgs obj)
 		{
 			switch (obj.KeyEvent.Key) {
 			case Key.F8:

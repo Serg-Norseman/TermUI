@@ -649,7 +649,7 @@ namespace Terminal.Gui {
 				Y = 1 + msgLines,
 				Width = Dim.Fill () - 1,
 			};
-			dirEntry.TextChanged += (e) => {
+			dirEntry.TextChanged += (s, e) => {
 				DirectoryPath = dirEntry.Text;
 				nameEntry.Text = ustring.Empty;
 			};
@@ -731,7 +731,7 @@ namespace Terminal.Gui {
 			};
 			AddButton (this.prompt);
 
-			nameEntry.TextChanged += (e) => {
+			nameEntry.TextChanged += (s, e) => {
 				if (nameEntry.Text.IsEmpty) {
 					this.prompt.Enabled = false;
 				} else {
@@ -745,7 +745,7 @@ namespace Terminal.Gui {
 			// On success, we will set this to false.
 			canceled = true;
 
-			KeyPress += (e) => {
+			KeyPress += (s, e) => {
 				if (e.KeyEvent.Key == Key.Esc) {
 					Cancel ();
 					e.Handled = true;

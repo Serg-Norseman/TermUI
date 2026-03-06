@@ -39,7 +39,7 @@ namespace UICatalog.Scenarios {
 			Win.Add (jumpEdit);
 			var unicodeLabel = new Label ("") { X = Pos.Right (jumpEdit) + 1, Y = Pos.Y (_charMap) };
 			Win.Add (unicodeLabel);
-			jumpEdit.TextChanged += (s) => {
+			jumpEdit.TextChanged += (s, e) => {
 				uint result = 0;
 				if (jumpEdit.Text.Length == 0) return;
 				try {
@@ -157,7 +157,7 @@ namespace UICatalog.Scenarios {
 			ContentSize = new Size (CharMap.RowWidth, (int)(MaxCodePointVal / 16 + 1));
 			ShowVerticalScrollIndicator = true;
 			ShowHorizontalScrollIndicator = false;
-			LayoutComplete += (args) => {
+			LayoutComplete += (s, args) => {
 				if (Bounds.Width < RowWidth) {
 					ShowHorizontalScrollIndicator = true;
 				} else {

@@ -236,7 +236,7 @@ namespace UICatalog.Scenarios {
 				X = Pos.Left (scrollView) + (scrollView.Bounds.Width / 2) - (k.Length / 2),
 				Y = Pos.Bottom (scrollView) + 4,
 			};
-			hCheckBox.Toggled += (_) => {
+			hCheckBox.Toggled += (s, _) => {
 				if (!ahCheckBox.Checked) {
 					scrollView.ShowHorizontalScrollIndicator = hCheckBox.Checked;
 				} else {
@@ -244,7 +244,7 @@ namespace UICatalog.Scenarios {
 					MessageBox.Query ("Message", "Disable Auto Hide Scrollbars first.", "Ok");
 				}
 			};
-			vCheckBox.Toggled += (_) => {
+			vCheckBox.Toggled += (s, _) => {
 				if (!ahCheckBox.Checked) {
 					scrollView.ShowVerticalScrollIndicator = vCheckBox.Checked;
 				} else {
@@ -252,14 +252,14 @@ namespace UICatalog.Scenarios {
 					MessageBox.Query ("Message", "Disable Auto Hide Scrollbars first.", "Ok");
 				}
 			};
-			ahCheckBox.Toggled += (_) => {
+			ahCheckBox.Toggled += (s, _) => {
 				scrollView.AutoHideScrollBars = ahCheckBox.Checked;
 				hCheckBox.Checked = true;
 				vCheckBox.Checked = true;
 			};
 			Win.Add (ahCheckBox);
 
-			keepCheckBox.Toggled += (_) => scrollView.KeepContentAlwaysInViewport = keepCheckBox.Checked;
+			keepCheckBox.Toggled += (s, _) => scrollView.KeepContentAlwaysInViewport = keepCheckBox.Checked;
 			Win.Add (keepCheckBox);
 
 			var scrollView2 = new ScrollView (new Rect (55, 2, 20, 8)) {

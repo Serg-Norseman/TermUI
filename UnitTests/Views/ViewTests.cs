@@ -1230,7 +1230,7 @@ namespace Terminal.Gui.ViewTests {
 			var top = Application.Top;
 
 			var text = new TextField ("");
-			text.KeyPress += (e) => {
+			text.KeyPress += (s, e) => {
 				e.Handled = true;
 				Assert.True (e.Handled);
 				Assert.Equal (Key.N, e.KeyEvent.Key);
@@ -1733,10 +1733,10 @@ Y
 			Assert.Equal (80, view.Bounds.Width);
 			Assert.Equal (25, view.Bounds.Height);
 			bool layoutStarted = false;
-			view.LayoutStarted += (_) => layoutStarted = true;
+			view.LayoutStarted += (s, _) => layoutStarted = true;
 			view.OnLayoutStarted (null);
 			Assert.True (layoutStarted);
-			view.LayoutComplete += (_) => layoutStarted = false;
+			view.LayoutComplete += (s, _) => layoutStarted = false;
 			view.OnLayoutComplete (null);
 			Assert.False (layoutStarted);
 			view.X = Pos.Center () - 41;
@@ -2110,7 +2110,7 @@ Y
 			var tf = new TextField ();
 			tf.KeyPress += Tf_KeyPress;
 
-			void Tf_KeyPress (View.KeyEventEventArgs obj)
+			void Tf_KeyPress (object sender, View.KeyEventEventArgs obj)
 			{
 				if (obj.KeyEvent.Key == (Key.Q | Key.CtrlMask)) {
 					obj.Handled = tfQuiting = true;
@@ -2122,7 +2122,7 @@ Y
 			var top = Application.Top;
 			top.KeyPress += Top_KeyPress;
 
-			void Top_KeyPress (View.KeyEventEventArgs obj)
+			void Top_KeyPress (object sender, View.KeyEventEventArgs obj)
 			{
 				if (obj.KeyEvent.Key == (Key.Q | Key.CtrlMask)) {
 					obj.Handled = topQuiting = true;
@@ -2170,7 +2170,7 @@ Y
 			var tf = new TextField ();
 			tf.KeyPress += Tf_KeyPress;
 
-			void Tf_KeyPress (View.KeyEventEventArgs obj)
+			void Tf_KeyPress (object sender, View.KeyEventEventArgs obj)
 			{
 				if (obj.KeyEvent.Key == (Key.Q | Key.CtrlMask)) {
 					obj.Handled = tfQuiting = true;
@@ -4063,21 +4063,21 @@ This is a tes
 			var keyUp = false;
 
 			var view = new DerivedView ();
-			view.KeyDown += (e) => {
+			view.KeyDown += (s, e) => {
 				Assert.Equal (Key.a, e.KeyEvent.Key);
 				Assert.False (keyDown);
 				Assert.False (view.IsKeyDown);
 				e.Handled = true;
 				keyDown = true;
 			};
-			view.KeyPress += (e) => {
+			view.KeyPress += (s, e) => {
 				Assert.Equal (Key.a, e.KeyEvent.Key);
 				Assert.False (keyPress);
 				Assert.False (view.IsKeyPress);
 				e.Handled = true;
 				keyPress = true;
 			};
-			view.KeyUp += (e) => {
+			view.KeyUp += (s, e) => {
 				Assert.Equal (Key.a, e.KeyEvent.Key);
 				Assert.False (keyUp);
 				Assert.False (view.IsKeyUp);
@@ -4172,7 +4172,7 @@ This is a tes
 			var keyUp = false;
 
 			var view = new DerivedView ();
-			view.KeyDown += (e) => {
+			view.KeyDown += (s, e) => {
 				Assert.Equal (-1, e.KeyEvent.KeyValue);
 				Assert.Equal (shift, e.KeyEvent.IsShift);
 				Assert.Equal (alt, e.KeyEvent.IsAlt);
@@ -4181,10 +4181,10 @@ This is a tes
 				Assert.False (view.IsKeyDown);
 				keyDown = true;
 			};
-			view.KeyPress += (e) => {
+			view.KeyPress += (s, e) => {
 				keyPress = true;
 			};
-			view.KeyUp += (e) => {
+			view.KeyUp += (s, e) => {
 				Assert.Equal (-1, e.KeyEvent.KeyValue);
 				Assert.Equal (shift, e.KeyEvent.IsShift);
 				Assert.Equal (alt, e.KeyEvent.IsAlt);
@@ -4223,15 +4223,15 @@ This is a tes
 			var view1 = new View { CanFocus = true };
 			var subView1 = new View { CanFocus = true };
 			var subView1subView1 = new View { CanFocus = true };
-			view1.Leave += (e) => {
+			view1.Leave += (s, e) => {
 				view1Leave = true;
 			};
-			subView1.Leave += (e) => {
+			subView1.Leave += (s, e) => {
 				subView1.Remove (subView1subView1);
 				subView1Leave = true;
 			};
 			view1.Add (subView1);
-			subView1subView1.Leave += (e) => {
+			subView1subView1.Leave += (s, e) => {
 				// This is never invoked
 				subView1subView1Leave = true;
 			};

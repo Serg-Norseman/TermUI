@@ -63,7 +63,7 @@ namespace Terminal.Gui {
 				}
 			}
 
-			LayoutStarted += (args) => {
+			LayoutStarted += (s, args) => {
 				LayoutStartedHandler ();
 			};
 		}
