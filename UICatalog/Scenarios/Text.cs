@@ -56,7 +56,7 @@ namespace UICatalog.Scenarios {
 			textView.DrawContent += TextView_DrawContent;
 
 			// This shows how to enable autocomplete in TextView.
-			void TextView_DrawContent (Rect e)
+			void TextView_DrawContent (object sender, Rect e)
 			{
 				textView.Autocomplete.AllSuggestions = Regex.Matches (textView.Text.ToString (), "\\w+")
 					.Select (s => s.Value)
@@ -136,7 +136,7 @@ namespace UICatalog.Scenarios {
 			};
 			var array = ((MemoryStream)hexEditor.Source).ToArray ();
 			labelMirroringHexEditor.Text = Encoding.UTF8.GetString (array, 0, array.Length);
-			hexEditor.Edited += (kv) => {
+			hexEditor.Edited += (s, kv) => {
 				hexEditor.ApplyEdits ();
 				var array = ((MemoryStream)hexEditor.Source).ToArray (); 
 				labelMirroringHexEditor.Text = Encoding.UTF8.GetString (array, 0, array.Length);
@@ -218,7 +218,7 @@ namespace UICatalog.Scenarios {
 		TimeField _timeField;
 		Label _labelMirroringTimeField;
 
-		private void TimeChanged (DateTimeEventArgs<TimeSpan> e)
+		private void TimeChanged (object sender, DateTimeEventArgs<TimeSpan> e)
 		{
 			_labelMirroringTimeField.Text = _timeField.Text;
 		}

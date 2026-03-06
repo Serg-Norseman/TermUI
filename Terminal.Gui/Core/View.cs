@@ -121,12 +121,12 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Event fired when a subview is being added to this view.
 		/// </summary>
-		public event Action<View> Added;
+		public event EventHandler<View> Added;
 
 		/// <summary>
 		/// Event fired when a subview is being removed from this view.
 		/// </summary>
-		public event Action<View> Removed;
+		public event EventHandler<View> Removed;
 
 		/// <summary>
 		/// Event fired when the view gets focus.
@@ -141,22 +141,22 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Event fired when the view receives the mouse event for the first time.
 		/// </summary>
-		public event Action<MouseEventArgs> MouseEnter;
+		public event EventHandler<MouseEventArgs> MouseEnter;
 
 		/// <summary>
 		/// Event fired when the view receives a mouse event for the last time.
 		/// </summary>
-		public event Action<MouseEventArgs> MouseLeave;
+		public event EventHandler<MouseEventArgs> MouseLeave;
 
 		/// <summary>
 		/// Event fired when a mouse event is generated.
 		/// </summary>
-		public event Action<MouseEventArgs> MouseClick;
+		public event EventHandler<MouseEventArgs> MouseClick;
 
 		/// <summary>
 		/// Event fired when the <see cref="CanFocus"/> value is being changed.
 		/// </summary>
-		public event Action CanFocusChanged;
+		public event EventHandler CanFocusChanged;
 
 		/// <summary>
 		/// Event fired when the <see cref="Enabled"/> value is being changed.
@@ -171,7 +171,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Event invoked when the <see cref="HotKey"/> is changed.
 		/// </summary>
-		public event Action<Key> HotKeyChanged;
+		public event EventHandler<Key> HotKeyChanged;
 
 		Key hotKey = Key.Null;
 
@@ -832,9 +832,9 @@ namespace Terminal.Gui {
 			SetNeedsDisplay ();
 		}
 
-		void TextFormatter_HotKeyChanged (Key obj)
+		void TextFormatter_HotKeyChanged (object sender, Key obj)
 		{
-			HotKeyChanged?.Invoke (obj);
+			HotKeyChanged?.Invoke (this, obj);
 		}
 
 		/// <summary>
@@ -1373,7 +1373,7 @@ namespace Terminal.Gui {
 			view.width = view.width ?? view.frame.Width;
 			view.height = view.height ?? view.frame.Height;
 
-			view.Added?.Invoke (this);
+			view.Added?.Invoke (this, this);
 		}
 
 		/// <summary>
@@ -1383,7 +1383,7 @@ namespace Terminal.Gui {
 		public virtual void OnRemoved (View view)
 		{
 			view.IsAdded = false;
-			view.Removed?.Invoke (this);
+			view.Removed?.Invoke (this, this);
 		}
 
 		/// <inheritdoc/>
@@ -1609,7 +1609,7 @@ namespace Terminal.Gui {
 		/// Rect provides the view-relative rectangle describing the currently visible viewport into the <see cref="View"/>.
 		/// </para>
 		/// </remarks>
-		public event Action<Rect> DrawContent;
+		public event EventHandler<Rect> DrawContent;
 
 		/// <summary>
 		/// Enables overrides to draw infinitely scrolled content and/or a background behind added controls. 
@@ -1620,7 +1620,7 @@ namespace Terminal.Gui {
 		/// </remarks>
 		public virtual void OnDrawContent (Rect viewport)
 		{
-			DrawContent?.Invoke (viewport);
+			DrawContent?.Invoke (this, viewport);
 		}
 
 		/// <summary>
@@ -1634,7 +1634,7 @@ namespace Terminal.Gui {
 		/// Rect provides the view-relative rectangle describing the currently visible viewport into the <see cref="View"/>.
 		/// </para>
 		/// </remarks>
-		public event Action<Rect> DrawContentComplete;
+		public event EventHandler<Rect> DrawContentComplete;
 
 		/// <summary>
 		/// Enables overrides after completed drawing infinitely scrolled content and/or a background behind removed controls.
@@ -1645,7 +1645,7 @@ namespace Terminal.Gui {
 		/// </remarks>
 		public virtual void OnDrawContentComplete (Rect viewport)
 		{
-			DrawContentComplete?.Invoke (viewport);
+			DrawContentComplete?.Invoke (this, viewport);
 		}
 
 		/// <summary>
@@ -2871,7 +2871,7 @@ namespace Terminal.Gui {
 			}
 
 			var args = new MouseEventArgs (mouseEvent);
-			MouseEnter?.Invoke (args);
+			MouseEnter?.Invoke (this, args);
 
 			return args.Handled || base.OnMouseEnter (mouseEvent);
 		}
@@ -2888,7 +2888,7 @@ namespace Terminal.Gui {
 			}
 
 			var args = new MouseEventArgs (mouseEvent);
-			MouseLeave?.Invoke (args);
+			MouseLeave?.Invoke (this, args);
 
 			return args.Handled || base.OnMouseLeave (mouseEvent);
 		}
@@ -2939,12 +2939,12 @@ namespace Terminal.Gui {
 				return true;
 			}
 
-			MouseClick?.Invoke (args);
+			MouseClick?.Invoke (this, args);
 			return args.Handled;
 		}
 
 		/// <inheritdoc/>
-		public override void OnCanFocusChanged () => CanFocusChanged?.Invoke ();
+		public override void OnCanFocusChanged () => CanFocusChanged?.Invoke (this, EventArgs.Empty);
 
 		/// <inheritdoc/>
 		public override void OnEnabledChanged () => EnabledChanged?.Invoke (this, EventArgs.Empty);

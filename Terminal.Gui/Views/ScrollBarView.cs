@@ -150,7 +150,7 @@ namespace Terminal.Gui {
 		//	}
 		//}
 
-		void ContentBottomRightCorner_MouseClick (MouseEventArgs me)
+		void ContentBottomRightCorner_MouseClick (object sender, MouseEventArgs me)
 		{
 			if (me.MouseEvent.Flags == MouseFlags.WheeledDown || me.MouseEvent.Flags == MouseFlags.WheeledUp
 				|| me.MouseEvent.Flags == MouseFlags.WheeledRight || me.MouseEvent.Flags == MouseFlags.WheeledLeft) {
@@ -162,7 +162,7 @@ namespace Terminal.Gui {
 			}
 		}
 
-		private void ContentBottomRightCorner_DrawContent (Rect obj)
+		private void ContentBottomRightCorner_DrawContent (object sender, Rect obj)
 		{
 			Driver.SetAttribute (Host.HasFocus ? GetFocusColor () : GetNormalColor ());
 			Host.SuperView.AddRune (contentBottomRightCorner.Frame.X, contentBottomRightCorner.Frame.Y, ' ');
@@ -206,7 +206,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// This event is raised when the position on the scrollbar has changed.
 		/// </summary>
-		public event Action ChangedPosition;
+		public event EventHandler ChangedPosition;
 
 		/// <summary>
 		/// The position, relative to <see cref="Size"/>, to set the scrollbar at.
@@ -319,7 +319,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		public virtual void OnChangedPosition ()
 		{
-			ChangedPosition?.Invoke ();
+			ChangedPosition?.Invoke (this, EventArgs.Empty);
 		}
 
 		/// <summary>

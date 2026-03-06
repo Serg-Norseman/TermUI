@@ -16,7 +16,7 @@ namespace Terminal.Gui {
 	class TextModel {
 		List<List<Rune>> lines = new List<List<Rune>> ();
 
-		public event Action LinesLoaded;
+		public event EventHandler LinesLoaded;
 
 		public bool LoadFile (string file)
 		{
@@ -120,7 +120,7 @@ namespace Terminal.Gui {
 
 		void OnLinesLoaded ()
 		{
-			LinesLoaded?.Invoke ();
+			LinesLoaded?.Invoke (this, EventArgs.Empty);
 		}
 
 		public override string ToString ()
@@ -559,7 +559,7 @@ namespace Terminal.Gui {
 
 		public bool HasHistoryChanges => idxHistoryText > -1;
 
-		public event Action<HistoryTextItem> ChangeText;
+		public event EventHandler<HistoryTextItem> ChangeText;
 
 		public void Add (List<List<Rune>> lines, Point curPos, LineStatus lineStatus = LineStatus.Original)
 		{
@@ -711,7 +711,7 @@ namespace Terminal.Gui {
 
 		void OnChangeText (HistoryTextItem lines)
 		{
-			ChangeText?.Invoke (lines);
+			ChangeText?.Invoke (this, lines);
 		}
 
 		public void Clear (ustring text)
@@ -1170,7 +1170,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Invoked with the unwrapped <see cref="CursorPosition"/>.
 		/// </summary>
-		public event Action<Point> UnwrappedCursorPosition;
+		public event EventHandler<Point> UnwrappedCursorPosition;
 
 		/// <summary>
 		/// Provides autocomplete context menu based on suggestions at the current cursor
@@ -1378,12 +1378,12 @@ namespace Terminal.Gui {
 				});
 		}
 
-		private void ContextMenu_KeyChanged (Key obj)
+		private void ContextMenu_KeyChanged (object sender, Key obj)
 		{
 			ReplaceKeyBinding (obj, ContextMenu.Key);
 		}
 
-		private void Model_LinesLoaded ()
+		private void Model_LinesLoaded (object sender, EventArgs e)
 		{
 			// This call is not needed. Model_LinesLoaded gets invoked when
 			// model.LoadString (value) is called. LoadString is called from one place
@@ -1393,7 +1393,7 @@ namespace Terminal.Gui {
 			//historyText.Clear (Text);
 		}
 
-		private void HistoryText_ChangeText (HistoryText.HistoryTextItem obj)
+		private void HistoryText_ChangeText (object sender, HistoryText.HistoryTextItem obj)
 		{
 			SetWrapModel ();
 
@@ -2362,7 +2362,7 @@ namespace Terminal.Gui {
 				row = wrapManager.GetModelLineFromWrappedLines (currentRow);
 				col = wrapManager.GetModelColFromWrappedLines (currentRow, currentColumn);
 			}
-			UnwrappedCursorPosition?.Invoke (new Point ((int)col, (int)row));
+			UnwrappedCursorPosition?.Invoke (this, new Point ((int)col, (int)row));
 		}
 
 		ustring GetSelectedRegion ()

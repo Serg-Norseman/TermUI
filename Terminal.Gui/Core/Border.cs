@@ -125,7 +125,7 @@ namespace Terminal.Gui {
 				}
 			}
 
-			void Border_BorderChanged (Border border)
+			void Border_BorderChanged (object sender, Border border)
 			{
 				Rect frame;
 				if (Border.Child != null && (Border.Child.Width is Dim || Border.Child.Height is Dim)) {
@@ -316,7 +316,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Invoked when any property of Border changes (except <see cref="Child"/>).
 		/// </summary>
-		public event Action<Border> BorderChanged;
+		public event EventHandler<Border> BorderChanged;
 
 		private BorderStyle borderStyle;
 		private bool drawMarginFrame;
@@ -451,7 +451,7 @@ namespace Terminal.Gui {
 			}
 		}
 
-		private void Parent_Removed (View obj)
+		private void Parent_Removed (object sender, View obj)
 		{
 			if (borderBrush != null) {
 				BorderBrush = default;
@@ -1062,7 +1062,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		public virtual void OnBorderChanged ()
 		{
-			BorderChanged?.Invoke (this);
+			BorderChanged?.Invoke (this, this);
 		}
 	}
 }

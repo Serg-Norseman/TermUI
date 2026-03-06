@@ -132,7 +132,7 @@ namespace Terminal.Gui {
 			public virtual bool OnTitleChanging (ustring oldTitle, ustring newTitle)
 			{
 				var args = new TitleEventArgs (oldTitle, newTitle);
-				TitleChanging?.Invoke (args);
+				TitleChanging?.Invoke (this, args);
 				return args.Cancel;
 			}
 
@@ -140,7 +140,7 @@ namespace Terminal.Gui {
 			/// Event fired when the <see cref="Title"/> is changing. Set <see cref="TitleEventArgs.Cancel"/> to 
 			/// <c>true</c> to cancel the Title change.
 			/// </summary>
-			public event Action<TitleEventArgs> TitleChanging;
+			public event EventHandler<TitleEventArgs> TitleChanging;
 
 			/// <summary>
 			/// Called when the <see cref="Title"/> has been changed. Invokes the <see cref="TitleChanged"/> event.
@@ -150,13 +150,13 @@ namespace Terminal.Gui {
 			public virtual void OnTitleChanged (ustring oldTitle, ustring newTitle)
 			{
 				var args = new TitleEventArgs (oldTitle, newTitle);
-				TitleChanged?.Invoke (args);
+				TitleChanged?.Invoke (this, args);
 			}
 
 			/// <summary>
 			/// Event fired after the <see cref="Title"/> has been changed. 
 			/// </summary>
-			public event Action<TitleEventArgs> TitleChanged;
+			public event EventHandler<TitleEventArgs> TitleChanged;
 
 			/// <summary>
 			/// WizardContentView is an internal implementation detail of Window. It is used to host Views added with <see cref="Add(View)"/>. 
@@ -217,7 +217,7 @@ namespace Terminal.Gui {
 
 				var scrollBar = new ScrollBarView (helpTextView, true);
 
-				scrollBar.ChangedPosition += () => {
+				scrollBar.ChangedPosition += (s, e) => {
 					helpTextView.TopRow = scrollBar.Position;
 					if (helpTextView.TopRow != scrollBar.Position) {
 						scrollBar.Position = helpTextView.TopRow;
@@ -225,7 +225,7 @@ namespace Terminal.Gui {
 					helpTextView.SetNeedsDisplay ();
 				};
 
-				scrollBar.OtherScrollBarView.ChangedPosition += () => {
+				scrollBar.OtherScrollBarView.ChangedPosition += (s, e) => {
 					helpTextView.LeftColumn = scrollBar.OtherScrollBarView.Position;
 					if (helpTextView.LeftColumn != scrollBar.OtherScrollBarView.Position) {
 						scrollBar.OtherScrollBarView.Position = helpTextView.LeftColumn;
@@ -249,7 +249,7 @@ namespace Terminal.Gui {
 					}
 				};
 
-				helpTextView.DrawContent += (e) => {
+				helpTextView.DrawContent += (s, e) => {
 					scrollBar.Size = helpTextView.Lines;
 					scrollBar.Position = helpTextView.TopRow;
 					if (scrollBar.OtherScrollBarView != null) {
@@ -407,7 +407,7 @@ namespace Terminal.Gui {
 		{
 			if (!finishedPressed) {
 				var args = new WizardButtonEventArgs ();
-				Cancelled?.Invoke (args);
+				Cancelled?.Invoke (this, args);
 			}
 		}
 
@@ -415,7 +415,7 @@ namespace Terminal.Gui {
 		{
 			if (CurrentStep == GetLastStep ()) {
 				var args = new WizardButtonEventArgs ();
-				Finished?.Invoke (args);
+				Finished?.Invoke (this, args);
 				if (!args.Cancel) {
 					finishedPressed = true;
 					if (IsCurrentTop) {
@@ -427,7 +427,7 @@ namespace Terminal.Gui {
 				}
 			} else {
 				var args = new WizardButtonEventArgs ();
-				MovingNext?.Invoke (args);
+				MovingNext?.Invoke (this, args);
 				if (!args.Cancel) {
 					GoNext ();
 				}
@@ -448,7 +448,7 @@ namespace Terminal.Gui {
 				switch (kb.Key) {
 				case Key.Esc:
 					var args = new WizardButtonEventArgs ();
-					Cancelled?.Invoke (args);
+					Cancelled?.Invoke (this, args);
 					return false;
 				}
 			}
@@ -500,7 +500,7 @@ namespace Terminal.Gui {
 		private void BackBtn_Clicked (object sender, EventArgs e)
 		{
 			var args = new WizardButtonEventArgs ();
-			MovingBack?.Invoke (args);
+			MovingBack?.Invoke (this, args);
 			if (!args.Cancel) {
 				GoBack ();
 			}
@@ -602,7 +602,7 @@ namespace Terminal.Gui {
 			SizeStep (newStep);
 
 			newStep.EnabledChanged += UpdateButtonsAndTitle;
-			newStep.TitleChanged += (args) => UpdateButtonsAndTitle (this, EventArgs.Empty);
+			newStep.TitleChanged += (s, args) => UpdateButtonsAndTitle (this, EventArgs.Empty);
 			steps.AddLast (newStep);
 			this.Add (newStep);
 			UpdateButtonsAndTitle (this, EventArgs.Empty);
@@ -648,7 +648,7 @@ namespace Terminal.Gui {
 		/// Raised when the Back button in the <see cref="Wizard"/> is clicked. The Back button is always
 		/// the first button in the array of Buttons passed to the <see cref="Wizard"/> constructor, if any.
 		/// </summary>
-		public event Action<WizardButtonEventArgs> MovingBack;
+		public event EventHandler<WizardButtonEventArgs> MovingBack;
 
 		/// <summary>
 		/// Raised when the Next/Finish button in the <see cref="Wizard"/> is clicked (or the user presses Enter). 
@@ -656,7 +656,7 @@ namespace Terminal.Gui {
 		/// if any. This event is only raised if the <see cref="CurrentStep"/> is the last Step in the Wizard flow 
 		/// (otherwise the <see cref="Finished"/> event is raised).
 		/// </summary>
-		public event Action<WizardButtonEventArgs> MovingNext;
+		public event EventHandler<WizardButtonEventArgs> MovingNext;
 
 		/// <summary>
 		/// Raised when the Next/Finish button in the <see cref="Wizard"/> is clicked. The Next/Finish button is always
@@ -664,7 +664,7 @@ namespace Terminal.Gui {
 		/// raised if the <see cref="CurrentStep"/> is the last Step in the Wizard flow 
 		/// (otherwise the <see cref="Finished"/> event is raised).
 		/// </summary>
-		public event Action<WizardButtonEventArgs> Finished;
+		public event EventHandler<WizardButtonEventArgs> Finished;
 
 		/// <summary>
 		/// Raised when the user has cancelled the <see cref="Wizard"/> by pressin the Esc key. 
@@ -672,7 +672,7 @@ namespace Terminal.Gui {
 		/// closing, cancel the event by setting <see cref="WizardButtonEventArgs.Cancel"/> to 
 		/// <c>true</c> before returning from the event handler.
 		/// </summary>
-		public event Action<WizardButtonEventArgs> Cancelled;
+		public event EventHandler<WizardButtonEventArgs> Cancelled;
 
 		/// <summary>
 		/// <see cref="EventArgs"/> for <see cref="WizardStep"/> events.
@@ -710,12 +710,12 @@ namespace Terminal.Gui {
 		/// This event is raised when the current <see cref="CurrentStep"/>) is about to change. Use <see cref="StepChangeEventArgs.Cancel"/> 
 		/// to abort the transition.
 		/// </summary>
-		public event Action<StepChangeEventArgs> StepChanging;
+		public event EventHandler<StepChangeEventArgs> StepChanging;
 
 		/// <summary>
 		/// This event is raised after the <see cref="Wizard"/> has changed the <see cref="CurrentStep"/>. 
 		/// </summary>
-		public event Action<StepChangeEventArgs> StepChanged;
+		public event EventHandler<StepChangeEventArgs> StepChanged;
 
 		/// <summary>
 		/// Gets or sets the currently active <see cref="WizardStep"/>.
@@ -736,7 +736,7 @@ namespace Terminal.Gui {
 		public virtual bool OnStepChanging (WizardStep oldStep, WizardStep newStep)
 		{
 			var args = new StepChangeEventArgs (oldStep, newStep);
-			StepChanging?.Invoke (args);
+			StepChanging?.Invoke (this, args);
 			return args.Cancel;
 		}
 
@@ -749,7 +749,7 @@ namespace Terminal.Gui {
 		public virtual bool OnStepChanged (WizardStep oldStep, WizardStep newStep)
 		{
 			var args = new StepChangeEventArgs (oldStep, newStep);
-			StepChanged?.Invoke (args);
+			StepChanged?.Invoke (this, args);
 			return args.Cancel;
 		}
 

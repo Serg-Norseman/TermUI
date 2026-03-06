@@ -446,7 +446,7 @@ namespace UICatalog.Scenarios {
 		{
 			var _scrollBar = new ScrollBarView (tableView, true);
 
-			_scrollBar.ChangedPosition += () => {
+			_scrollBar.ChangedPosition += (s, e) => {
 				tableView.RowOffset = _scrollBar.Position;
 				if (tableView.RowOffset != _scrollBar.Position) {
 					_scrollBar.Position = tableView.RowOffset;
@@ -462,7 +462,7 @@ namespace UICatalog.Scenarios {
 				_listView.SetNeedsDisplay ();
 			};*/
 
-			tableView.DrawContent += (e) => {
+			tableView.DrawContent += (s, e) => {
 				_scrollBar.Size = tableView.Table?.Rows?.Count ?? 0;
 				_scrollBar.Position = tableView.RowOffset;
 				//	_scrollBar.OtherScrollBarView.Size = _listView.Maxlength - 1;

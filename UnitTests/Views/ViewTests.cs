@@ -171,11 +171,11 @@ namespace Terminal.Gui.ViewTests {
 			var v = new View (new Rect (0, 0, 10, 24));
 			var t = new View ();
 
-			v.Added += (View e) => {
+			v.Added += (object sender, View e) => {
 				Assert.True (v.SuperView == e);
 			};
 
-			v.Removed += (View e) => {
+			v.Removed += (object sender, View e) => {
 				Assert.True (v.SuperView == null);
 			};
 
@@ -660,19 +660,19 @@ namespace Terminal.Gui.ViewTests {
 
 			int tc = 0, wc = 0, v1c = 0, v2c = 0, sv1c = 0;
 
-			w.Added += (e) => {
+			w.Added += (s, e) => {
 				Assert.Equal (e.Frame.Width, w.Frame.Width);
 				Assert.Equal (e.Frame.Height, w.Frame.Height);
 			};
-			v1.Added += (e) => {
+			v1.Added += (s, e) => {
 				Assert.Equal (e.Frame.Width, v1.Frame.Width);
 				Assert.Equal (e.Frame.Height, v1.Frame.Height);
 			};
-			v2.Added += (e) => {
+			v2.Added += (s, e) => {
 				Assert.Equal (e.Frame.Width, v2.Frame.Width);
 				Assert.Equal (e.Frame.Height, v2.Frame.Height);
 			};
-			sv1.Added += (e) => {
+			sv1.Added += (s, e) => {
 				Assert.Equal (e.Frame.Width, sv1.Frame.Width);
 				Assert.Equal (e.Frame.Height, sv1.Frame.Height);
 			};
@@ -2226,7 +2226,7 @@ Y
 		{
 			var view = new View (new Rect (0, 0, 8, 4));
 
-			view.DrawContent += (_) => view.DrawFrame (view.Bounds, 0, true);
+			view.DrawContent += (s, _) => view.DrawFrame (view.Bounds, 0, true);
 
 			Assert.Equal (Point.Empty, new Point (view.Frame.X, view.Frame.Y));
 			Assert.Equal (new Size (8, 4), new Size (view.Frame.Width, view.Frame.Height));
@@ -2250,7 +2250,7 @@ Y
 		{
 			var view = new View (new Rect (0, 0, 2, 2));
 
-			view.DrawContent += (_) => view.DrawFrame (view.Bounds, 0, true);
+			view.DrawContent += (s, _) => view.DrawFrame (view.Bounds, 0, true);
 
 			Assert.Equal (Point.Empty, new Point (view.Frame.X, view.Frame.Y));
 			Assert.Equal (new Size (2, 2), new Size (view.Frame.Width, view.Frame.Height));
@@ -2272,7 +2272,7 @@ Y
 		{
 			var view = new View (new Rect (-1, 0, 8, 4));
 
-			view.DrawContent += (_) => view.DrawFrame (view.Bounds, 0, true);
+			view.DrawContent += (s, _) => view.DrawFrame (view.Bounds, 0, true);
 
 			Assert.Equal (new Point (-1, 0), new Point (view.Frame.X, view.Frame.Y));
 			Assert.Equal (new Size (8, 4), new Size (view.Frame.Width, view.Frame.Height));
@@ -2596,7 +2596,7 @@ Y
 				Width = Dim.Fill (),
 				Height = Dim.Fill ()
 			};
-			view.DrawContent += e => {
+			view.DrawContent += (s, e) => {
 				view.DrawFrame (view.Bounds);
 				var savedClip = Application.Driver.Clip;
 				Application.Driver.Clip = new Rect (1, 1, view.Bounds.Width - 2, view.Bounds.Height - 2);
@@ -2644,7 +2644,7 @@ Y
 				Width = Dim.Fill (),
 				Height = Dim.Fill ()
 			};
-			view.DrawContent += e => {
+			view.DrawContent += (s, e) => {
 				view.DrawFrame (view.Bounds);
 				var savedClip = Application.Driver.Clip;
 				Application.Driver.Clip = new Rect (1, 1, view.Bounds.Width - 2, view.Bounds.Height - 2);
@@ -4044,9 +4044,9 @@ This is a tes
 			var tvCalled = false;
 
 			var view = new View ("View") { Width = 10, Height = 10 };
-			view.DrawContentComplete += (e) => viewCalled = true;
+			view.DrawContentComplete += (s, e) => viewCalled = true;
 			var tv = new TextView () { Y = 11, Width = 10, Height = 10 };
-			tv.DrawContentComplete += (e) => tvCalled = true;
+			tv.DrawContentComplete += (s, e) => tvCalled = true;
 
 			Application.Top.Add (view, tv);
 			Application.Begin (Application.Top);
@@ -4666,7 +4666,7 @@ Test", output);
 		{
 			var mouseClicks = 0;
 			var view = new View ();
-			view.MouseClick += (_) => mouseClicks++;
+			view.MouseClick += (s, _) => mouseClicks++;
 
 			view.OnMouseEvent (new MouseEvent () { Flags = pressed });
 			view.OnMouseEvent (new MouseEvent () { Flags = released });

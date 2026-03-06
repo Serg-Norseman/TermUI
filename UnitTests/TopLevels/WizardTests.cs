@@ -47,7 +47,7 @@ namespace Terminal.Gui.TopLevelTests {
 			string expectedAfter = string.Empty;
 			string expectedDuring = string.Empty;
 			bool cancel = false;
-			r.TitleChanging += (args) => {
+			r.TitleChanging += (s, args) => {
 				Assert.Equal (expectedDuring, args.NewTitle);
 				args.Cancel = cancel;
 			};
@@ -73,7 +73,7 @@ namespace Terminal.Gui.TopLevelTests {
 			Assert.Equal (ustring.Empty, r.Title);
 
 			string expected = string.Empty;
-			r.TitleChanged += (args) => {
+			r.TitleChanged += (s, args) => {
 				Assert.Equal (r.Title, args.NewTitle);
 			};
 
@@ -518,7 +518,7 @@ namespace Terminal.Gui.TopLevelTests {
 			wizard.AddStep (step1);
 
 			var finishedFired = false;
-			wizard.Finished += (args) => {
+			wizard.Finished += (s, args) => {
 				finishedFired = true;
 			};
 
@@ -548,7 +548,7 @@ namespace Terminal.Gui.TopLevelTests {
 			wizard.AddStep (step2);
 
 			finishedFired = false;
-			wizard.Finished += (args) => {
+			wizard.Finished += (s, args) => {
 				finishedFired = true;
 			};
 
@@ -586,7 +586,7 @@ namespace Terminal.Gui.TopLevelTests {
 			step1.Enabled = false;
 
 			finishedFired = false;
-			wizard.Finished += (args) => {
+			wizard.Finished += (s, args) => {
 				finishedFired = true;
 			};
 

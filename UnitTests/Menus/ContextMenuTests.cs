@@ -207,7 +207,7 @@ namespace Terminal.Gui.MenuTests {
 
 			var cm = new ContextMenu ();
 
-			lbl.MouseClick += (e) => {
+			lbl.MouseClick += (s, e) => {
 				if (e.MouseEvent.Flags == cm.MouseFlags) {
 					lbl.Text = "Replaced";
 					e.Handled = true;
@@ -233,7 +233,7 @@ namespace Terminal.Gui.MenuTests {
 			var oldKey = Key.Null;
 			var cm = new ContextMenu ();
 
-			cm.KeyChanged += (e) => oldKey = e;
+			cm.KeyChanged += (sender, e) => oldKey = e;
 
 			cm.Key = Key.Space | Key.CtrlMask;
 			Assert.Equal (Key.Space | Key.CtrlMask, cm.Key);
@@ -246,7 +246,7 @@ namespace Terminal.Gui.MenuTests {
 			var oldMouseFlags = new MouseFlags ();
 			var cm = new ContextMenu ();
 
-			cm.MouseFlagsChanged += (e) => oldMouseFlags = e;
+			cm.MouseFlagsChanged += (s, e) => oldMouseFlags = e;
 
 			cm.MouseFlags = MouseFlags.Button2Clicked;
 			Assert.Equal (MouseFlags.Button2Clicked, cm.MouseFlags);

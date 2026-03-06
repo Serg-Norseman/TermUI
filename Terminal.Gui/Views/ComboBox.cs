@@ -311,7 +311,7 @@ namespace Terminal.Gui {
 				Height = minimumHeight;
 			}
 
-			search.MouseClick += (e) => {
+			search.MouseClick += (s, e) => {
 				if (ReadOnly) {
 					Expand ();
 					e.Handled = true;
@@ -342,7 +342,7 @@ namespace Terminal.Gui {
 				}
 			};
 
-			Added += (View v) => {
+			Added += (object sender, View v) => {
 				// Determine if this view is hosted inside a dialog and is the only control
 				for (View view = this.SuperView; view != null; view = view.SuperView) {
 					if (view is Dialog && SuperView != null && SuperView.Subviews.Count == 1 && SuperView.Subviews [0] == this) {

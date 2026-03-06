@@ -106,7 +106,7 @@ namespace Terminal.Gui.ViewTests {
 		{
 			var hv = new HexView (LoadStream (true)) { Width = 20, Height = 20 };
 			KeyValuePair<long, byte> keyValuePair = default;
-			hv.Edited += (e) => keyValuePair = e;
+			hv.Edited += (sender, e) => keyValuePair = e;
 
 			Assert.True (hv.ProcessKey (new KeyEvent (Key.D4, new KeyModifiers ())));
 			Assert.True (hv.ProcessKey (new KeyEvent (Key.D6, new KeyModifiers ())));
@@ -255,7 +255,7 @@ namespace Terminal.Gui.ViewTests {
 		{
 			var hv = new HexView (LoadStream ()) { Width = Dim.Fill (), Height = Dim.Fill () };
 			HexView.HexViewEventArgs hexViewEventArgs = null;
-			hv.PositionChanged += (e) => hexViewEventArgs = e;
+			hv.PositionChanged += (sender, e) => hexViewEventArgs = e;
 			Application.Top.Add (hv);
 			Application.Begin (Application.Top);
 

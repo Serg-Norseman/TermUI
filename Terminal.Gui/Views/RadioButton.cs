@@ -205,6 +205,9 @@ namespace Terminal.Gui {
 		/// <inheritdoc/>
 		protected override void UpdateTextFormatterText ()
 		{
+			// Windows \ Lucida Console - symbol \u25CF missing
+			// Windows \ Consolas - symbol \a missing
+
 			string radioMark = Checked ? "(\u25CF)" : "( )";
 
 			switch (TextAlignment) {

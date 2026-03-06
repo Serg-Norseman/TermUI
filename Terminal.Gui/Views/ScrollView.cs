@@ -272,14 +272,14 @@ namespace Terminal.Gui {
 			contentView.RemoveAll ();
 		}
 
-		void View_MouseLeave (MouseEventArgs e)
+		void View_MouseLeave (object sender, MouseEventArgs e)
 		{
 			if (Application.MouseGrabView != null && Application.MouseGrabView != vertical && Application.MouseGrabView != horizontal) {
 				Application.UngrabMouse ();
 			}
 		}
 
-		void View_MouseEnter (MouseEventArgs e)
+		void View_MouseEnter (object sender, MouseEventArgs e)
 		{
 			Application.GrabMouse (this);
 		}

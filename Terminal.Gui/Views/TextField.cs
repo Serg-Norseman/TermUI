@@ -228,12 +228,12 @@ namespace Terminal.Gui {
 				});
 		}
 
-		private void ContextMenu_KeyChanged (Key obj)
+		private void ContextMenu_KeyChanged (object sender, Key obj)
 		{
 			ReplaceKeyBinding (obj, ContextMenu.Key);
 		}
 
-		private void HistoryText_ChangeText (HistoryText.HistoryTextItem obj)
+		private void HistoryText_ChangeText (object sender, HistoryText.HistoryTextItem obj)
 		{
 			if (obj == null)
 				return;

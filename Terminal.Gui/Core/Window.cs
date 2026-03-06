@@ -67,7 +67,7 @@ namespace Terminal.Gui {
 			}
 		}
 
-		void Border_BorderChanged (Border border)
+		void Border_BorderChanged (object sender, Border border)
 		{
 			Rect frame;
 			if (contentView != null && (contentView.Width is Dim || contentView.Height is Dim)) {
@@ -405,7 +405,7 @@ namespace Terminal.Gui {
 		public virtual bool OnTitleChanging (ustring oldTitle, ustring newTitle)
 		{
 			var args = new TitleEventArgs (oldTitle, newTitle);
-			TitleChanging?.Invoke (args);
+			TitleChanging?.Invoke (this, args);
 			return args.Cancel;
 		}
 
@@ -413,7 +413,7 @@ namespace Terminal.Gui {
 		/// Event fired when the <see cref="Window.Title"/> is changing. Set <see cref="TitleEventArgs.Cancel"/> to 
 		/// `true` to cancel the Title change.
 		/// </summary>
-		public event Action<TitleEventArgs> TitleChanging;
+		public event EventHandler<TitleEventArgs> TitleChanging;
 
 		/// <summary>
 		/// Called when the <see cref="Window.Title"/> has been changed. Invokes the <see cref="TitleChanged"/> event.
@@ -423,12 +423,12 @@ namespace Terminal.Gui {
 		public virtual void OnTitleChanged (ustring oldTitle, ustring newTitle)
 		{
 			var args = new TitleEventArgs (oldTitle, newTitle);
-			TitleChanged?.Invoke (args);
+			TitleChanged?.Invoke (this, args);
 		}
 
 		/// <summary>
 		/// Event fired after the <see cref="Window.Title"/> has been changed. 
 		/// </summary>
-		public event Action<TitleEventArgs> TitleChanged;
+		public event EventHandler<TitleEventArgs> TitleChanged;
 	}
 }

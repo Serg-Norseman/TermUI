@@ -587,7 +587,7 @@ namespace Terminal.Gui.TopLevelTests {
 			var view = new View ();
 			view.Added += View_Added;
 
-			void View_Added (View obj)
+			void View_Added (object sender, View obj)
 			{
 				Assert.Throws<NullReferenceException> (() => Application.Top.AlternateForwardKeyChanged += (e) => alternateForwardKey = e);
 				Assert.Throws<NullReferenceException> (() => Application.Top.AlternateBackwardKeyChanged += (e) => alternateBackwardKey = e);

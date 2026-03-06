@@ -121,7 +121,7 @@ namespace UICatalog.Scenarios {
 				new StatusItem(Key.Null, $"OS Clipboard IsSupported : {Clipboard.IsSupported}", null)
 			});
 
-			_textView.UnwrappedCursorPosition += (e) => {
+			_textView.UnwrappedCursorPosition += (s, e) => {
 				siCursorPosition.Title = $"Ln {e.Y + 1}, Col {e.X + 1}";
 				statusBar.SetNeedsDisplay ();
 			};
@@ -130,7 +130,7 @@ namespace UICatalog.Scenarios {
 
 			_scrollBar = new ScrollBarView (_textView, true);
 
-			_scrollBar.ChangedPosition += () => {
+			_scrollBar.ChangedPosition += (s, e) => {
 				_textView.TopRow = _scrollBar.Position;
 				if (_textView.TopRow != _scrollBar.Position) {
 					_scrollBar.Position = _textView.TopRow;
@@ -138,7 +138,7 @@ namespace UICatalog.Scenarios {
 				_textView.SetNeedsDisplay ();
 			};
 
-			_scrollBar.OtherScrollBarView.ChangedPosition += () => {
+			_scrollBar.OtherScrollBarView.ChangedPosition += (s, e) => {
 				_textView.LeftColumn = _scrollBar.OtherScrollBarView.Position;
 				if (_textView.LeftColumn != _scrollBar.OtherScrollBarView.Position) {
 					_scrollBar.OtherScrollBarView.Position = _textView.LeftColumn;
@@ -162,7 +162,7 @@ namespace UICatalog.Scenarios {
 				}
 			};
 
-			_textView.DrawContent += (e) => {
+			_textView.DrawContent += (s, e) => {
 				_scrollBar.Size = _textView.Lines;
 				_scrollBar.Position = _textView.TopRow;
 				if (_scrollBar.OtherScrollBarView != null) {
@@ -768,7 +768,7 @@ namespace UICatalog.Scenarios {
 		private View FindTab ()
 		{
 			var d = new View ();
-			d.DrawContent += (e) => {
+			d.DrawContent += (s, e) => {
 				foreach (var v in d.Subviews) {
 					v.SetNeedsDisplay ();
 				}
@@ -860,7 +860,7 @@ namespace UICatalog.Scenarios {
 		private View ReplaceTab ()
 		{
 			var d = new View ();
-			d.DrawContent += (e) => {
+			d.DrawContent += (s, e) => {
 				foreach (var v in d.Subviews) {
 					v.SetNeedsDisplay ();
 				}

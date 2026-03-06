@@ -34,13 +34,13 @@ namespace UICatalog {
 
 			public ViewTracker (View top)
 			{
-				RecordView (top);
+				RecordView (this, top);
 
 				// Refresh known windows
 				Application.MainLoop.AddTimeout (TimeSpan.FromMilliseconds (100), (m) => {
 
 					lock (lockKnownViews) {
-						RecordView (Application.Top);
+						RecordView (this, Application.Top);
 
 						ApplyKeyBindingsToAllKnownViews ();
 					}
@@ -49,7 +49,7 @@ namespace UICatalog {
 				});
 			}
 
-			private void RecordView (View view)
+			private void RecordView (object sender, View view)
 			{
 				if (!knownViews.ContainsKey (view)) {
 					knownViews.Add (view, false);
@@ -58,7 +58,7 @@ namespace UICatalog {
 				// may already have subviews that were added to it
 				// before we got to it
 				foreach (var sub in view.Subviews) {
-					RecordView (sub);
+					RecordView (sender, sub);
 				}
 
 				view.Added += RecordView;

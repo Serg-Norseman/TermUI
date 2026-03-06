@@ -103,12 +103,12 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Event to be invoked when an edit is made on the <see cref="Stream"/>.
 		/// </summary>
-		public event Action<KeyValuePair<long, byte>> Edited;
+		public event EventHandler<KeyValuePair<long, byte>> Edited;
 
 		/// <summary>
 		/// Event to be invoked when the position and cursor position changes.
 		/// </summary>
-		public event Action<HexViewEventArgs> PositionChanged;
+		public event EventHandler<HexViewEventArgs> PositionChanged;
 
 		/// <summary>
 		/// Sets or gets the <see cref="Stream"/> the <see cref="HexView"/> is operating on; the stream must support seeking (<see cref="Stream.CanSeek"/> == true).
@@ -476,7 +476,7 @@ namespace Terminal.Gui {
 		/// <param name="keyValuePair">The key value pair.</param>
 		public virtual void OnEdited (KeyValuePair<long, byte> keyValuePair)
 		{
-			Edited?.Invoke (keyValuePair);
+			Edited?.Invoke (this, keyValuePair);
 		}
 
 		/// <summary>
@@ -484,7 +484,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		public virtual void OnPositionChanged ()
 		{
-			PositionChanged?.Invoke (new HexViewEventArgs (Position, CursorPosition, BytesPerLine));
+			PositionChanged?.Invoke (this, new HexViewEventArgs (Position, CursorPosition, BytesPerLine));
 		}
 
 		/// <inheritdoc/>
