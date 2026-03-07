@@ -1,5 +1,5 @@
-﻿using Terminal.Gui;
-using System;
+﻿using System;
+using Terminal.Gui;
 
 namespace UICatalog.Scenarios {
 	[ScenarioMetadata (Name: "Color Picker", Description: "Color Picker.")]
@@ -47,7 +47,7 @@ namespace UICatalog.Scenarios {
 			Win.Add (foregroundColorPicker);
 
 			foregroundColorLabel = new Label ();
-			foregroundColorLabel.X = Pos.Left(foregroundColorPicker);
+			foregroundColorLabel.X = Pos.Left (foregroundColorPicker);
 			foregroundColorLabel.Y = Pos.Bottom (foregroundColorPicker) + 1;
 			Win.Add (foregroundColorLabel);
 
@@ -73,6 +73,35 @@ namespace UICatalog.Scenarios {
 			// Set default colors.
 			backgroundColorPicker.SelectedColor = demoLabel.SuperView.ColorScheme.Normal.Background;
 			foregroundColorPicker.SelectedColor = demoLabel.SuperView.ColorScheme.Normal.Foreground;
+
+			// Dialogs
+			var btnSelectBackground = new Button ("Show Dialog - Select Background") {
+				X = Pos.Center (),
+				Y = Pos.Center (),
+			};
+			btnSelectBackground.Clicked += (sender, e) => {
+				var dlg = new ColorDialog () {
+					Color = backgroundColorPicker.SelectedColor
+				};
+				Application.Run (dlg);
+				if (!dlg.Canceled) {
+					backgroundColorPicker.SelectedColor = dlg.Color;
+				}
+			};
+			var btnSelectForeground = new Button ("Show Dialog - Select Foreground") {
+				X = Pos.Center (),
+				Y = Pos.Center () + 2,
+			};
+			btnSelectForeground.Clicked += (sender, e) => {
+				var dlg = new ColorDialog () {
+					Color = foregroundColorPicker.SelectedColor
+				};
+				Application.Run (dlg);
+				if (!dlg.Canceled) {
+					foregroundColorPicker.SelectedColor = dlg.Color;
+				}
+			};
+			Win.Add (btnSelectBackground, btnSelectForeground);
 		}
 
 		/// <summary>
