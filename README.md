@@ -1,6 +1,7 @@
 # TermUI
 
 Cross platform terminal UI toolkit for .NET.
+
 **TermUI**: A toolkit for building rich console apps for .NET, .NET Core, and Mono that works on Windows, the Mac, and Linux/Unix.
 
 **Attention**: This is a particular fork - sandbox for the development of Terminal.Gui v1.
