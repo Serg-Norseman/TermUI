@@ -80,12 +80,8 @@ namespace UICatalog.Scenarios {
 				Y = Pos.Center (),
 			};
 			btnSelectBackground.Clicked += (sender, e) => {
-				var dlg = new ColorDialog () {
-					Color = backgroundColorPicker.SelectedColor
-				};
-				Application.Run (dlg);
-				if (!dlg.Canceled) {
-					backgroundColorPicker.SelectedColor = dlg.Color;
+				using (var dlg = new ColorDialog ()) {
+					backgroundColorPicker.SelectedColor = dlg.Show(backgroundColorPicker.SelectedColor);
 				}
 			};
 			var btnSelectForeground = new Button ("Show Dialog - Select Foreground") {
@@ -93,12 +89,8 @@ namespace UICatalog.Scenarios {
 				Y = Pos.Center () + 2,
 			};
 			btnSelectForeground.Clicked += (sender, e) => {
-				var dlg = new ColorDialog () {
-					Color = foregroundColorPicker.SelectedColor
-				};
-				Application.Run (dlg);
-				if (!dlg.Canceled) {
-					foregroundColorPicker.SelectedColor = dlg.Color;
+				using (var dlg = new ColorDialog ()) {
+					foregroundColorPicker.SelectedColor = dlg.Show(foregroundColorPicker.SelectedColor);
 				}
 			};
 			Win.Add (btnSelectBackground, btnSelectForeground);

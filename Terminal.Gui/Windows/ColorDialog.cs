@@ -35,12 +35,6 @@ namespace Terminal.Gui {
 			Width = colorPicker.Width + 4;
 			Height = colorPicker.Height + 7;
 
-			this.cancel = new Button ("Cancel");
-			this.cancel.Clicked += (sender, e) => {
-				Cancel ();
-			};
-			AddButton (cancel);
-
 			this.prompt = new Button ("Ok") {
 				IsDefault = true,
 				Enabled = true
@@ -50,6 +44,12 @@ namespace Terminal.Gui {
 				Application.RequestStop ();
 			};
 			AddButton (this.prompt);
+
+			this.cancel = new Button ("Cancel");
+			this.cancel.Clicked += (sender, e) => {
+				Cancel ();
+			};
+			AddButton (cancel);
 
 			// On success, we will set this to false.
 			canceled = true;
@@ -72,6 +72,13 @@ namespace Terminal.Gui {
 		{
 			base.WillPresent ();
 			colorPicker.SetFocus ();
+		}
+
+		public Color Show(Color defaultValue)
+		{
+			Color = defaultValue;
+			Application.Run(this);
+			return (!Canceled) ? this.Color : defaultValue;
 		}
 	}
 }
