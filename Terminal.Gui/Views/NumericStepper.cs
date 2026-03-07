@@ -27,6 +27,21 @@ namespace Terminal.Gui {
 			}
 		}
 
+		/// <summary>
+		///If set to true its not allow any changes in the text.
+		/// </summary>
+		public bool ReadOnly {
+			get => _textField.ReadOnly;
+			set {
+				_textField.ReadOnly = value;
+				if (_textField.ReadOnly) {
+					if (_textField.ColorScheme != null) {
+						_textField.ColorScheme.Normal = _textField.ColorScheme.Focus;
+					}
+				}
+			}
+		}
+
 
 		public event EventHandler ValueChanged;
 
@@ -78,7 +93,7 @@ namespace Terminal.Gui {
 		///<inheritdoc/>
 		public override bool MouseEvent (MouseEvent me)
 		{
-			if (me.Y == Bounds.Top && me.Flags == MouseFlags.Button1Pressed) {
+			if (!ReadOnly && me.Y == Bounds.Top && me.Flags == MouseFlags.Button1Pressed) {
 				if (me.X == Bounds.Right - 2) {
 					Value = Value - Step;
 					return true;
@@ -97,13 +112,15 @@ namespace Terminal.Gui {
 
 		public override bool ProcessKey (KeyEvent kb)
 		{
-			if (kb.Key == Key.CursorUp) {
-				Value += Step;
-				return true;
-			}
-			if (kb.Key == Key.CursorDown) {
-				Value -= Step;
-				return true;
+			if (!ReadOnly) {
+				if (kb.Key == Key.CursorUp) {
+					Value += Step;
+					return true;
+				}
+				if (kb.Key == Key.CursorDown) {
+					Value -= Step;
+					return true;
+				}
 			}
 			return base.ProcessKey (kb);
 		}
