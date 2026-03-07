@@ -368,6 +368,13 @@ namespace Terminal.Gui {
 		ITextValidateProvider provider;
 		int cursorPosition = 0;
 
+		public bool InvalidIndication { get; set; }
+
+		/// <summary>
+		///If set to true its not allow any changes in the text.
+		/// </summary>
+		public bool ReadOnly { get; set; } = false;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TextValidateField"/> class using <see cref="LayoutStyle.Computed"/> positioning.
 		/// </summary>
@@ -391,6 +398,8 @@ namespace Terminal.Gui {
 		{
 			Height = 1;
 			CanFocus = true;
+
+			InvalidIndication = true;
 
 			// Things this view knows how to do
 			AddCommand (Command.LeftHome, () => { HomeKeyHandler (); return true; });
@@ -510,7 +519,7 @@ namespace Terminal.Gui {
 				return;
 			}
 
-			var bgcolor = !IsValid ? Color.BrightRed : ColorScheme.Focus.Background;
+			var bgcolor = (!IsValid && InvalidIndication) ? Color.BrightRed : ColorScheme.Focus.Background;
 			var textColor = new Attribute (ColorScheme.Focus.Foreground, bgcolor);
 
 			var (margin_left, margin_right) = GetMargins (bounds.Width);
