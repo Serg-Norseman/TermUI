@@ -207,6 +207,10 @@ namespace Terminal.Gui {
 
 				if (value < 0 || (source.Count > 0 && value >= source.Count))
 					throw new ArgumentException ("value");
+
+				if (source.Count > Frame.Height && value > source.Count - Frame.Height)
+					return;
+
 				top = value;
 				SetNeedsDisplay ();
 			}
@@ -506,7 +510,7 @@ namespace Terminal.Gui {
 			if (n != selected) {
 				selected = n;
 				if (source.Count >= Frame.Height)
-					top = selected;
+					top = Math.Min (selected, source.Count - Frame.Height);
 				else
 					top = 0;
 				OnSelectedChanged ();
@@ -638,7 +642,7 @@ namespace Terminal.Gui {
 		/// <param name="items">Number of items to scroll down.</param>
 		public virtual bool ScrollDown (int items)
 		{
-			top = Math.Max (Math.Min (top + items, source.Count - 1), 0);
+			top = Math.Max (Math.Min (top + items, source.Count - Frame.Height), 0);
 			SetNeedsDisplay ();
 			return true;
 		}
