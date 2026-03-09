@@ -632,7 +632,7 @@ namespace Terminal.Gui {
 					};
 				}
 				if (borderRect.Width > 0 && borderRect.Height > 0) {
-					driver.DrawWindowFrame (borderRect, 1, 1, 1, 1, BorderStyle != BorderStyle.None, fill: true, this);
+					driver.DrawWindowFrame (borderRect, 1, 1, 1, 1, borderStyle != BorderStyle.None, fill: true, borderStyle);
 				}
 			}
 			driver.SetAttribute (savedAttribute);
@@ -743,7 +743,7 @@ namespace Terminal.Gui {
 					Height = frame.Height + (2 * drawMarginFrame)
 				};
 				if (rect.Width > 0 && rect.Height > 0) {
-					driver.DrawWindowFrame (rect, 1, 1, 1, 1, BorderStyle != BorderStyle.None, fill, this);
+					driver.DrawWindowFrame (rect, 1, 1, 1, 1, borderStyle != BorderStyle.None, fill, borderStyle);
 					DrawTitle (Child);
 				}
 			}
@@ -898,7 +898,7 @@ namespace Terminal.Gui {
 					Height = Math.Max (frame.Height - sumThickness.Bottom - sumThickness.Top, 0)
 				};
 				if (rect.Width > 0 && rect.Height > 0) {
-					driver.DrawWindowFrame (rect, 1, 1, 1, 1, BorderStyle != BorderStyle.None, fill, this);
+					driver.DrawWindowFrame (rect, 1, 1, 1, 1, borderStyle != BorderStyle.None, fill, borderStyle);
 					DrawTitle (Parent);
 				}
 			}

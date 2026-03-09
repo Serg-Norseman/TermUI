@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Terminal.Gui;
 
 namespace UICatalog.Scenarios {
@@ -95,6 +97,20 @@ namespace UICatalog.Scenarios {
 				}
 			};
 			Win.Add (chkReadOnly);
+
+			var borderStyleEnum = Enum.GetValues (typeof (BorderStyle)).Cast<BorderStyle> ().ToList ();
+			var rbBorderStyle = new RadioGroup (borderStyleEnum.Select (e => NStack.ustring.Make (e.ToString ())).ToArray ()) {
+				X = Pos.Left (chkReadOnly),
+				Y = Pos.Top (chkReadOnly) + 2,
+				SelectedItem = (int)comboBox.DropDownBorderStyle
+			};
+			Win.Add (rbBorderStyle);
+			rbBorderStyle.SelectedItemChanged += (s, e) => {
+				comboBox.DropDownBorderStyle = (BorderStyle)e.SelectedItem;
+				comboBox.SetNeedsDisplay ();
+			};
+
+
 		}
 	}
 }

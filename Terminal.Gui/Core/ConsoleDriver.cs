@@ -955,9 +955,9 @@ namespace Terminal.Gui {
 		/// <param name="paddingBottom">Number of rows to pad on the bottom (if 0 the border will not appear on the bottom).</param>
 		/// <param name="border">If set to <c>true</c> and any padding dimension is > 0 the border will be drawn.</param>
 		/// <param name="fill">If set to <c>true</c> it will clear the content area (the area inside the padding) with the current color, otherwise the content area will be left untouched.</param>
-		/// <param name="borderContent">The <see cref="Border"/> to be used if defined.</param>
+		/// <param name="borderStyle">The <see cref="Border"/> to be used if defined.</param>
 		public virtual void DrawWindowFrame (Rect region, int paddingLeft = 0, int paddingTop = 0, int paddingRight = 0,
-			int paddingBottom = 0, bool border = true, bool fill = false, Border borderContent = null)
+			int paddingBottom = 0, bool border = true, bool fill = false, BorderStyle borderStyle = BorderStyle.Single)
 		{
 			char clearChar = ' ';
 			char leftChar = clearChar;
@@ -996,8 +996,6 @@ namespace Terminal.Gui {
 
 			// fbottom is location of bottom frame line
 			int fbottom = ftop + fheight + 1;
-
-			var borderStyle = borderContent == null ? BorderStyle.Single : borderContent.BorderStyle;
 
 			Rune hLine = default, vLine = default,
 				uRCorner = default, uLCorner = default, lLCorner = default, lRCorner = default;

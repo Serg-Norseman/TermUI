@@ -172,11 +172,6 @@ namespace Terminal.Gui {
 			Border.Child = contentView;
 		}
 
-		void DrawFrame ()
-		{
-			DrawFrame (new Rect (0, 0, Frame.Width, Frame.Height), 0, fill: true);
-		}
-
 		/// <summary>
 		/// Add the specified <see cref="View"/> to this container.
 		/// </summary>

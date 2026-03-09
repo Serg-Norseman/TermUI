@@ -42,12 +42,17 @@ namespace Terminal.Gui {
 			private void Initialize (ComboBox container)
 			{
 				this.container = container ?? throw new ArgumentNullException (nameof(container), "ComboBox container cannot be null.");
+
+				IgnoreBorderPropertyOnRedraw = true;
 			}
 
 			public override bool MouseEvent (MouseEvent me)
 			{
 				var res = false;
 				var isMousePositionValid = IsMousePositionValid (me);
+
+				int offset = (container.DropDownBorderStyle == BorderStyle.None) ? 0 : 1;
+				me.Y = me.Y - offset;
 
 				if (isMousePositionValid) {
 					res = base.MouseEvent (me);
@@ -85,17 +90,28 @@ namespace Terminal.Gui {
 
 			public override void Redraw (Rect bounds)
 			{
+				var borderStyle = container.DropDownBorderStyle;
+				int borders = (borderStyle == BorderStyle.None) ? 0 : 2;
+				int offsetXY = (borders == 0) ? 0 : 1;
+
+				Driver.SetAttribute (GetNormalColor ());
+				DrawFrame (bounds, 0, true, borderStyle);
+
 				var current = ColorScheme.Focus;
 				Driver.SetAttribute (current);
 				Move (0, 0);
-				var f = Frame;
+
+				var frame = Frame;
+				var frameHeight = frame.Height - borders;
+				var frameWidth = frame.Width - borders;
+
 				var item = TopItem;
 				bool focused = HasFocus;
 				int col = AllowsMarking ? 2 : 0;
 				int start = LeftItem;
 				var hideDropdownListOnClick = container.HideDropdownListOnClick;
 
-				for (int row = 0; row < f.Height; row++, item++) {
+				for (int row = 0; row < frameHeight; row++, item++) {
 					bool isSelected = item == container.SelectedItem;
 					bool isHighlighted = hideDropdownListOnClick && item == highlighted;
 
@@ -113,9 +129,9 @@ namespace Terminal.Gui {
 						current = newcolor;
 					}
 
-					Move (0, row);
+					Move (0 + offsetXY, row + offsetXY);
 					if (Source == null || item >= Source.Count) {
-						for (int c = 0; c < f.Width; c++)
+						for (int c = 0; c < frameWidth; c++)
 							Driver.AddRune (' ');
 					} else {
 						var rowEventArgs = new ListViewRowEventArgs (item);
@@ -128,7 +144,7 @@ namespace Terminal.Gui {
 							Driver.AddRune (Source.IsMarked (item) ? (AllowsMultipleSelection ? Driver.Checked : Driver.Selected) : (AllowsMultipleSelection ? Driver.UnChecked : Driver.UnSelected));
 							Driver.AddRune (' ');
 						}
-						Source.Render (this, Driver, isSelected, item, col, row, f.Width - col, start);
+						Source.Render (this, Driver, isSelected, item, col + offsetXY, row + offsetXY, frameWidth - col, start);
 					}
 				}
 			}
@@ -162,6 +178,17 @@ namespace Terminal.Gui {
 				highlighted = SelectedItem;
 
 				return res;
+			}
+
+			///<inheritdoc/>
+			public override bool ScrollDown (int items)
+			{
+				// The entire implementation needs to be moved to ListView - there are too many dependencies on Frame - borders.
+				int borders = (container.DropDownBorderStyle == BorderStyle.None) ? 0 : 2;
+
+				TopItem = Math.Max (Math.Min (TopItem + items, Source.Count - (Frame.Height - borders)), 0);
+				SetNeedsDisplay ();
+				return true;
 			}
 		}
 
@@ -229,7 +256,13 @@ namespace Terminal.Gui {
 		ustring text = "";
 		readonly TextField search;
 		readonly ComboListView listview;
+
+		/// <summary>
+		/// Determine if this view is hosted inside a dialog and is the only control.
+		/// ComboBox without dropdown list opening arrow (is it always visible?).
+		/// </summary>
 		bool autoHide = true;
+
 		readonly int minimumHeight = 2;
 
 		/// <summary>
@@ -305,8 +338,6 @@ namespace Terminal.Gui {
 		{
 			SearchMode = true;
 
-			//listview.Border = new Border () { BorderStyle = BorderStyle.None };
-
 			if (Bounds.Height < minimumHeight && (Height == null || Height is Dim.DimAbsolute)) {
 				Height = minimumHeight;
 			}
@@ -330,6 +361,8 @@ namespace Terminal.Gui {
 				if ((!autoHide && Bounds.Width > 0 && search.Frame.Width != Bounds.Width) ||
 					(autoHide && Bounds.Width > 0 && search.Frame.Width != Bounds.Width - 1)) {
 					search.Width = listview.Width = autoHide ? Bounds.Width - 1 : Bounds.Width;
+
+					//listview.Width = Bounds.Width; // breaks 2 tests
 					listview.Height = CalculatetHeight ();
 					search.SetRelativeLayout (Bounds);
 					listview.SetRelativeLayout (Bounds);
@@ -881,7 +914,7 @@ namespace Terminal.Gui {
 			listview.SetSource (searchset);
 			listview.Clear (); // Ensure list shrinks in Dialog as you type
 			listview.Height = CalculatetHeight ();
-			//listview.Visible = true;
+			listview.Visible = true;
 			SuperView?.BringSubviewToFront (this);
 		}
 
@@ -899,7 +932,7 @@ namespace Terminal.Gui {
 			Reset (keepSearchText: true);
 			listview.Clear (rect);
 			listview.TabStop = false;
-			//listview.Visible = false;
+			listview.Visible = false;
 			SuperView?.SendSubviewToBack (this);
 			SuperView?.SetNeedsDisplay (rect);
 			OnCollapsed ();
@@ -912,8 +945,7 @@ namespace Terminal.Gui {
 		private int CalculatetHeight ()
 		{
 			if (!SearchMode) {
-				//int borders = (DropDownBorderStyle == BorderStyle.None) ? 0 : 2;
-				actualDropHeight = Math.Min (maxDropDownItems, searchset.Count) /*+ borders*/;
+				actualDropHeight = Math.Min (maxDropDownItems, searchset.Count);
 			} else {
 				if (Bounds.Height == 0) {
 					actualDropHeight = 0;
@@ -921,6 +953,10 @@ namespace Terminal.Gui {
 					actualDropHeight = Math.Min (Math.Max (Bounds.Height - 1, minimumHeight - 1), searchset?.Count > 0 ? searchset.Count : isShow ? Math.Max (Bounds.Height - 1, minimumHeight - 1) : 0);
 				}
 			}
+
+			int borders = (DropDownBorderStyle == BorderStyle.None) ? 0 : 2;
+			actualDropHeight += borders;
+
 			return actualDropHeight;
 		}
 
@@ -935,9 +971,14 @@ namespace Terminal.Gui {
 			set { maxDropDownItems = value; }
 		}
 
-		/*public BorderStyle DropDownBorderStyle {
-			get { return listview.Border.BorderStyle; }
+		public BorderStyle DropDownBorderStyle {
+			get {
+				if (listview.Border == null) {
+					listview.Border = new Border () { BorderStyle = BorderStyle.None };
+				}
+				return listview.Border.BorderStyle;
+			}
 			set { listview.Border = new Border () { BorderStyle = value }; }
-		}*/
+		}
 	}
 }

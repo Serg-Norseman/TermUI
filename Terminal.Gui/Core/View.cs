@@ -1224,11 +1224,12 @@ namespace Terminal.Gui {
 		/// <param name="region">View-relative region for the frame to be drawn.</param>
 		/// <param name="padding">The padding to add around the outside of the drawn frame.</param>
 		/// <param name="fill">If set to <see langword="true"/> it fill will the contents.</param>
-		public void DrawFrame (Rect region, int padding = 0, bool fill = false)
+		/// <param name="borderStyle">The <see cref="Border"/> to be used if defined.</param>
+		public void DrawFrame (Rect region, int padding = 0, bool fill = false, BorderStyle borderStyle = BorderStyle.Single)
 		{
 			var scrRect = ViewToScreen (region);
 			var savedClip = ClipToBounds ();
-			Driver.DrawWindowFrame (scrRect, padding + 1, padding + 1, padding + 1, padding + 1, border: true, fill: fill);
+			Driver.DrawWindowFrame (scrRect, padding + 1, padding + 1, padding + 1, padding + 1, true, fill, borderStyle);
 			Driver.Clip = savedClip;
 		}
 

@@ -167,7 +167,9 @@ namespace Terminal.Gui.ViewTests {
 			Assert.Equal (0, lv.SelectedItem);
 			Assert.True (lv.ProcessKey (new KeyEvent (Key.PageDown, new KeyModifiers ())));
 			Assert.Equal (2, lv.SelectedItem);
-			Assert.Equal (2, lv.TopItem);
+			// With a height of 2 and a number of items of 3 and the requirement that the page ends
+			// with an item and not with an empty line, the 2nd page will start with 1.
+			Assert.Equal (1, lv.TopItem);
 			Assert.True (lv.ProcessKey (new KeyEvent (Key.PageUp, new KeyModifiers ())));
 			Assert.Equal (0, lv.SelectedItem);
 			Assert.Equal (0, lv.TopItem);
@@ -400,18 +402,19 @@ namespace Terminal.Gui.ViewTests {
 			Assert.True (lv.ScrollDown (20));
 			lv.Redraw (lv.Bounds);
 			Assert.Equal (0, lv.SelectedItem);
+			// Requirement that the page ends with an item and not with an empty line.
 			TestHelpers.AssertDriverContentsWithFrameAre (@"
 ┌──────────┐
+│Line10    │
+│Line11    │
+│Line12    │
+│Line13    │
+│Line14    │
+│Line15    │
+│Line16    │
+│Line17    │
+│Line18    │
 │Line19    │
-│          │
-│          │
-│          │
-│          │
-│          │
-│          │
-│          │
-│          │
-│          │
 └──────────┘", output);
 
 			Assert.True (lv.MoveUp ());
