@@ -390,7 +390,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="tab"></param>
 		/// <param name="andSelect">True to make the newly added Tab the <see cref="SelectedTab"/></param>
-		public void AddTab (Tab tab, bool andSelect)
+		public void AddTab (Tab tab, bool andSelect = false)
 		{
 			if (tabs.Contains (tab)) {
 				return;

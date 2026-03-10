@@ -604,7 +604,7 @@ namespace Terminal.Gui {
 		public KeyEvent (Key k, KeyModifiers km)
 		{
 			Key = k;
-			keyModifiers = km;
+			keyModifiers = (km == null) ? new KeyModifiers() : km;
 		}
 
 		/// <summary>

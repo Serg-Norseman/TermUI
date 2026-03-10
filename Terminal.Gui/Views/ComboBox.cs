@@ -43,6 +43,7 @@ namespace Terminal.Gui {
 			{
 				this.container = container ?? throw new ArgumentNullException (nameof(container), "ComboBox container cannot be null.");
 
+				Visible = false;
 				IgnoreBorderPropertyOnRedraw = true;
 			}
 
@@ -60,7 +61,6 @@ namespace Terminal.Gui {
 
 				if (container.HideDropdownListOnClick && me.Flags == MouseFlags.Button1Clicked) {
 					if (!isMousePositionValid && !isFocusing) {
-						container.isShow = false;
 						container.HideList ();
 					} else if (isMousePositionValid) {
 						OnOpenSelectedItem ();
@@ -445,7 +445,21 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Gets the drop down list state, expanded or collapsed.
 		/// </summary>
-		public bool IsShow => isShow;
+		public bool IsShow {
+			get { return isShow; }
+			private set {
+				if (isShow != value) {
+					isShow = value;
+
+					// Necessary to restore the screen outside the current window
+					// from which the menu was called with output over and beyond
+					// the window border.
+					if (!isShow && Application.Initialized) {
+						Application.Refresh ();
+					}
+				}
+			}
+		}
 
 		///<inheritdoc/>
 		public new ColorScheme ColorScheme {
@@ -552,7 +566,6 @@ namespace Terminal.Gui {
 				SetValue (source.ToList () [selectedItem].ToString ());
 			}
 			if (autoHide && isShow && view != this && view != search && view != listview) {
-				isShow = false;
 				HideList ();
 			} else if (listview.TabStop) {
 				listview.TabStop = false;
@@ -744,8 +757,8 @@ namespace Terminal.Gui {
 				return false;
 			}
 
-			isShow = false;
 			HideList ();
+
 			return true;
 		}
 
@@ -760,6 +773,10 @@ namespace Terminal.Gui {
 			}
 
 			SetSearchSet ();
+			if (searchset.Count < 1) {
+				return false;
+			}
+
 			isShow = true;
 			ShowList ();
 			FocusSelectedItem ();
@@ -805,7 +822,6 @@ namespace Terminal.Gui {
 
 		private void Selected ()
 		{
-			isShow = false;
 			listview.TabStop = false;
 
 			if (listview.Source.Count == 0 || searchset.Count == 0) {
@@ -819,6 +835,7 @@ namespace Terminal.Gui {
 			Search_Changed (this, search.Text);
 			OnOpenSelectedItem ();
 			Reset (keepSearchText: true);
+
 			HideList ();
 		}
 
@@ -899,7 +916,6 @@ namespace Terminal.Gui {
 			if (HasFocus) {
 				ShowList ();
 			} else if (autoHide) {
-				isShow = false;
 				HideList ();
 			}
 		}
@@ -936,6 +952,8 @@ namespace Terminal.Gui {
 			SuperView?.SendSubviewToBack (this);
 			SuperView?.SetNeedsDisplay (rect);
 			OnCollapsed ();
+
+			IsShow = false;
 		}
 
 		/// <summary>

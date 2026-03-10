@@ -894,7 +894,7 @@ namespace Terminal.Gui {
 
 		void RenderUstr (ConsoleDriver driver, ustring ustr, int col, int line, int width, int start = 0)
 		{
-			ustring str = start > ustr.ConsoleWidth ? string.Empty : ustr.Substring (Math.Min (start, ustr.ToRunes ().Length - 1));
+			ustring str = ustr.IsEmpty || start > ustr.ConsoleWidth ? string.Empty : ustr.Substring (Math.Min (start, ustr.ToRunes ().Length - 1));
 			ustring u = TextFormatter.ClipAndJustify (str, width, TextAlignment.Left);
 			driver.AddStr (u);
 			width -= TextFormatter.GetTextWidth (u);
@@ -917,7 +917,12 @@ namespace Terminal.Gui {
 				} else if (t is string s) {
 					RenderUstr (driver, s, col, line, width, start);
 				} else {
-					RenderUstr (driver, t.ToString (), col, line, width, start);
+					var strItem = t.ToString ();
+					if (!string.IsNullOrEmpty (strItem)) {
+						RenderUstr (driver, strItem, col, line, width, start);
+					} else {
+						RenderUstr (driver, ustring.Make (""), col, line, width);
+					}
 				}
 			}
 			driver.Clip = savedClip;
