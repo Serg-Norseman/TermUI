@@ -415,9 +415,9 @@ namespace Terminal.Gui.ApplicationTests {
 			Init ();
 			var top = Application.Top;
 			var count = 0;
-			top.Loaded += () => count++;
-			top.Ready += () => count++;
-			top.Unloaded += () => count++;
+			top.Loaded += (_, _) => count++;
+			top.Ready += (_, _) => count++;
+			top.Unloaded += (_, _) => count++;
 			Application.Iteration = () => Application.RequestStop ();
 			Application.Run ();
 			Application.Shutdown ();
@@ -468,23 +468,23 @@ namespace Terminal.Gui.ApplicationTests {
 			// t1, t2, t3, d, t4
 			var iterations = 5;
 
-			t1.Ready += () => {
+			t1.Ready += (_, _) => {
 				Assert.Equal (t1, Application.Top);
 				Application.Run (t2);
 			};
-			t2.Ready += () => {
+			t2.Ready += (_, _) => {
 				Assert.Equal (t2, Application.Top);
 				Application.Run (t3);
 			};
-			t3.Ready += () => {
+			t3.Ready += (_, _) => {
 				Assert.Equal (t3, Application.Top);
 				Application.Run (d);
 			};
-			d.Ready += () => {
+			d.Ready += (_, _) => {
 				Assert.Equal (t3, Application.Top);
 				Application.Run (t4);
 			};
-			t4.Ready += () => {
+			t4.Ready += (_, _) => {
 				Assert.Equal (t4, Application.Top);
 				t4.RequestStop ();
 				d.RequestStop ();
@@ -492,7 +492,7 @@ namespace Terminal.Gui.ApplicationTests {
 				t2.RequestStop ();
 			};
 			// Now this will close the MdiContainer when all MdiChildes was closed
-			t2.Closed += (_) => {
+			t2.Closed += (_, _) => {
 				t1.RequestStop ();
 			};
 			Application.Iteration += () => {
@@ -728,7 +728,7 @@ namespace Terminal.Gui.ApplicationTests {
 			var top = Application.Top;
 			var isQuiting = false;
 
-			top.Closing += (e) => {
+			top.Closing += (s, e) => {
 				isQuiting = true;
 				e.Cancel = true;
 			};

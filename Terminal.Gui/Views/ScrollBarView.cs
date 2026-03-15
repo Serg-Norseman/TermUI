@@ -193,7 +193,7 @@ namespace Terminal.Gui {
 		/// <value>The size.</value>
 		/// <remarks>The <see cref="Size"/> is typically the size of the virtual content. E.g. when a Scrollbar is
 		/// part of a <see cref="View"/> the Size is set to the appropriate dimension of <see cref="Host"/>.</remarks>
-		public int Size {
+		public new int Size {
 			get => size;
 			set {
 				size = value;

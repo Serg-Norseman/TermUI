@@ -57,7 +57,7 @@ namespace Terminal.Gui.ViewTests {
 		{
 			var isChecked = false;
 			CheckBox ckb = new CheckBox ();
-			ckb.Toggled += (s, e) => isChecked = true;
+			ckb.CheckedChanged += (s, e) => isChecked = true;
 			Application.Top.Add (ckb);
 			Application.Begin (Application.Top);
 

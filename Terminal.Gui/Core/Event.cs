@@ -810,6 +810,17 @@ namespace Terminal.Gui {
 		/// </summary>
 		public bool Handled { get; set; }
 
+		public MouseEvent ()
+		{
+		}
+
+		public MouseEvent (int x, int y, MouseFlags flags)
+		{
+			X = x;
+			Y = y;
+			Flags = flags;
+		}
+
 		/// <summary>
 		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="MouseEvent"/>.
 		/// </summary>

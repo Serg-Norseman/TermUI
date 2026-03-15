@@ -44,7 +44,7 @@ namespace UICatalog.Scenarios {
 				X = Pos.Center (),
 				Y = Pos.Center () + 3
 			};
-			ckbDirection.Toggled += (s, _) => {
+			ckbDirection.CheckedChanged += (s, _) => {
 				if (labelH.TextDirection == TextDirection.LeftRight_TopBottom) {
 					labelH.TextDirection = TextDirection.TopBottom_LeftRight;
 					labelV.TextDirection = TextDirection.LeftRight_TopBottom;
@@ -60,7 +60,7 @@ namespace UICatalog.Scenarios {
 				Y = Pos.Center () + 5,
 				Checked = labelH.AutoSize = labelV.AutoSize
 			};
-			ckbAutoSize.Toggled += (s, _) => labelH.AutoSize = labelV.AutoSize = ckbAutoSize.Checked;
+			ckbAutoSize.CheckedChanged += (s, _) => labelH.AutoSize = labelV.AutoSize = ckbAutoSize.Checked;
 			Win.Add (ckbAutoSize);
 
 			var ckbPreserveTrailingSpaces = new CheckBox ("Preserve Trailing Spaces") {
@@ -68,7 +68,7 @@ namespace UICatalog.Scenarios {
 				Y = Pos.Center () + 7,
 				Checked = labelH.PreserveTrailingSpaces = labelV.PreserveTrailingSpaces
 			};
-			ckbPreserveTrailingSpaces.Toggled += (s, _) =>
+			ckbPreserveTrailingSpaces.CheckedChanged += (s, _) =>
 					labelH.PreserveTrailingSpaces = labelV.PreserveTrailingSpaces = ckbPreserveTrailingSpaces.Checked;
 			Win.Add (ckbPreserveTrailingSpaces);
 
@@ -76,7 +76,7 @@ namespace UICatalog.Scenarios {
 				X = Pos.Center (),
 				Y = Pos.Center () + 9
 			};
-			ckbWideText.Toggled += (s, _) => {
+			ckbWideText.CheckedChanged += (s, _) => {
 				if (ckbWideText.Checked) {
 					labelH.Text = labelV.Text = editText.Text = wideText;
 					labelH.Width = 14;

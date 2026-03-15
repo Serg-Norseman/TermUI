@@ -1,10 +1,13 @@
 using NStack;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 
 namespace Terminal.Gui {
+	public class TabPage : TabView.Tab
+	{
+	}
+
 
 	/// <summary>
 	/// Control that hosts multiple sub views, presenting a single one at once

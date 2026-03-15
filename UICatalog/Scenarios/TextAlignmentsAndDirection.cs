@@ -141,7 +141,7 @@ namespace UICatalog.Scenarios {
 				Height = 1
 			};
 
-			justifyCheckbox.Toggled += (s, prevtoggled) => {
+			justifyCheckbox.CheckedChanged += (s, prevtoggled) => {
 				if (prevtoggled) {
 					foreach (var t in mtxts) {
 						t.TextAlignment = (TextAlignment)((dynamic)t.Tag).h;

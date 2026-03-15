@@ -151,37 +151,37 @@ namespace Terminal.Gui.TopLevelTests {
 			var top = new Toplevel ();
 			var eventInvoked = "";
 
-			top.ChildUnloaded += (e) => eventInvoked = "ChildUnloaded";
+			top.ChildUnloaded += (s, e) => eventInvoked = "ChildUnloaded";
 			top.OnChildUnloaded (top);
 			Assert.Equal ("ChildUnloaded", eventInvoked);
-			top.ChildLoaded += (e) => eventInvoked = "ChildLoaded";
+			top.ChildLoaded += (s, e) => eventInvoked = "ChildLoaded";
 			top.OnChildLoaded (top);
 			Assert.Equal ("ChildLoaded", eventInvoked);
-			top.Closed += (e) => eventInvoked = "Closed";
+			top.Closed += (s, e) => eventInvoked = "Closed";
 			top.OnClosed (top);
 			Assert.Equal ("Closed", eventInvoked);
-			top.Closing += (e) => eventInvoked = "Closing";
+			top.Closing += (s, e) => eventInvoked = "Closing";
 			top.OnClosing (new ToplevelClosingEventArgs (top));
 			Assert.Equal ("Closing", eventInvoked);
-			top.AllChildClosed += () => eventInvoked = "AllChildClosed";
+			top.AllChildClosed += (_, _) => eventInvoked = "AllChildClosed";
 			top.OnAllChildClosed ();
 			Assert.Equal ("AllChildClosed", eventInvoked);
-			top.ChildClosed += (e) => eventInvoked = "ChildClosed";
+			top.ChildClosed += (s, e) => eventInvoked = "ChildClosed";
 			top.OnChildClosed (top);
 			Assert.Equal ("ChildClosed", eventInvoked);
-			top.Deactivate += (e) => eventInvoked = "Deactivate";
+			top.Deactivate += (s, e) => eventInvoked = "Deactivate";
 			top.OnDeactivate (top);
 			Assert.Equal ("Deactivate", eventInvoked);
-			top.Activate += (e) => eventInvoked = "Activate";
+			top.Activate += (s, e) => eventInvoked = "Activate";
 			top.OnActivate (top);
 			Assert.Equal ("Activate", eventInvoked);
-			top.Loaded += () => eventInvoked = "Loaded";
+			top.Loaded += (_, _) => eventInvoked = "Loaded";
 			top.OnLoaded ();
 			Assert.Equal ("Loaded", eventInvoked);
-			top.Ready += () => eventInvoked = "Ready";
+			top.Ready += (_, _) => eventInvoked = "Ready";
 			top.OnReady ();
 			Assert.Equal ("Ready", eventInvoked);
-			top.Unloaded += () => eventInvoked = "Unloaded";
+			top.Unloaded += (_, _) => eventInvoked = "Unloaded";
 			top.OnUnloaded ();
 			Assert.Equal ("Unloaded", eventInvoked);
 
@@ -355,8 +355,8 @@ namespace Terminal.Gui.TopLevelTests {
 
 			var top = Application.Top;
 			top.Add (win1, win2);
-			top.Loaded += () => isRunning = true;
-			top.Closing += (_) => isRunning = false;
+			top.Loaded += (_, _) => isRunning = true;
+			top.Closing += (_, _) => isRunning = false;
 			Application.Begin (top);
 			top.Running = true;
 
@@ -465,7 +465,7 @@ namespace Terminal.Gui.TopLevelTests {
 			var tf2W2 = new TextField ("Text2 on Win2") { X = Pos.Left (tf1W2), Width = Dim.Fill () };
 			win2.Add (lblTf1W2, tf1W2, lblTvW2, tvW2, lblTf2W2, tf2W2);
 
-			win1.Closing += (_) => isRunning = false;
+			win1.Closing += (_, _) => isRunning = false;
 			Assert.Null (top.Focused);
 			Assert.Equal (top, Application.Current);
 			Assert.True (top.IsCurrentTop);
@@ -589,9 +589,9 @@ namespace Terminal.Gui.TopLevelTests {
 
 			void View_Added (object sender, View obj)
 			{
-				Assert.Throws<NullReferenceException> (() => Application.Top.AlternateForwardKeyChanged += (e) => alternateForwardKey = e);
-				Assert.Throws<NullReferenceException> (() => Application.Top.AlternateBackwardKeyChanged += (e) => alternateBackwardKey = e);
-				Assert.Throws<NullReferenceException> (() => Application.Top.QuitKeyChanged += (e) => quitKey = e);
+				Assert.Throws<NullReferenceException> (() => Application.Top.AlternateForwardKeyChanged += (s, e) => alternateForwardKey = e);
+				Assert.Throws<NullReferenceException> (() => Application.Top.AlternateBackwardKeyChanged += (s, e) => alternateBackwardKey = e);
+				Assert.Throws<NullReferenceException> (() => Application.Top.QuitKeyChanged += (s, e) => quitKey = e);
 				Assert.False (wasAdded);
 				wasAdded = true;
 				view.Added -= View_Added;
@@ -621,9 +621,9 @@ namespace Terminal.Gui.TopLevelTests {
 
 			void View_Initialized (object sender, EventArgs e)
 			{
-				Application.Top.AlternateForwardKeyChanged += (e) => alternateForwardKey = e;
-				Application.Top.AlternateBackwardKeyChanged += (e) => alternateBackwardKey = e;
-				Application.Top.QuitKeyChanged += (e) => quitKey = e;
+				Application.Top.AlternateForwardKeyChanged += (s, e) => alternateForwardKey = e;
+				Application.Top.AlternateBackwardKeyChanged += (s, e) => alternateBackwardKey = e;
+				Application.Top.QuitKeyChanged += (s, e) => quitKey = e;
 			}
 
 			var win = new Window ();
@@ -668,7 +668,7 @@ namespace Terminal.Gui.TopLevelTests {
 		{
 			for (int i = 0; i < 8; i++) {
 				var fd = new FileDialog ();
-				fd.Ready += () => Application.RequestStop ();
+				fd.Ready += (_, _) => Application.RequestStop ();
 				Application.Run (fd);
 			}
 		}

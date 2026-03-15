@@ -101,7 +101,7 @@ namespace UICatalog.Scenarios {
 				ColorScheme = Colors.TopLevel,
 			};
 			_computedCheckBox = new CheckBox ("Computed Layout", true) { X = 0, Y = 0 };
-			_computedCheckBox.Toggled += (s, previousState) => {
+			_computedCheckBox.CheckedChanged += (s, previousState) => {
 				if (_curView != null) {
 					_curView.LayoutStyle = previousState ? LayoutStyle.Absolute : LayoutStyle.Computed;
 					_hostPane.LayoutSubviews ();

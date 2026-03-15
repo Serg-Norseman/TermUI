@@ -265,7 +265,7 @@ namespace UICatalog.Scenarios {
 				Y = 0,
 				Width = 5
 			};
-			cbDrawMarginFrame.Toggled += (s, e) => {
+			cbDrawMarginFrame.CheckedChanged += (s, e) => {
 				try {
 					smartView.Border.DrawMarginFrame = cbDrawMarginFrame.Checked;
 					if (cbDrawMarginFrame.Checked != smartView.Border.DrawMarginFrame) {
@@ -340,7 +340,7 @@ namespace UICatalog.Scenarios {
 			effect3DOffsetY.Text = $"{smartView.Border.Effect3DOffset.Y}";
 			Win.Add (effect3DOffsetY);
 
-			cbEffect3D.Toggled += (s, e) => {
+			cbEffect3D.CheckedChanged += (s, e) => {
 				try {
 					smartView.Border.Effect3D = effect3DOffsetX.Enabled =
 						effect3DOffsetY.Enabled = cbEffect3D.Checked;

@@ -470,8 +470,26 @@ namespace Terminal.Gui {
 				}
 				provider.Text = value;
 
+				OnTextChanged (value.ToString ());
+
 				SetNeedsDisplay ();
 			}
+		}
+
+		/// <summary>
+		///   Changed event, raised when the text has changed.
+		/// </summary>
+		/// <remarks>
+		///   This event is raised when the <see cref="Text"/> changes. 
+		/// </remarks>
+		/// <remarks>
+		///   The passed <see cref="EventArgs"/> is a <see cref="string"/> containing the old value. 
+		/// </remarks>
+		public event EventHandler<string> TextChanged;
+
+		protected virtual void OnTextChanged (string text)
+		{
+			TextChanged?.Invoke (this, text);
 		}
 
 		///<inheritdoc/>

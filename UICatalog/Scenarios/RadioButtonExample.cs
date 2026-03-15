@@ -28,11 +28,11 @@ namespace UICatalog.Scenarios {
 			var lblToggle = new Label () { Location = new Point(2, 20), Text = "debug line" };
 
 			// Subscribe to events
-			rbMale.Toggled += (s, e) => {
+			rbMale.CheckedChanged += (s, e) => {
 				if (e.NewValue) lblToggle.Text = "Selected: Male";
 			};
 
-			rbAdmin.Toggled += (s, e) => {
+			rbAdmin.CheckedChanged += (s, e) => {
 				if (e.NewValue) lblToggle.Text = "Selected: Administrator";
 			};
 

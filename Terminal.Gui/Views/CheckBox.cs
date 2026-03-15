@@ -25,14 +25,14 @@ namespace Terminal.Gui {
 		///   raised when the <see cref="CheckBox"/> is activated either with
 		///   the mouse or the keyboard. The passed <c>bool</c> contains the previous state. 
 		/// </remarks>
-		public event EventHandler<bool> Toggled;
+		public event EventHandler<bool> CheckedChanged;
 
 		/// <summary>
-		/// Called when the <see cref="Checked"/> property changes. Invokes the <see cref="Toggled"/> event.
+		/// Called when the <see cref="Checked"/> property changes. Invokes the <see cref="CheckedChanged"/> event.
 		/// </summary>
 		public virtual void OnToggled (bool previousChecked)
 		{
-			Toggled?.Invoke (this, previousChecked);
+			CheckedChanged?.Invoke (this, previousChecked);
 		}
 
 		/// <summary>

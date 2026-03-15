@@ -38,7 +38,9 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// State change event (after group processing)
 		/// </summary>
-		public event EventHandler<ToggledEventArgs> Toggled;
+		public event EventHandler<ToggledEventArgs> CheckedChanged;
+
+		public event EventHandler Clicked;
 
 		public RadioButton () : base ()
 		{
@@ -136,7 +138,7 @@ namespace Terminal.Gui {
 			UpdateTextFormatterText ();
 			ProcessResizeView ();
 
-			Toggled?.Invoke (this, new ToggledEventArgs { OldValue = oldValue, NewValue = newValue });
+			CheckedChanged?.Invoke (this, new ToggledEventArgs { OldValue = oldValue, NewValue = newValue });
 		}
 
 		///<inheritdoc/>
@@ -173,9 +175,13 @@ namespace Terminal.Gui {
 				return false;
 
 			SetFocus ();
+
+			Clicked?.Invoke (this, EventArgs.Empty);
+
 			if (!Checked) {
 				Checked = true;
 			}
+
 			SetNeedsDisplay ();
 
 			return true;

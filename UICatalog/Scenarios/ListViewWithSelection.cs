@@ -29,7 +29,7 @@ namespace UICatalog.Scenarios {
 				Height = 1,
 			};
 			Win.Add (_customRenderCB);
-			_customRenderCB.Toggled += _customRenderCB_Toggled;
+			_customRenderCB.CheckedChanged += _customRenderCB_Toggled;
 
 			_allowMarkingCB = new CheckBox ("Allow Marking") {
 				X = Pos.Right (_customRenderCB) + 1,
@@ -37,7 +37,7 @@ namespace UICatalog.Scenarios {
 				Height = 1,
 			};
 			Win.Add (_allowMarkingCB);
-			_allowMarkingCB.Toggled += AllowMarkingCB_Toggled;
+			_allowMarkingCB.CheckedChanged += AllowMarkingCB_Toggled;
 
 			_allowMultipleCB = new CheckBox ("Allow Multi-Select") {
 				X = Pos.Right (_allowMarkingCB) + 1,
@@ -46,7 +46,7 @@ namespace UICatalog.Scenarios {
 				Visible = _allowMarkingCB.Checked
 			};
 			Win.Add (_allowMultipleCB);
-			_allowMultipleCB.Toggled += AllowMultipleCB_Toggled;
+			_allowMultipleCB.CheckedChanged += AllowMultipleCB_Toggled;
 
 			_listView = new ListView () {
 				X = 1,
@@ -93,7 +93,7 @@ namespace UICatalog.Scenarios {
 				X = Pos.AnchorEnd (k.Length + 3),
 				Y = 0,
 			};
-			keepCheckBox.Toggled += (s, _) => _scrollBar.KeepContentAlwaysInViewport = keepCheckBox.Checked;
+			keepCheckBox.CheckedChanged += (s, _) => _scrollBar.KeepContentAlwaysInViewport = keepCheckBox.Checked;
 			Win.Add (keepCheckBox);
 		}
 

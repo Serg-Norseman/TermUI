@@ -151,7 +151,7 @@ namespace UICatalog.Scenarios {
 			};
 			scrollView.Add (verticalRuler);
 
-			void Top_Loaded ()
+			void Top_Loaded (object sender, EventArgs e)
 			{
 				horizontalRuler.Text = rule.Repeat ((int)Math.Ceiling ((double)(horizontalRuler.Bounds.Width) / (double)rule.Length)) [0..(horizontalRuler.Bounds.Width)] +
 					"\n" + "|         ".Repeat ((int)Math.Ceiling ((double)(horizontalRuler.Bounds.Width) / (double)rule.Length)) [0..(horizontalRuler.Bounds.Width)];
@@ -236,7 +236,7 @@ namespace UICatalog.Scenarios {
 				X = Pos.Left (scrollView) + (scrollView.Bounds.Width / 2) - (k.Length / 2),
 				Y = Pos.Bottom (scrollView) + 4,
 			};
-			hCheckBox.Toggled += (s, _) => {
+			hCheckBox.CheckedChanged += (s, _) => {
 				if (!ahCheckBox.Checked) {
 					scrollView.ShowHorizontalScrollIndicator = hCheckBox.Checked;
 				} else {
@@ -244,7 +244,7 @@ namespace UICatalog.Scenarios {
 					MessageBox.Query ("Message", "Disable Auto Hide Scrollbars first.", "Ok");
 				}
 			};
-			vCheckBox.Toggled += (s, _) => {
+			vCheckBox.CheckedChanged += (s, _) => {
 				if (!ahCheckBox.Checked) {
 					scrollView.ShowVerticalScrollIndicator = vCheckBox.Checked;
 				} else {
@@ -252,14 +252,14 @@ namespace UICatalog.Scenarios {
 					MessageBox.Query ("Message", "Disable Auto Hide Scrollbars first.", "Ok");
 				}
 			};
-			ahCheckBox.Toggled += (s, _) => {
+			ahCheckBox.CheckedChanged += (s, _) => {
 				scrollView.AutoHideScrollBars = ahCheckBox.Checked;
 				hCheckBox.Checked = true;
 				vCheckBox.Checked = true;
 			};
 			Win.Add (ahCheckBox);
 
-			keepCheckBox.Toggled += (s, _) => scrollView.KeepContentAlwaysInViewport = keepCheckBox.Checked;
+			keepCheckBox.CheckedChanged += (s, _) => scrollView.KeepContentAlwaysInViewport = keepCheckBox.Checked;
 			Win.Add (keepCheckBox);
 
 			var scrollView2 = new ScrollView (new Rect (55, 2, 20, 8)) {
@@ -310,7 +310,7 @@ namespace UICatalog.Scenarios {
 			}
 			Application.MainLoop.AddTimeout (TimeSpan.FromMilliseconds (300), timer);
 
-			void Top_Unloaded ()
+			void Top_Unloaded (object sender, EventArgs e)
 			{
 				pulsing = false;
 				Application.Top.Unloaded -= Top_Unloaded;

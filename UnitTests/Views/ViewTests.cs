@@ -905,7 +905,7 @@ namespace Terminal.Gui.ViewTests {
 			w.Add (f);
 			t.Add (w);
 
-			t.Ready += () => {
+			t.Ready += (_, _) => {
 				Assert.True (t.CanFocus);
 				Assert.True (w.CanFocus);
 				Assert.True (f.CanFocus);
@@ -949,7 +949,7 @@ namespace Terminal.Gui.ViewTests {
 			w.Add (f);
 			t.Add (w);
 
-			t.Ready += () => {
+			t.Ready += (_, _) => {
 				Assert.True (t.CanFocus);
 				Assert.True (w.CanFocus);
 				Assert.True (f.CanFocus);
@@ -984,7 +984,7 @@ namespace Terminal.Gui.ViewTests {
 			w.Add (f);
 			t.Add (w);
 
-			t.Ready += () => {
+			t.Ready += (_, _) => {
 				Assert.True (t.CanFocus);
 				Assert.True (w.CanFocus);
 				Assert.True (f.CanFocus);
@@ -1018,7 +1018,7 @@ namespace Terminal.Gui.ViewTests {
 
 			Application.Init (new FakeDriver ());
 
-			Application.Top.Ready += () => {
+			Application.Top.Ready += (_, _) => {
 				Assert.Null (Application.Top.Focused);
 			};
 
@@ -1078,7 +1078,7 @@ namespace Terminal.Gui.ViewTests {
 
 			t.Ready += FirstDialogToplevel;
 
-			void FirstDialogToplevel ()
+			void FirstDialogToplevel (object sender, EventArgs e)
 			{
 				var od = new OpenDialog ();
 				od.Ready += SecoundDialogToplevel;
@@ -1102,7 +1102,7 @@ namespace Terminal.Gui.ViewTests {
 				Application.Run (od);
 			}
 
-			void SecoundDialogToplevel ()
+			void SecoundDialogToplevel (object sender, EventArgs e)
 			{
 				var d = new Dialog ();
 

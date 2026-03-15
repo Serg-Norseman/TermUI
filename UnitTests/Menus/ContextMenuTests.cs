@@ -953,7 +953,7 @@ namespace Terminal.Gui.MenuTests {
 			};
 
 			var isTopClosed = false;
-			top.Closing += (_) => {
+			top.Closing += (_, _) => {
 				var dialog2 = new Dialog ();
 				Application.Run (dialog2);
 

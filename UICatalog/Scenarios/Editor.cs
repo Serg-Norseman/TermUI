@@ -199,7 +199,7 @@ namespace UICatalog.Scenarios {
 				}
 			};
 
-			Application.Top.Closed += (_) => Thread.CurrentThread.CurrentUICulture = new CultureInfo ("en-US");
+			Application.Top.Closed += (_, _) => Thread.CurrentThread.CurrentUICulture = new CultureInfo ("en-US");
 		}
 
 		private void DisposeWinDialog ()
@@ -840,7 +840,7 @@ namespace UICatalog.Scenarios {
 				Y = Pos.Top (txtToFind) + 2,
 				Checked = _matchCase
 			};
-			ckbMatchCase.Toggled += (s, e) => _matchCase = ckbMatchCase.Checked;
+			ckbMatchCase.CheckedChanged += (s, e) => _matchCase = ckbMatchCase.Checked;
 			d.Add (ckbMatchCase);
 
 			var ckbMatchWholeWord = new CheckBox ("Match _whole word") {
@@ -848,7 +848,7 @@ namespace UICatalog.Scenarios {
 				Y = Pos.Top (ckbMatchCase) + 1,
 				Checked = _matchWholeWord
 			};
-			ckbMatchWholeWord.Toggled += (s, e) => _matchWholeWord = ckbMatchWholeWord.Checked;
+			ckbMatchWholeWord.CheckedChanged += (s, e) => _matchWholeWord = ckbMatchWholeWord.Checked;
 			d.Add (ckbMatchWholeWord);
 
 			d.Width = label.Width + txtToFind.Width + btnFindNext.Width + 2;
@@ -961,7 +961,7 @@ namespace UICatalog.Scenarios {
 				Y = Pos.Top (txtToFind) + 2,
 				Checked = _matchCase
 			};
-			ckbMatchCase.Toggled += (s, e) => _matchCase = ckbMatchCase.Checked;
+			ckbMatchCase.CheckedChanged += (s, e) => _matchCase = ckbMatchCase.Checked;
 			d.Add (ckbMatchCase);
 
 			var ckbMatchWholeWord = new CheckBox ("Match _whole word") {
@@ -969,7 +969,7 @@ namespace UICatalog.Scenarios {
 				Y = Pos.Top (ckbMatchCase) + 1,
 				Checked = _matchWholeWord
 			};
-			ckbMatchWholeWord.Toggled += (s, e) => _matchWholeWord = ckbMatchWholeWord.Checked;
+			ckbMatchWholeWord.CheckedChanged += (s, e) => _matchWholeWord = ckbMatchWholeWord.Checked;
 			d.Add (ckbMatchWholeWord);
 
 			d.Width = lblWidth + txtToFind.Width + btnFindNext.Width + 2;

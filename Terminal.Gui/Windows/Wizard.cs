@@ -393,17 +393,17 @@ namespace Terminal.Gui {
 				AddKeyBinding (Key.Esc, Command.QuitToplevel);
 			}
 
-			Initialized += (s, e) => Wizard_Loaded ();
+			Initialized += Wizard_Loaded;
 		}
 
-		private void Wizard_Loaded ()
+		private void Wizard_Loaded (object sender, EventArgs e)
 		{
 			CurrentStep = GetFirstStep (); // gets the first step if CurrentStep == null
 		}
 
 		private bool finishedPressed = false;
 
-		private void Wizard_Closing (ToplevelClosingEventArgs obj)
+		private void Wizard_Closing (object sender, ToplevelClosingEventArgs obj)
 		{
 			if (!finishedPressed) {
 				var args = new WizardButtonEventArgs ();

@@ -673,7 +673,7 @@ namespace Terminal.Gui {
 				Width = Dim.Fill (1),
 				Height = SetComboBoxHeight (allowedTypes),
 				Text = allowedTypes?.Count > 0 ? allowedTypes [0] : string.Empty,
-				SelectedItem = allowedTypes?.Count > 0 ? 0 : -1,
+				SelectedIndex = allowedTypes?.Count > 0 ? 0 : -1,
 				ReadOnly = true,
 				HideDropdownListOnClick = true
 			};
@@ -856,12 +856,12 @@ namespace Terminal.Gui {
 			get => allowedFileTypes;
 			set {
 				allowedFileTypes = value;
-				var selected = cmbAllowedTypes.SelectedItem;
+				var selected = cmbAllowedTypes.SelectedIndex;
 				cmbAllowedTypes.SetSource (value);
-				cmbAllowedTypes.SelectedItem = selected > -1 ? selected : 0;
+				cmbAllowedTypes.SelectedIndex = selected > -1 ? selected : 0;
 				SetComboBoxHeight (value?.ToList ());
 				dirListView.AllowedFileTypes = value != null
-					? value [cmbAllowedTypes.SelectedItem].Split (';')
+					? value [cmbAllowedTypes.SelectedIndex].Split (';')
 					: null;
 			}
 		}

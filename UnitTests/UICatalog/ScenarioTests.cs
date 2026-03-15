@@ -302,7 +302,7 @@ namespace UICatalog.Tests {
 				_curView = CreateClass (_viewClasses.Values.ToArray () [_classListView.SelectedItem]);
 			};
 
-			_computedCheckBox.Toggled += (s, previousState) => {
+			_computedCheckBox.CheckedChanged += (s, previousState) => {
 				if (_curView != null) {
 					_curView.LayoutStyle = previousState ? LayoutStyle.Absolute : LayoutStyle.Computed;
 					_hostPane.LayoutSubviews ();

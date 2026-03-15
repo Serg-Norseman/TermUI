@@ -206,7 +206,7 @@ namespace UICatalog.Scenarios {
 				Y = Pos.Y (replacePadding) + 3,
 				Checked = smartPanel.UsePanelFrame
 			};
-			cbUseUsePanelFrame.Toggled += (s, e) => smartPanel.UsePanelFrame = !e;
+			cbUseUsePanelFrame.CheckedChanged += (s, e) => smartPanel.UsePanelFrame = !e;
 			Win.Add (cbUseUsePanelFrame);
 
 			Win.Add (new Label ("Border:") {
@@ -337,7 +337,7 @@ namespace UICatalog.Scenarios {
 				Y = 0,
 				Width = 5
 			};
-			cbDrawMarginFrame.Toggled += (s, e) => {
+			cbDrawMarginFrame.CheckedChanged += (s, e) => {
 				try {
 					smartPanel.Child.Border.DrawMarginFrame = cbDrawMarginFrame.Checked;
 					smartView.Border.DrawMarginFrame = cbDrawMarginFrame.Checked;
@@ -420,7 +420,7 @@ namespace UICatalog.Scenarios {
 			effect3DOffsetY.Text = $"{smartView.Border.Effect3DOffset.Y}";
 			Win.Add (effect3DOffsetY);
 
-			cbEffect3D.Toggled += (s, e) => {
+			cbEffect3D.CheckedChanged += (s, e) => {
 				try {
 					smartPanel.Child.Border.Effect3D = smartView.Border.Effect3D = effect3DOffsetX.Enabled =
 						effect3DOffsetY.Enabled = cbEffect3D.Checked;

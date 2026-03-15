@@ -1098,6 +1098,9 @@ namespace Terminal.Gui {
 		/// </remarks>
 		public void Clear ()
 		{
+			if (Driver == null)
+				return;
+
 			var h = Frame.Height;
 			var w = Frame.Width;
 			for (var line = 0; line < h; line++) {

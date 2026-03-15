@@ -70,7 +70,7 @@ namespace UICatalog.Scenarios {
 			};
 			frame.Add (titleEdit);
 
-			void Top_Loaded ()
+			void Top_Loaded (object sender, EventArgs e)
 			{
 				frame.Height = Dim.Height (widthEdit) + Dim.Height (heightEdit) + Dim.Height (titleEdit) + 2;
 				Application.Top.Loaded -= Top_Loaded;
@@ -202,7 +202,7 @@ namespace UICatalog.Scenarios {
 					};
 					thirdStep.Add (progLbl, progressBar);
 					thirdStep.Enabled = thirdStepEnabledCeckBox.Checked;
-					thirdStepEnabledCeckBox.Toggled += (s, args) => {
+					thirdStepEnabledCeckBox.CheckedChanged += (s, args) => {
 						thirdStep.Enabled = thirdStepEnabledCeckBox.Checked;
 					};
 
@@ -277,7 +277,7 @@ namespace UICatalog.Scenarios {
 					wizard.AddStep (finalFinalStep);
 					finalFinalStep.HelpText = "This step only shows if it was enabled on the other last step.";
 					finalFinalStep.Enabled = thirdStepEnabledCeckBox.Checked;
-					finalFinalStepEnabledCeckBox.Toggled += (s, args) => {
+					finalFinalStepEnabledCeckBox.CheckedChanged += (s, args) => {
 						finalFinalStep.Enabled = finalFinalStepEnabledCeckBox.Checked;
 					};
 

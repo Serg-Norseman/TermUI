@@ -1448,12 +1448,12 @@ namespace Terminal.Gui {
 			OnContentsChanged ();
 		}
 
-		void Top_AlternateBackwardKeyChanged (Key obj)
+		void Top_AlternateBackwardKeyChanged (object sender, Key obj)
 		{
 			ReplaceKeyBinding (obj, Application.AlternateBackwardKey);
 		}
 
-		void Top_AlternateForwardKeyChanged (Key obj)
+		void Top_AlternateForwardKeyChanged (object sender, Key obj)
 		{
 			ReplaceKeyBinding (obj, Application.AlternateForwardKey);
 		}

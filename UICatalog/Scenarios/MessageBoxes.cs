@@ -147,12 +147,12 @@ namespace UICatalog.Scenarios {
 				X = Pos.Right (label) + 1,
 				Y = Pos.Top (label) + 2
 			};
-			ckbEffect3D.Toggled += (s, e) => {
+			ckbEffect3D.CheckedChanged += (s, e) => {
 				border.Effect3D = !e;
 			};
 			frame.Add (ckbEffect3D);
 
-			void Top_Loaded ()
+			void Top_Loaded (object sender, EventArgs e)
 			{
 				frame.Height = Dim.Height (widthEdit) + Dim.Height (heightEdit) + Dim.Height (titleEdit) + Dim.Height (messageEdit)
 				+ Dim.Height (numButtonsEdit) + Dim.Height (defaultButtonEdit) + Dim.Height (styleRadioGroup) + 2 + Dim.Height (ckbEffect3D);

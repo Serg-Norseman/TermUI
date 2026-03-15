@@ -106,7 +106,7 @@ namespace Terminal.Gui {
 			AddKeyBinding (Key.F | Key.CtrlMask, Command.Right);
 		}
 
-		void DateField_Changed (object sender, ustring e)
+		void DateField_Changed (object sender, string e)
 		{
 			try {
 				if (!DateTime.TryParseExact (GetDate (Text).ToString (), GetInvarianteFormat (), CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime result))

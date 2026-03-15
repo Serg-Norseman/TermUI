@@ -80,7 +80,7 @@ namespace UICatalog.Scenarios {
 			};
 			comboBox.SetSource (items);
 
-			comboBox.SelectedItemChanged += (object sender, ListViewItemEventArgs text) => lbComboBox.Text = text.Value.ToString ();
+			comboBox.SelectedIndexChanged += (object sender, ListViewItemEventArgs text) => lbComboBox.Text = text.Value.ToString ();
 			Win.Add (lbComboBox, comboBox);
 
 			var scrollBarCbx = new ScrollBarView (comboBox.Subviews [1], true);

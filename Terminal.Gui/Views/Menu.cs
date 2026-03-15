@@ -172,7 +172,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		public bool IsEnabled ()
 		{
-			return CanExecute == null ? true : CanExecute ();
+			return CanExecute == null || CanExecute ();
 		}
 
 		// 
@@ -328,9 +328,9 @@ namespace Terminal.Gui {
 			if (parent != null) {
 				Parent = parent;
 			}
-			if (children is List<MenuItem []>) {
+			if (children is List<MenuItem []> childrenList) {
 				MenuItem [] childrens = new MenuItem [] { };
-				foreach (var item in (List<MenuItem []>)children) {
+				foreach (var item in childrenList) {
 					for (int i = 0; i < item.Length; i++) {
 						SetChildrensParent (item);
 						Array.Resize (ref childrens, childrens.Length + 1);
@@ -338,9 +338,9 @@ namespace Terminal.Gui {
 					}
 				}
 				Children = childrens;
-			} else if (children is MenuItem []) {
-				SetChildrensParent ((MenuItem [])children);
-				Children = (MenuItem [])children;
+			} else if (children is MenuItem [] childrenArr) {
+				SetChildrensParent (childrenArr);
+				Children = childrenArr;
 			} else {
 				Children = null;
 			}
@@ -492,7 +492,7 @@ namespace Terminal.Gui {
 			AddKeyBinding (Key.Enter, Command.Accept);
 		}
 
-		private void Current_Resized (Size obj)
+		private void Current_Resized (object sender, Size obj)
 		{
 			if (host.IsMenuOpen) {
 				host.CloseAllMenus ();
@@ -1085,9 +1085,7 @@ namespace Terminal.Gui {
 					// that faults.
 
 					var mbar = GetMouseGrabViewInstance (this);
-					if (mbar != null) {
-						mbar.CleanUp ();
-					}
+					mbar?.CleanUp ();
 
 					//Activate (0);
 					//StartMenu ();
@@ -1121,9 +1119,7 @@ namespace Terminal.Gui {
 			IsMenuOpen = false;
 			selected = -1;
 			CanFocus = false;
-			if (lastFocused != null) {
-				lastFocused.SetFocus ();
-			}
+			lastFocused?.SetFocus ();
 			SetNeedsDisplay ();
 			Application.UngrabMouse ();
 			isCleaning = false;
@@ -1398,9 +1394,7 @@ namespace Terminal.Gui {
 		public void OpenMenu ()
 		{
 			var mbar = GetMouseGrabViewInstance (this);
-			if (mbar != null) {
-				mbar.CleanUp ();
-			}
+			mbar?.CleanUp ();
 
 			if (openMenu != null)
 				return;

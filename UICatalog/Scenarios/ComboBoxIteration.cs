@@ -28,9 +28,16 @@ namespace UICatalog.Scenarios {
 			var frameView = new FrameView () {
 				X = Pos.Right (lbListView) + 3,
 				Width = Dim.Percent (40),
-				Height = 6 // 6 - for dropdown tests, 20 - for list tests
+				Height = 7 // 6 - for dropdown tests, 20 - for list tests
 			};
 			Win.Add (frameView);
+
+			var txtValue = new TextField ();
+			txtValue.X = Pos.Left (frameView);
+			txtValue.Y = Pos.Bottom (frameView) + 20;
+			txtValue.Width = 30;
+			txtValue.Text = "text from combo";
+			Win.Add (txtValue);
 
 			var lbComboBox = new Label () {
 				ColorScheme = Colors.TopLevel,
@@ -43,7 +50,7 @@ namespace UICatalog.Scenarios {
 				//DropDownBorderStyle = BorderStyle.Single,
 				MaxDropDownItems = 5,
 				X = 1,
-				Y = 1,
+				Y = 2,
 				Width = Dim.Percent (40)
 			};
 			comboBox.SetSource (items);
@@ -53,10 +60,14 @@ namespace UICatalog.Scenarios {
 
 			listview.SelectedItemChanged += (sender, e) => {
 				lbListView.Text = items [e.Item];
-				comboBox.SelectedItem = e.Item;
+				comboBox.SelectedIndex = e.Item;
 			};
 
-			comboBox.SelectedItemChanged += (object sender, ListViewItemEventArgs text) => {
+			comboBox.TextChanged += (s, e) => {
+				txtValue.Text = comboBox.Text;
+			};
+
+			comboBox.SelectedIndexChanged += (object sender, ListViewItemEventArgs text) => {
 				if (text.Item != -1) {
 					lbComboBox.Text = text.Value.ToString ();
 					listview.SelectedItem = text.Item;
@@ -90,18 +101,44 @@ namespace UICatalog.Scenarios {
 			};
 			Win.Add (btnThree);
 
+			var chkSearchMode = new CheckBox ("SearchMode", false) { X = Pos.Right (frameView) + 3, Y = Pos.Bottom (btnThree) + 2 };
+			Win.Add (chkSearchMode);
+
 			var chkReadOnly = new CheckBox ("ReadOnly", false) { X = Pos.Right (frameView) + 3, Y = Pos.Bottom (btnThree) + 3 };
-			chkReadOnly.Toggled += (s, previousState) => {
+			Win.Add (chkReadOnly);
+
+			var chkHideDropdownListOnClick = new CheckBox ("HideDropdownListOnClick", false) { X = Pos.Right (frameView) + 3, Y = Pos.Bottom (btnThree) + 4 };
+			Win.Add (chkHideDropdownListOnClick);
+
+			chkReadOnly.Checked = comboBox.ReadOnly;
+			chkSearchMode.Checked = comboBox.SearchMode;
+			chkHideDropdownListOnClick.Checked = comboBox.HideDropdownListOnClick;
+
+			chkSearchMode.CheckedChanged += (s, previousState) => {
+				if (comboBox != null) {
+					comboBox.SearchMode = chkSearchMode.Checked;
+				}
+			};
+			chkReadOnly.CheckedChanged += (s, previousState) => {
 				if (comboBox != null) {
 					comboBox.ReadOnly = chkReadOnly.Checked;
 				}
 			};
-			Win.Add (chkReadOnly);
+			chkHideDropdownListOnClick.CheckedChanged += (s, previousState) => {
+				if (comboBox != null) {
+					comboBox.HideDropdownListOnClick = chkHideDropdownListOnClick.Checked;
+					if (chkHideDropdownListOnClick.Checked) {
+						frameView.Height = 7;
+					} else {
+						frameView.Height = 15;
+					}
+				}
+			};
 
 			var borderStyleEnum = Enum.GetValues (typeof (BorderStyle)).Cast<BorderStyle> ().ToList ();
 			var rbBorderStyle = new RadioGroup (borderStyleEnum.Select (e => NStack.ustring.Make (e.ToString ())).ToArray ()) {
 				X = Pos.Left (chkReadOnly),
-				Y = Pos.Top (chkReadOnly) + 2,
+				Y = Pos.Bottom (btnThree) + 7,
 				SelectedItem = (int)comboBox.DropDownBorderStyle
 			};
 			Win.Add (rbBorderStyle);

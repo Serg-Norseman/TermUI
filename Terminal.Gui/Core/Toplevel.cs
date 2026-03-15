@@ -48,7 +48,7 @@ namespace Terminal.Gui {
 		/// A Loaded event handler is a good place to finalize initialization before calling 
 		/// <see cref="Application.RunLoop(Application.RunState, bool)"/>.
 		/// </summary>
-		public event Action Loaded;
+		public event EventHandler Loaded;
 
 		/// <summary>
 		/// Invoked when the Toplevel <see cref="MainLoop"/> has started it's first iteration.
@@ -57,91 +57,91 @@ namespace Terminal.Gui {
 		/// <para>A Ready event handler is a good place to finalize initialization after calling 
 		/// <see cref="Application.Run(Func{Exception, bool})"/> on this Toplevel.</para>
 		/// </summary>
-		public event Action Ready;
+		public event EventHandler Ready;
 
 		/// <summary>
 		/// Invoked when the Toplevel <see cref="Application.RunState"/> has been unloaded.
 		/// A Unloaded event handler is a good place to dispose objects after calling <see cref="Application.End(Application.RunState)"/>.
 		/// </summary>
-		public event Action Unloaded;
+		public event EventHandler Unloaded;
 
 		/// <summary>
 		/// Invoked when the Toplevel <see cref="Application.RunState"/> becomes the <see cref="Application.Current"/> Toplevel.
 		/// </summary>
-		public event Action<Toplevel> Activate;
+		public event EventHandler<Toplevel> Activate;
 
 		/// <summary>
 		/// Invoked when the Toplevel<see cref="Application.RunState"/> ceases to be the <see cref="Application.Current"/> Toplevel.
 		/// </summary>
-		public event Action<Toplevel> Deactivate;
+		public event EventHandler<Toplevel> Deactivate;
 
 		/// <summary>
 		/// Invoked when a child of the Toplevel <see cref="Application.RunState"/> is closed by  
 		/// <see cref="Application.End(Application.RunState)"/>.
 		/// </summary>
-		public event Action<Toplevel> ChildClosed;
+		public event EventHandler<Toplevel> ChildClosed;
 
 		/// <summary>
 		/// Invoked when the last child of the Toplevel <see cref="Application.RunState"/> is closed from 
 		/// by <see cref="Application.End(Application.RunState)"/>.
 		/// </summary>
-		public event Action AllChildClosed;
+		public event EventHandler AllChildClosed;
 
 		/// <summary>
 		/// Invoked when the Toplevel's <see cref="Application.RunState"/> is being closed by  
 		/// <see cref="Application.RequestStop(Toplevel)"/>.
 		/// </summary>
-		public event Action<ToplevelClosingEventArgs> Closing;
+		public event EventHandler<ToplevelClosingEventArgs> Closing;
 
 		/// <summary>
 		/// Invoked when the Toplevel's <see cref="Application.RunState"/> is closed by <see cref="Application.End(Application.RunState)"/>.
 		/// </summary>
-		public event Action<Toplevel> Closed;
+		public event EventHandler<Toplevel> Closed;
 
 		/// <summary>
 		/// Invoked when a child Toplevel's <see cref="Application.RunState"/> has been loaded.
 		/// </summary>
-		public event Action<Toplevel> ChildLoaded;
+		public event EventHandler<Toplevel> ChildLoaded;
 
 		/// <summary>
 		/// Invoked when a cjhild Toplevel's <see cref="Application.RunState"/> has been unloaded.
 		/// </summary>
-		public event Action<Toplevel> ChildUnloaded;
+		public event EventHandler<Toplevel> ChildUnloaded;
 
 		/// <summary>
 		/// Invoked when the terminal has been resized. The new <see cref="Size"/> of the terminal is provided.
 		/// </summary>
-		public event Action<Size> Resized;
+		public event EventHandler<Size> Resized;
 
 		protected internal virtual void OnResized (Size size)
 		{
-			Resized?.Invoke (size);
+			Resized?.Invoke (this, size);
 		}
 
 		protected internal virtual void OnChildUnloaded (Toplevel top)
 		{
-			ChildUnloaded?.Invoke (top);
+			ChildUnloaded?.Invoke (this, top);
 		}
 
 		protected internal virtual void OnChildLoaded (Toplevel top)
 		{
-			ChildLoaded?.Invoke (top);
+			ChildLoaded?.Invoke (this, top);
 		}
 
 		protected internal virtual void OnClosed (Toplevel top)
 		{
-			Closed?.Invoke (top);
+			Closed?.Invoke (this, top);
 		}
 
 		protected internal virtual bool OnClosing (ToplevelClosingEventArgs ev)
 		{
-			Closing?.Invoke (ev);
+			Closing?.Invoke (this, ev);
 			return ev.Cancel;
 		}
 
 		protected internal virtual void OnAllChildClosed ()
 		{
-			AllChildClosed?.Invoke ();
+			AllChildClosed?.Invoke (this, EventArgs.Empty);
 		}
 
 		protected internal virtual void OnChildClosed (Toplevel top)
@@ -149,17 +149,17 @@ namespace Terminal.Gui {
 			if (IsMdiContainer) {
 				SetChildNeedsDisplay ();
 			}
-			ChildClosed?.Invoke (top);
+			ChildClosed?.Invoke (this, top);
 		}
 
 		protected internal virtual void OnDeactivate (Toplevel activated)
 		{
-			Deactivate?.Invoke (activated);
+			Deactivate?.Invoke (this, activated);
 		}
 
 		protected internal virtual void OnActivate (Toplevel deactivated)
 		{
-			Activate?.Invoke (deactivated);
+			Activate?.Invoke (this, deactivated);
 		}
 
 		/// <summary>
@@ -170,7 +170,7 @@ namespace Terminal.Gui {
 			foreach (Toplevel tl in Subviews.Where (v => v is Toplevel)) {
 				tl.OnLoaded ();
 			}
-			Loaded?.Invoke ();
+			Loaded?.Invoke (this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -182,7 +182,7 @@ namespace Terminal.Gui {
 			foreach (Toplevel tl in Subviews.Where (v => v is Toplevel)) {
 				tl.OnReady ();
 			}
-			Ready?.Invoke ();
+			Ready?.Invoke (this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -193,7 +193,7 @@ namespace Terminal.Gui {
 			foreach (Toplevel tl in Subviews.Where (v => v is Toplevel)) {
 				tl.OnUnloaded ();
 			}
-			Unloaded?.Invoke ();
+			Unloaded?.Invoke (this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -279,7 +279,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Invoked when the <see cref="Application.AlternateForwardKey"/> is changed.
 		/// </summary>
-		public event Action<Key> AlternateForwardKeyChanged;
+		public event EventHandler<Key> AlternateForwardKeyChanged;
 
 		/// <summary>
 		/// Virtual method to invoke the <see cref="AlternateForwardKeyChanged"/> event.
@@ -288,13 +288,13 @@ namespace Terminal.Gui {
 		public virtual void OnAlternateForwardKeyChanged (Key oldKey)
 		{
 			ReplaceKeyBinding (oldKey, Application.AlternateForwardKey);
-			AlternateForwardKeyChanged?.Invoke (oldKey);
+			AlternateForwardKeyChanged?.Invoke (this, oldKey);
 		}
 
 		/// <summary>
 		/// Invoked when the <see cref="Application.AlternateBackwardKey"/> is changed.
 		/// </summary>
-		public event Action<Key> AlternateBackwardKeyChanged;
+		public event EventHandler<Key> AlternateBackwardKeyChanged;
 
 		/// <summary>
 		/// Virtual method to invoke the <see cref="AlternateBackwardKeyChanged"/> event.
@@ -303,13 +303,13 @@ namespace Terminal.Gui {
 		public virtual void OnAlternateBackwardKeyChanged (Key oldKey)
 		{
 			ReplaceKeyBinding (oldKey, Application.AlternateBackwardKey);
-			AlternateBackwardKeyChanged?.Invoke (oldKey);
+			AlternateBackwardKeyChanged?.Invoke (this, oldKey);
 		}
 
 		/// <summary>
 		/// Invoked when the <see cref="Application.QuitKey"/> is changed.
 		/// </summary>
-		public event Action<Key> QuitKeyChanged;
+		public event EventHandler<Key> QuitKeyChanged;
 
 		/// <summary>
 		/// Virtual method to invoke the <see cref="QuitKeyChanged"/> event.
@@ -318,7 +318,7 @@ namespace Terminal.Gui {
 		public virtual void OnQuitKeyChanged (Key oldKey)
 		{
 			ReplaceKeyBinding (oldKey, Application.QuitKey);
-			QuitKeyChanged?.Invoke (oldKey);
+			QuitKeyChanged?.Invoke (this, oldKey);
 		}
 
 		/// <summary>

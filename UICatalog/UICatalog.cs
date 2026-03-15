@@ -271,7 +271,7 @@ namespace UICatalog {
 				ScenarioListView.SelectedItem = _cachedScenarioIndex;
 			}
 
-			void LoadedHandler ()
+			void LoadedHandler (object sender, EventArgs e)
 			{
 				if (_colorScheme == null) {
 					ColorScheme = _colorScheme = Colors.Base;

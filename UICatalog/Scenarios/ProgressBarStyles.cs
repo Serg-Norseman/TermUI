@@ -120,7 +120,7 @@ namespace UICatalog.Scenarios {
 				marqueesContinuousPB.ProgressBarFormat = (ProgressBarFormat)e.SelectedItem;
 			};
 
-			ckbBidirectional.Toggled += (s, e) => {
+			ckbBidirectional.CheckedChanged += (s, e) => {
 				ckbBidirectional.Checked = marqueesBlocksPB.BidirectionalMarquee = marqueesContinuousPB.BidirectionalMarquee = !e;
 			};
 
@@ -133,7 +133,7 @@ namespace UICatalog.Scenarios {
 
 			Application.Top.Unloaded += Top_Unloaded;
 
-			void Top_Unloaded ()
+			void Top_Unloaded (object sender, EventArgs e)
 			{
 				if (_fractionTimer != null) {
 					_fractionTimer.Dispose ();

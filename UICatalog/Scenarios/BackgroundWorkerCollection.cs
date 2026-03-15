@@ -63,7 +63,7 @@ namespace UICatalog.Scenarios {
 				};
 			}
 
-			private void MdiMain_Closed (Toplevel obj)
+			private void MdiMain_Closed (object sender, Toplevel obj)
 			{
 				workerApp.Dispose ();
 				Dispose ();
@@ -82,12 +82,12 @@ namespace UICatalog.Scenarios {
 				}
 			}
 
-			private void MdiMain_Deactivate (Toplevel top)
+			private void MdiMain_Deactivate (object sender, Toplevel top)
 			{
 				workerApp.WriteLog ($"{top.Tag} deactivate.");
 			}
 
-			private void MdiMain_Activate (Toplevel top)
+			private void MdiMain_Activate (object sender, Toplevel top)
 			{
 				workerApp.WriteLog ($"{top.Tag} activate.");
 			}
