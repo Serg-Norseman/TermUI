@@ -1,8 +1,5 @@
 # Terminal.Gui v1 API Overview
 
-> [!NOTE]
-> This is the v1 API documentation. For v2 go here: https://gui-cs.github.io/Terminal.Gui
-
 `Terminal.Gui` is a library intended to create console-based
 applications using C#. The framework has been designed to make it
 easy to write applications that will work on monochrome terminals, as

@@ -23,15 +23,15 @@ namespace Terminal.Gui.ViewTests {
 			return GetTabView (out _, out _);
 		}
 
-		private TabView GetTabView (out TabView.Tab tab1, out TabView.Tab tab2, bool initFakeDriver = true)
+		private TabView GetTabView (out TabPage tab1, out TabPage tab2, bool initFakeDriver = true)
 		{
 			if (initFakeDriver)
 				InitFakeDriver ();
 
 			var tv = new TabView ();
 			tv.ColorScheme = new ColorScheme ();
-			tv.AddTab (tab1 = new TabView.Tab ("Tab1", new TextField ("hi")), false);
-			tv.AddTab (tab2 = new TabView.Tab ("Tab2", new Label ("hi2")), false);
+			tv.AddTab (tab1 = new TabPage ("Tab1", new TextField ("hi")), false);
+			tv.AddTab (tab2 = new TabPage ("Tab2", new Label ("hi2")), false);
 			return tv;
 		}
 
@@ -41,10 +41,10 @@ namespace Terminal.Gui.ViewTests {
 			InitFakeDriver ();
 
 			var tv = new TabView ();
-			TabView.Tab tab1;
-			TabView.Tab tab2;
-			tv.AddTab (tab1 = new TabView.Tab ("Tab1", new TextField ("hi")), false);
-			tv.AddTab (tab2 = new TabView.Tab ("Tab1", new Label ("hi2")), true);
+			TabPage tab1;
+			TabPage tab2;
+			tv.AddTab (tab1 = new TabPage ("Tab1", new TextField ("hi")), false);
+			tv.AddTab (tab2 = new TabPage ("Tab1", new Label ("hi2")), true);
 
 			Assert.Equal (2, tv.Tabs.Count);
 			Assert.Equal (tab2, tv.SelectedTab);
@@ -98,8 +98,8 @@ namespace Terminal.Gui.ViewTests {
 
 			tv.SelectedTab = tab1;
 
-			TabView.Tab oldTab = null;
-			TabView.Tab newTab = null;
+			TabPage oldTab = null;
+			TabPage newTab = null;
 			int called = 0;
 
 			tv.SelectedTabChanged += (s, e) => {
@@ -172,13 +172,13 @@ namespace Terminal.Gui.ViewTests {
 		{
 			var tv = GetTabView (out var tab1, out var tab2);
 
-			TabView.Tab tab3;
-			TabView.Tab tab4;
-			TabView.Tab tab5;
+			TabPage tab3;
+			TabPage tab4;
+			TabPage tab5;
 
-			tv.AddTab (tab3 = new TabView.Tab (), false);
-			tv.AddTab (tab4 = new TabView.Tab (), false);
-			tv.AddTab (tab5 = new TabView.Tab (), false);
+			tv.AddTab (tab3 = new TabPage (), false);
+			tv.AddTab (tab4 = new TabPage (), false);
+			tv.AddTab (tab5 = new TabPage (), false);
 
 			tv.SelectedTab = tab1;
 
@@ -321,7 +321,7 @@ namespace Terminal.Gui.ViewTests {
 			var tv = GetTabView (out var tab1, out var tab2, false);
 			tv.Width = 10;
 			tv.Height = 5;
-			tv.Style = new TabView.TabStyle { ShowTopLine = false };
+			tv.Style = new TabStyle { ShowTopLine = false };
 			tv.ApplyStyleChanges ();
 
 			// Ensures that the tab bar subview gets the bounds of the parent TabView
@@ -417,7 +417,7 @@ namespace Terminal.Gui.ViewTests {
 			var tv = GetTabView (out _, out _, false);
 			tv.Width = 4;
 			tv.Height = 5;
-			tv.Style = new TabView.TabStyle { ShowTopLine = false };
+			tv.Style = new TabStyle { ShowTopLine = false };
 			tv.ApplyStyleChanges ();
 			tv.LayoutSubviews ();
 
@@ -455,7 +455,7 @@ namespace Terminal.Gui.ViewTests {
 			var tv = GetTabView (out _, out _, false);
 			tv.Width = 3;
 			tv.Height = 5;
-			tv.Style = new TabView.TabStyle { ShowTopLine = false };
+			tv.Style = new TabStyle { ShowTopLine = false };
 			tv.ApplyStyleChanges ();
 			tv.LayoutSubviews ();
 
@@ -475,7 +475,7 @@ namespace Terminal.Gui.ViewTests {
 			var tv = GetTabView (out var tab1, out var tab2, false);
 			tv.Width = 10;
 			tv.Height = 5;
-			tv.Style = new TabView.TabStyle { TabsOnBottom = true };
+			tv.Style = new TabStyle { TabsOnBottom = true };
 			tv.ApplyStyleChanges ();
 
 			// Ensures that the tab bar subview gets the bounds of the parent TabView
@@ -540,7 +540,7 @@ namespace Terminal.Gui.ViewTests {
 			var tv = GetTabView (out var tab1, out var tab2, false);
 			tv.Width = 10;
 			tv.Height = 5;
-			tv.Style = new TabView.TabStyle { ShowTopLine = false, TabsOnBottom = true };
+			tv.Style = new TabStyle { ShowTopLine = false, TabsOnBottom = true };
 			tv.ApplyStyleChanges ();
 
 			// Ensures that the tab bar subview gets the bounds of the parent TabView
@@ -618,7 +618,7 @@ namespace Terminal.Gui.ViewTests {
 			var tv = GetTabView (out _, out _, false);
 			tv.Width = 4;
 			tv.Height = 5;
-			tv.Style = new TabView.TabStyle { TabsOnBottom = true };
+			tv.Style = new TabStyle { TabsOnBottom = true };
 			tv.ApplyStyleChanges ();
 			tv.LayoutSubviews ();
 
@@ -638,7 +638,7 @@ namespace Terminal.Gui.ViewTests {
 			var tv = GetTabView (out _, out _, false);
 			tv.Width = 4;
 			tv.Height = 5;
-			tv.Style = new TabView.TabStyle { ShowTopLine = false, TabsOnBottom = true };
+			tv.Style = new TabStyle { ShowTopLine = false, TabsOnBottom = true };
 			tv.ApplyStyleChanges ();
 			tv.LayoutSubviews ();
 
@@ -658,7 +658,7 @@ namespace Terminal.Gui.ViewTests {
 			var tv = GetTabView (out _, out _, false);
 			tv.Width = 3;
 			tv.Height = 5;
-			tv.Style = new TabView.TabStyle { TabsOnBottom = true };
+			tv.Style = new TabStyle { TabsOnBottom = true };
 			tv.ApplyStyleChanges ();
 			tv.LayoutSubviews ();
 
@@ -678,7 +678,7 @@ namespace Terminal.Gui.ViewTests {
 			var tv = GetTabView (out _, out _, false);
 			tv.Width = 3;
 			tv.Height = 5;
-			tv.Style = new TabView.TabStyle { ShowTopLine = false, TabsOnBottom = true };
+			tv.Style = new TabStyle { ShowTopLine = false, TabsOnBottom = true };
 			tv.ApplyStyleChanges ();
 			tv.LayoutSubviews ();
 
@@ -731,7 +731,7 @@ namespace Terminal.Gui.ViewTests {
 			var tv = GetTabView (out var tab1, out var tab2, false);
 			tv.Width = 20;
 			tv.Height = 5;
-			tv.Style = new TabView.TabStyle { TabsOnBottom = true };
+			tv.Style = new TabStyle { TabsOnBottom = true };
 			tv.ApplyStyleChanges ();
 
 			tv.LayoutSubviews ();
@@ -783,7 +783,7 @@ namespace Terminal.Gui.ViewTests {
 └──────────────────┘
 ", output);
 
-			TabView.Tab clicked = null;
+			TabPage clicked = null;
 			
 
 			tv.TabClicked += (s,e)=>{

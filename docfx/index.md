@@ -1,13 +1,8 @@
 # Terminal.Gui v1 - Cross Platform Terminal UI toolkit for .NET
 
-> [!NOTE]
-> This is the v1 API documentation. For v2 go here: https://gui-cs.github.io/Terminal.Gui
-
-A toolkit for building rich console apps for .NET, .NET Core, and Mono that works on Windows, the Mac, and Linux/Unix.
+A toolkit for building rich console apps for .NET, .NET Core that works on Windows, the Mac, and Linux/Unix.
 
 ![Sample](images/sample.gif)
-
-* [Terminal.Gui Project on GitHub](https://github.com/gui-cs/Terminal.Gui)
 
 ## Terminal.Gui API Documentation
 

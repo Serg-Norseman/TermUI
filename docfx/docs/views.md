@@ -1,8 +1,5 @@
 *Terminal.Gui v1* provides a rich set of views and controls for building terminal user interfaces:
 
-> [!NOTE]
-> This is the v1 API documentation. For v2 go here: https://gui-cs.github.io/Terminal.Gui
-
 * [Button](~/api/Terminal.Gui.Button.yml) - A View that provides an item that invokes an System.Action when activated by the user.
 * [CheckBox](~/api/Terminal.Gui.CheckBox.yml) - Shows an on/off toggle that the user can set.
 * [ColorPicker](~/api/Terminal.Gui.ColorPicker.yml) - Enables to user to pick a color.

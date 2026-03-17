@@ -741,9 +741,9 @@ namespace UICatalog.Scenarios {
 				Height = Dim.Fill ()
 			};
 
-			_tabView.AddTab (new TabView.Tab ("Find", FindTab ()), isFind);
+			_tabView.AddTab (new TabPage ("Find", FindTab ()), isFind);
 			var replace = ReplaceTab ();
-			_tabView.AddTab (new TabView.Tab ("Replace", replace), !isFind);
+			_tabView.AddTab (new TabPage ("Replace", replace), !isFind);
 			_tabView.SelectedTabChanged += (s, e) => _tabView.SelectedTab.View.FocusFirst ();
 			_winDialog.Add (_tabView);
 

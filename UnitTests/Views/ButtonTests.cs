@@ -477,7 +477,7 @@ namespace Terminal.Gui.ViewTests {
 				Width = Dim.Fill (),
 				Height = Dim.Fill ()
 			};
-			tabView.AddTab (new TabView.Tab ("Find", tab), true);
+			tabView.AddTab (new TabPage ("Find", tab), true);
 
 			var win = new Window ("Find") {
 				Width = Dim.Fill (),

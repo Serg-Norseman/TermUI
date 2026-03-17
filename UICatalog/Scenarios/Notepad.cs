@@ -65,7 +65,7 @@ namespace UICatalog.Scenarios {
 			New ();
 		}
 
-		private void TabView_TabClicked (object sender, TabView.TabMouseEventArgs e)
+		private void TabView_TabClicked (object sender, TabMouseEventArgs e)
 		{
 			// we are only interested in right clicks
 			if(!e.MouseEvent.Flags.HasFlag(MouseFlags.Button3Clicked)) {
@@ -102,7 +102,7 @@ namespace UICatalog.Scenarios {
 		{
 			Close (tabView.SelectedTab);
 		}
-		private void Close (TabView.Tab tabToClose)
+		private void Close (TabPage tabToClose)
 		{
 			var tab = tabToClose as OpenedFile;
 
@@ -194,7 +194,7 @@ namespace UICatalog.Scenarios {
 		{
 			Save (tabView.SelectedTab);
 		}
-		public void Save (TabView.Tab tabToSave)
+		public void Save (TabPage tabToSave)
 		{
 			var tab = tabToSave as OpenedFile;
 
@@ -232,7 +232,7 @@ namespace UICatalog.Scenarios {
 			return true;
 		}
 
-		private class OpenedFile : TabView.Tab {
+		private class OpenedFile : TabPage {
 			public FileInfo File { get; set; }
 
 			/// <summary>

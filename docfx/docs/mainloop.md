@@ -1,7 +1,5 @@
 # Event Processing and the Application Main Loop
 
-**These are the v1 API docs**. The v2 API docs are [here](https://gui-cs.github.io/Terminal.GuiV2Docs/).
-
 _See also [Cross-platform Driver Model](drivers.md)_
 
 The method `Application.Run` that we covered before will wait for
