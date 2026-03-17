@@ -266,31 +266,32 @@ namespace Terminal.Gui {
 
 		///<inheritdoc/>
 		public override void Redraw (Rect bounds)
-			{
-				Move (0, 0);
-				var frame = Frame;
+		{
+			Move (0, 0);
+			var frame = Frame;
 
-				scrollRightPoint = null;
-				scrollLeftPoint = null;
+			scrollRightPoint = null;
+			scrollLeftPoint = null;
 
-				// What columns to render at what X offset in viewport
-				var columnsToRender = CalculateViewport (bounds).ToArray ();
+			// What columns to render at what X offset in viewport
+			var columnsToRender = CalculateViewport (bounds).ToArray ();
 
-				Driver.SetAttribute (GetNormalColor ());
+			Driver.SetAttribute (GetNormalColor ());
 
-				//invalidate current row (prevents scrolling around leaving old characters in the frame
-				Driver.AddStr (new string (' ', bounds.Width));
+			//invalidate current row (prevents scrolling around leaving old characters in the frame
+			Driver.AddStr (new string (' ', bounds.Width));
 
-				int line = 0;
+			int line = 0;
 
-				if (ShouldRenderHeaders ()) {
-					// Render something like:
-					/*
-						┌────────────────────┬──────────┬───────────┬──────────────┬─────────┐
-						│ArithmeticComparator│chi       │Healthboard│Interpretation│Labnumber│
-						└────────────────────┴──────────┴───────────┴──────────────┴─────────┘
-					*/
-			if (Style.ShowHorizontalHeaderOverline) {
+			if (ShouldRenderHeaders ()) {
+				// Render something like:
+				/*
+					┌────────────────────┬──────────┬───────────┬──────────────┬─────────┐
+					│ArithmeticComparator│chi       │Healthboard│Interpretation│Labnumber│
+					└────────────────────┴──────────┴───────────┴──────────────┴─────────┘
+				*/
+
+				if (Style.ShowHorizontalHeaderOverline) {
 					RenderHeaderOverline (line, bounds.Width, columnsToRender);
 					line++;
 				}
@@ -304,6 +305,7 @@ namespace Terminal.Gui {
 				}
 			}
 
+			bool isNullOrInvisible = TableIsNullOrInvisible ();
 			int headerLinesConsumed = line;
 
 			//render the cells
@@ -315,7 +317,10 @@ namespace Terminal.Gui {
 				var rowToRender = RowOffset + (line - headerLinesConsumed);
 
 				//if we have run off the end of the table
-				if (TableIsNullOrInvisible () || rowToRender >= Table.Rows.Count || rowToRender < 0)
+				if (isNullOrInvisible || rowToRender < 0)
+					continue;
+
+				if (rowToRender >= Table.Rows.Count && !Style.AlwaysShowVerticalCellLines)
 					continue;
 
 				RenderRow (line, rowToRender, columnsToRender);
@@ -511,8 +516,8 @@ namespace Terminal.Gui {
 
 				AddRuneAt (Driver, c, row, rune);
 			}
-
 		}
+
 		private void RenderRow (int row, int rowToRender, ColumnToRender [] columnsToRender)
 		{
 			var focused = HasFocus;
@@ -540,6 +545,8 @@ namespace Terminal.Gui {
 			Driver.SetAttribute (color);
 			Driver.AddStr (new string (' ', Bounds.Width));
 
+			int rowsCount = Table.Rows.Count;
+
 			// Render cells for each visible header for the current row
 			for (int i = 0; i < columnsToRender.Length; i++) {
 
@@ -553,7 +560,7 @@ namespace Terminal.Gui {
 				// Set color scheme based on whether the current cell is the selected one
 				bool isSelectedCell = IsSelected (current.Column.Ordinal, rowToRender);
 
-				var val = Table.Rows [rowToRender] [current.Column];
+				var val = (rowToRender >= rowsCount) ? null : Table.Rows [rowToRender] [current.Column];
 
 				// Render the (possibly truncated) cell value
 				var representation = GetRepresentation (val, colStyle);
@@ -1473,9 +1480,11 @@ namespace Terminal.Gui {
 				rowsToRender -= GetHeaderHeight ();
 
 			bool first = true;
-			var lastColumn = Table.Columns.Cast<DataColumn> ().Last ();
+			var dataColumns = Table.Columns.Cast<DataColumn> ();
+			var lastColumn = dataColumns.Last ();
+			int requiredMin = (int)(availableHorizontalSpace * 0.20f);
 
-			foreach (var col in Table.Columns.Cast<DataColumn> ().Skip (ColumnOffset)) {
+			foreach (var col in dataColumns.Skip (ColumnOffset)) {
 
 				int startingIdxForCurrentHeader = usedSpace;
 				var colStyle = Style.GetColumnStyleIfAny (col);
@@ -1508,6 +1517,12 @@ namespace Terminal.Gui {
 						colWidth = availableHorizontalSpace - usedSpace;
 					}
 
+					// if this column is at least 20% of the width of the view can be visible
+					if (availableHorizontalSpace - usedSpace >= requiredMin) {
+						showColumn = true;
+						colWidth = availableHorizontalSpace - usedSpace;
+					}
+
 					// If its the only column we are able to render then
 					// accept it anyway (that must be one massively wide column!)
 					if (first)
@@ -1517,7 +1532,7 @@ namespace Terminal.Gui {
 
 					// no special exceptions and we are out of space
 					// so stop accepting new columns for the render area
-					if(!showColumn)
+					if (!showColumn)
 						break;
 				}
 
@@ -1555,7 +1570,6 @@ namespace Terminal.Gui {
 			if (RowOffset < 0)
 				return spaceRequired;
 
-
 			for (int i = RowOffset; i < RowOffset + rowsToRender && i < Table.Rows.Count; i++) {
 
 				//expand required space if cell is bigger than the last biggest cell or header
@@ -1580,7 +1594,6 @@ namespace Terminal.Gui {
 			if (spaceRequired > MaxCellWidth)
 				spaceRequired = MaxCellWidth;
 
-
 			return spaceRequired;
 		}
 
@@ -1593,7 +1606,7 @@ namespace Terminal.Gui {
 		private string GetRepresentation (object value, ColumnStyle colStyle)
 		{
 			if (value == null || value == DBNull.Value) {
-				return NullSymbol;
+				return (Style.ShowNullSymbol) ? NullSymbol : string.Empty;
 			}
 
 			return colStyle != null ? colStyle.GetRepresentation (value) : value.ToString ();
@@ -1741,6 +1754,16 @@ namespace Terminal.Gui {
 			/// True to render a solid line vertical line between cells
 			/// </summary>
 			public bool ShowVerticalCellLines { get; set; } = true;
+
+			/// <summary>
+			/// True if vertical lines between cells need to be drawn for empty rows. Historically = false.
+			/// </summary>
+			public bool AlwaysShowVerticalCellLines { get; set; } = false;
+
+			/// <summary>
+			/// True if need to print a dash in empty cells.
+			/// </summary>
+			public bool ShowNullSymbol { get; set; } = true;
 
 			/// <summary>
 			/// True to render a solid line vertical line between headers
