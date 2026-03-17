@@ -4,8 +4,128 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Terminal.Gui {
-	public class TabPage : TabView.Tab
-	{
+	/// <summary>
+	/// A single tab in a <see cref="TabView"/>
+	/// </summary>
+	public class TabPage {
+		private ustring text;
+
+		/// <summary>
+		/// The text to display in a <see cref="TabView"/>
+		/// </summary>
+		/// <value></value>
+		public ustring Text { get => text ?? "Unamed"; set => text = value; }
+
+		/// <summary>
+		/// The control to display when the tab is selected
+		/// </summary>
+		/// <value></value>
+		public View View { get; set; }
+
+		/// <summary>
+		/// Creates a new unamed tab with no controls inside
+		/// </summary>
+		public TabPage ()
+		{
+
+		}
+
+		/// <summary>
+		/// Creates a new tab with the given text hosting a view
+		/// </summary>
+		/// <param name="text"></param>
+		/// <param name="view"></param>
+		public TabPage (string text, View view)
+		{
+			this.Text = text;
+			this.View = view;
+		}
+	}
+
+	/// <summary>
+	/// Describes a mouse event over a specific <see cref="TabPage"/> in a <see cref="TabView"/>.
+	/// </summary>
+	public class TabMouseEventArgs : EventArgs {
+
+		/// <summary>
+		/// Gets the <see cref="TabPage"/> (if any) that the mouse
+		/// was over when the <see cref="MouseEvent"/> occurred.
+		/// </summary>
+		/// <remarks>This will be null if the click is after last tab
+		/// or before first.</remarks>
+		public TabPage Tab { get; }
+
+		/// <summary>
+		/// Gets the actual mouse event.  Use <see cref="MouseEvent.Handled"/> to cancel this event
+		/// and perform custom behavior (e.g. show a context menu).
+		/// </summary>
+		public MouseEvent MouseEvent { get; }
+
+		/// <summary>
+		/// Creates a new instance of the <see cref="TabMouseEventArgs"/> class.
+		/// </summary>
+		/// <param name="tab"><see cref="TabPage"/> that the mouse was over when the event occurred.</param>
+		/// <param name="mouseEvent">The mouse activity being reported</param>
+		public TabMouseEventArgs (TabPage tab, MouseEvent mouseEvent)
+		{
+			Tab = tab;
+			MouseEvent = mouseEvent;
+		}
+	}
+
+	/// <summary>
+	/// Describes render stylistic selections of a <see cref="TabView"/>
+	/// </summary>
+	public class TabStyle {
+
+		/// <summary>
+		/// True to show the top lip of tabs.  False to directly begin with tab text during 
+		/// rendering.  When true header line occupies 3 rows, when false only 2.
+		/// Defaults to true.
+		/// 
+		/// <para>When <see cref="TabsOnBottom"/> is enabled this instead applies to the
+		///  bottommost line of the control</para>
+		/// </summary> 
+		public bool ShowTopLine { get; set; } = true;
+
+
+		/// <summary>
+		/// True to show a solid box around the edge of the control.  Defaults to true.
+		/// </summary>
+		public bool ShowBorder { get; set; } = true;
+
+		/// <summary>
+		/// True to render tabs at the bottom of the view instead of the top
+		/// </summary>
+		public bool TabsOnBottom { get; set; } = false;
+
+	}
+
+	/// <summary>
+	/// Describes a change in <see cref="TabView.SelectedTab"/>
+	/// </summary>
+	public class TabChangedEventArgs : EventArgs {
+
+		/// <summary>
+		/// The previously selected tab. May be null
+		/// </summary>
+		public TabPage OldTab { get; }
+
+		/// <summary>
+		/// The currently selected tab. May be null
+		/// </summary>
+		public TabPage NewTab { get; }
+
+		/// <summary>
+		/// Documents a tab change
+		/// </summary>
+		/// <param name="oldTab"></param>
+		/// <param name="newTab"></param>
+		public TabChangedEventArgs (TabPage oldTab, TabPage newTab)
+		{
+			OldTab = oldTab;
+			NewTab = newTab;
+		}
 	}
 
 
@@ -13,7 +133,7 @@ namespace Terminal.Gui {
 	/// Control that hosts multiple sub views, presenting a single one at once
 	/// </summary>
 	public class TabView : View {
-		private Tab selectedTab;
+		private TabPage selectedTab;
 
 		/// <summary>
 		/// The default <see cref="MaxTabTextWidth"/> to set on new <see cref="TabView"/> controls
@@ -28,17 +148,17 @@ namespace Terminal.Gui {
 		private class TabContentView : View { }
 
 		/// <summary>
-		/// This sub view is the main client area of the current tab.  It hosts the <see cref="Tab.View"/> 
+		/// This sub view is the main client area of the current tab.  It hosts the <see cref="TabPage.View"/> 
 		/// of the tab, the <see cref="SelectedTab"/>
 		/// </summary>
 		TabContentView contentView;
-		private List<Tab> tabs = new List<Tab> ();
+		private List<TabPage> tabs = new List<TabPage> ();
 
 		/// <summary>
 		/// All tabs currently hosted by the control
 		/// </summary>
 		/// <value></value>
-		public IReadOnlyList<Tab> Tabs { get => tabs.AsReadOnly (); }
+		public IReadOnlyList<TabPage> Tabs { get => tabs.AsReadOnly (); }
 
 		/// <summary>
 		/// When there are too many tabs to render, this indicates the first
@@ -60,7 +180,7 @@ namespace Terminal.Gui {
 
 
 		/// <summary>
-		/// Event fired when a <see cref="TabView.Tab"/> is clicked.  Can be used to cancel navigation,
+		/// Event fired when a <see cref="TabPage"/> is clicked.  Can be used to cancel navigation,
 		/// show context menu (e.g. on right click) etc.
 		/// </summary>
 		public event EventHandler<TabMouseEventArgs> TabClicked;
@@ -70,7 +190,7 @@ namespace Terminal.Gui {
 		/// The currently selected member of <see cref="Tabs"/> chosen by the user
 		/// </summary>
 		/// <value></value>
-		public Tab SelectedTab {
+		public TabPage SelectedTab {
 			get => selectedTab;
 			set {
 
@@ -240,7 +360,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Raises the <see cref="SelectedTabChanged"/> event
 		/// </summary>
-		protected virtual void OnSelectedTabChanged (Tab oldTab, Tab newTab)
+		protected virtual void OnSelectedTabChanged (TabPage oldTab, TabPage newTab)
 		{
 
 			SelectedTabChanged?.Invoke (this, new TabChangedEventArgs (oldTab, newTab));
@@ -393,7 +513,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="tab"></param>
 		/// <param name="andSelect">True to make the newly added Tab the <see cref="SelectedTab"/></param>
-		public void AddTab (Tab tab, bool andSelect = false)
+		public void AddTab (TabPage tab, bool andSelect = false)
 		{
 			if (tabs.Contains (tab)) {
 				return;
@@ -416,11 +536,11 @@ namespace Terminal.Gui {
 
 		/// <summary>
 		/// Removes the given <paramref name="tab"/> from <see cref="Tabs"/>.
-		/// Caller is responsible for disposing the tab's hosted <see cref="Tab.View"/>
+		/// Caller is responsible for disposing the tab's hosted <see cref="TabPage.View"/>
 		/// if appropriate.
 		/// </summary>
 		/// <param name="tab"></param>
-		public void RemoveTab (Tab tab)
+		public void RemoveTab (TabPage tab)
 		{
 			if (tab == null || !tabs.Contains (tab)) {
 				return;
@@ -452,7 +572,7 @@ namespace Terminal.Gui {
 
 		private class TabToRender {
 			public int X { get; set; }
-			public Tab Tab { get; set; }
+			public TabPage Tab { get; set; }
 
 			/// <summary>
 			/// True if the tab that is being rendered is the selected one
@@ -462,7 +582,7 @@ namespace Terminal.Gui {
 			public int Width { get; }
 			public string TextToRender { get; }
 
-			public TabToRender (int x, Tab tab, string textToRender, bool isSelected, int width)
+			public TabToRender (int x, TabPage tab, string textToRender, bool isSelected, int width)
 			{
 				X = x;
 				Tab = tab;
@@ -765,7 +885,7 @@ namespace Terminal.Gui {
 			/// <param name="x"></param>
 			/// <param name="y"></param>
 			/// <returns></returns>
-			public Tab ScreenToTab (int x, int y)
+			public TabPage ScreenToTab (int x, int y)
 			{
 				var tabs = host.CalculateViewport (Bounds);
 
@@ -780,130 +900,6 @@ namespace Terminal.Gui {
 		protected virtual private void OnTabClicked (TabMouseEventArgs tabMouseEventArgs)
 		{
 			TabClicked?.Invoke (this, tabMouseEventArgs);
-		}
-
-		/// <summary>
-		/// Describes a mouse event over a specific <see cref="TabView.Tab"/> in a <see cref="TabView"/>.
-		/// </summary>
-		public class TabMouseEventArgs : EventArgs {
-
-			/// <summary>
-			/// Gets the <see cref="TabView.Tab"/> (if any) that the mouse
-			/// was over when the <see cref="MouseEvent"/> occurred.
-			/// </summary>
-			/// <remarks>This will be null if the click is after last tab
-			/// or before first.</remarks>
-			public Tab Tab { get; }
-
-			/// <summary>
-			/// Gets the actual mouse event.  Use <see cref="MouseEvent.Handled"/> to cancel this event
-			/// and perform custom behavior (e.g. show a context menu).
-			/// </summary>
-			public MouseEvent MouseEvent { get; }
-
-			/// <summary>
-			/// Creates a new instance of the <see cref="TabMouseEventArgs"/> class.
-			/// </summary>
-			/// <param name="tab"><see cref="TabView.Tab"/> that the mouse was over when the event occurred.</param>
-			/// <param name="mouseEvent">The mouse activity being reported</param>
-			public TabMouseEventArgs (Tab tab, MouseEvent mouseEvent)
-			{
-				Tab = tab;
-				MouseEvent = mouseEvent;
-			}
-		}
-
-		/// <summary>
-		/// A single tab in a <see cref="TabView"/>
-		/// </summary>
-		public class Tab {
-			private ustring text;
-
-			/// <summary>
-			/// The text to display in a <see cref="TabView"/>
-			/// </summary>
-			/// <value></value>
-			public ustring Text { get => text ?? "Unamed"; set => text = value; }
-
-			/// <summary>
-			/// The control to display when the tab is selected
-			/// </summary>
-			/// <value></value>
-			public View View { get; set; }
-
-			/// <summary>
-			/// Creates a new unamed tab with no controls inside
-			/// </summary>
-			public Tab ()
-			{
-
-			}
-
-			/// <summary>
-			/// Creates a new tab with the given text hosting a view
-			/// </summary>
-			/// <param name="text"></param>
-			/// <param name="view"></param>
-			public Tab (string text, View view)
-			{
-				this.Text = text;
-				this.View = view;
-			}
-		}
-
-		/// <summary>
-		/// Describes render stylistic selections of a <see cref="TabView"/>
-		/// </summary>
-		public class TabStyle {
-
-			/// <summary>
-			/// True to show the top lip of tabs.  False to directly begin with tab text during 
-			/// rendering.  When true header line occupies 3 rows, when false only 2.
-			/// Defaults to true.
-			/// 
-			/// <para>When <see cref="TabsOnBottom"/> is enabled this instead applies to the
-			///  bottommost line of the control</para>
-			/// </summary> 
-			public bool ShowTopLine { get; set; } = true;
-
-
-			/// <summary>
-			/// True to show a solid box around the edge of the control.  Defaults to true.
-			/// </summary>
-			public bool ShowBorder { get; set; } = true;
-
-			/// <summary>
-			/// True to render tabs at the bottom of the view instead of the top
-			/// </summary>
-			public bool TabsOnBottom { get; set; } = false;
-
-		}
-
-		/// <summary>
-		/// Describes a change in <see cref="TabView.SelectedTab"/>
-		/// </summary>
-		public class TabChangedEventArgs : EventArgs {
-
-			/// <summary>
-			/// The previously selected tab. May be null
-			/// </summary>
-			public Tab OldTab { get; }
-
-			/// <summary>
-			/// The currently selected tab. May be null
-			/// </summary>
-			public Tab NewTab { get; }
-
-			/// <summary>
-			/// Documents a tab change
-			/// </summary>
-			/// <param name="oldTab"></param>
-			/// <param name="newTab"></param>
-			public TabChangedEventArgs (Tab oldTab, Tab newTab)
-			{
-				OldTab = oldTab;
-				NewTab = newTab;
-			}
 		}
 		#endregion
 	}
