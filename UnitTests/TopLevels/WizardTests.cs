@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using Terminal.Gui;
-using Xunit;
-using System.Globalization;
+﻿using Xunit;
 using Xunit.Abstractions;
-using NStack;
 
 namespace Terminal.Gui.TopLevelTests {
 
@@ -42,7 +34,7 @@ namespace Terminal.Gui.TopLevelTests {
 		public void WizardStep_Set_Title_Fires_TitleChanging ()
 		{
 			var r = new Window ();
-			Assert.Equal (ustring.Empty, r.Title);
+			Assert.Equal (string.Empty, r.Title);
 
 			string expectedAfter = string.Empty;
 			string expectedDuring = string.Empty;
@@ -70,7 +62,7 @@ namespace Terminal.Gui.TopLevelTests {
 		public void WizardStep_Set_Title_Fires_TitleChanged ()
 		{
 			var r = new Window ();
-			Assert.Equal (ustring.Empty, r.Title);
+			Assert.Equal (string.Empty, r.Title);
 
 			string expected = string.Empty;
 			r.TitleChanged += (s, args) => {

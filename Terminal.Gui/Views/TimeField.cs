@@ -4,19 +4,21 @@
 // Author: Jörg Preiß
 //
 // Licensed under the MIT license
+
 using System;
 using System.Globalization;
 using System.Linq;
-using NStack;
 
-namespace Terminal.Gui {
+namespace Terminal.Gui
+{
 	/// <summary>
 	///   Time editing <see cref="View"/>
 	/// </summary>
 	/// <remarks>
 	///   The <see cref="TimeField"/> <see cref="View"/> provides time editing functionality with mouse support.
 	/// </remarks>
-	public class TimeField : TextField {
+	public class TimeField : TextField
+	{
 		TimeSpan time;
 		bool isShort;
 
@@ -47,27 +49,27 @@ namespace Terminal.Gui {
 		/// <param name="y">The y coordinate.</param>
 		/// <param name="time">Initial time.</param>
 		/// <param name="isShort">If true, the seconds are hidden. Sets the <see cref="IsShortFormat"/> property.</param>
-		public TimeField (int x, int y, TimeSpan time, bool isShort = false) : base (x, y, isShort ? 7 : 10, "")
+		public TimeField(int x, int y, TimeSpan time, bool isShort = false) : base(x, y, isShort ? 7 : 10, "")
 		{
-			Initialize (time, isShort);
+			Initialize(time, isShort);
 		}
 
 		/// <summary>
 		///    Initializes a new instance of <see cref="TimeField"/> using <see cref="LayoutStyle.Computed"/> positioning.
 		/// </summary>
 		/// <param name="time">Initial time</param>
-		public TimeField (TimeSpan time) : base (string.Empty)
+		public TimeField(TimeSpan time) : base(string.Empty)
 		{
 			Width = fieldLen + 2;
-			Initialize (time);
+			Initialize(time);
 		}
 
 		/// <summary>
 		///    Initializes a new instance of <see cref="TimeField"/> using <see cref="LayoutStyle.Computed"/> positioning.
 		/// </summary>
-		public TimeField () : this (time: TimeSpan.MinValue) { }
+		public TimeField() : this(time: TimeSpan.MinValue) { }
 
-		void Initialize (TimeSpan time, bool isShort = false)
+		void Initialize(TimeSpan time, bool isShort = false)
 		{
 			CultureInfo cultureInfo = CultureInfo.CurrentCulture;
 			sepChar = cultureInfo.DateTimeFormat.TimeSeparator;
@@ -79,37 +81,37 @@ namespace Terminal.Gui {
 			TextChanged += TextField_TextChanged;
 
 			// Things this view knows how to do
-			AddCommand (Command.DeleteCharRight, () => { DeleteCharRight (); return true; });
-			AddCommand (Command.DeleteCharLeft, () => { DeleteCharLeft (); return true; });
-			AddCommand (Command.LeftHome, () => MoveHome ());
-			AddCommand (Command.Left, () => MoveLeft ());
-			AddCommand (Command.RightEnd, () => MoveEnd ());
-			AddCommand (Command.Right, () => MoveRight ());
+			AddCommand(Command.DeleteCharRight, () => { DeleteCharRight(); return true; });
+			AddCommand(Command.DeleteCharLeft, () => { DeleteCharLeft(); return true; });
+			AddCommand(Command.LeftHome, () => MoveHome());
+			AddCommand(Command.Left, () => MoveLeft());
+			AddCommand(Command.RightEnd, () => MoveEnd());
+			AddCommand(Command.Right, () => MoveRight());
 
 			// Default keybindings for this view
-			AddKeyBinding (Key.DeleteChar, Command.DeleteCharRight);
-			AddKeyBinding (Key.D | Key.CtrlMask, Command.DeleteCharRight);
+			AddKeyBinding(Key.DeleteChar, Command.DeleteCharRight);
+			AddKeyBinding(Key.D | Key.CtrlMask, Command.DeleteCharRight);
 
-			AddKeyBinding (Key.Delete, Command.DeleteCharLeft);
-			AddKeyBinding (Key.Backspace, Command.DeleteCharLeft);
+			AddKeyBinding(Key.Delete, Command.DeleteCharLeft);
+			AddKeyBinding(Key.Backspace, Command.DeleteCharLeft);
 
-			AddKeyBinding (Key.Home, Command.LeftHome);
-			AddKeyBinding (Key.A | Key.CtrlMask, Command.LeftHome);
+			AddKeyBinding(Key.Home, Command.LeftHome);
+			AddKeyBinding(Key.A | Key.CtrlMask, Command.LeftHome);
 
-			AddKeyBinding (Key.CursorLeft, Command.Left);
-			AddKeyBinding (Key.B | Key.CtrlMask, Command.Left);
+			AddKeyBinding(Key.CursorLeft, Command.Left);
+			AddKeyBinding(Key.B | Key.CtrlMask, Command.Left);
 
-			AddKeyBinding (Key.End, Command.RightEnd);
-			AddKeyBinding (Key.E | Key.CtrlMask, Command.RightEnd);
+			AddKeyBinding(Key.End, Command.RightEnd);
+			AddKeyBinding(Key.E | Key.CtrlMask, Command.RightEnd);
 
-			AddKeyBinding (Key.CursorRight, Command.Right);
-			AddKeyBinding (Key.F | Key.CtrlMask, Command.Right);
+			AddKeyBinding(Key.CursorRight, Command.Right);
+			AddKeyBinding(Key.F | Key.CtrlMask, Command.Right);
 		}
 
-		void TextField_TextChanged (object sender, string e)
+		void TextField_TextChanged(object sender, string e)
 		{
 			try {
-				if (!TimeSpan.TryParseExact (Text.ToString ().Trim (), format.Trim (), CultureInfo.CurrentCulture, TimeSpanStyles.None, out TimeSpan result))
+				if (!TimeSpan.TryParseExact(Text.ToString().Trim(), format.Trim(), CultureInfo.CurrentCulture, TimeSpanStyles.None, out TimeSpan result))
 					Text = e;
 			} catch (Exception) {
 				Text = e;
@@ -121,7 +123,8 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <remarks>
 		/// </remarks>
-		public TimeSpan Time {
+		public TimeSpan Time
+		{
 			get {
 				return time;
 			}
@@ -131,10 +134,10 @@ namespace Terminal.Gui {
 
 				var oldTime = time;
 				time = value;
-				this.Text = " " + value.ToString (format.Trim ());
-				var args = new DateTimeEventArgs<TimeSpan> (oldTime, value, format);
+				this.Text = " " + value.ToString(format.Trim());
+				var args = new DateTimeEventArgs<TimeSpan>(oldTime, value, format);
 				if (oldTime != value) {
-					OnTimeChanged (args);
+					OnTimeChanged(args);
 				}
 			}
 		}
@@ -142,7 +145,8 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Get or sets whether <see cref="TimeField"/> uses the short or long time format.
 		/// </summary>
-		public bool IsShortFormat {
+		public bool IsShortFormat
+		{
 			get => isShort;
 			set {
 				isShort = value;
@@ -153,103 +157,104 @@ namespace Terminal.Gui {
 				var ro = ReadOnly;
 				if (ro)
 					ReadOnly = false;
-				SetText (Text);
+				SetText(Text);
 				ReadOnly = ro;
-				SetNeedsDisplay ();
+				SetNeedsDisplay();
 			}
 		}
 
 		/// <inheritdoc/>
-		public override int CursorPosition {
+		public override int CursorPosition
+		{
 			get => base.CursorPosition;
 			set {
-				base.CursorPosition = Math.Max (Math.Min (value, fieldLen), 1);
+				base.CursorPosition = Math.Max(Math.Min(value, fieldLen), 1);
 			}
 		}
 
-		bool SetText (Rune key)
+		bool SetText(char key)
 		{
-			var text = TextModel.ToRunes (Text);
-			var newText = text.GetRange (0, CursorPosition);
-			newText.Add (key);
+			var text = TextModel.ToRunes(Text);
+			var newText = text.GetRange(0, CursorPosition);
+			newText.Add(key);
 			if (CursorPosition < fieldLen)
-				newText = newText.Concat (text.GetRange (CursorPosition + 1, text.Count - (CursorPosition + 1))).ToList ();
-			return SetText (ustring.Make (newText));
+				newText = newText.Concat(text.GetRange(CursorPosition + 1, text.Count - (CursorPosition + 1))).ToList();
+			return SetText(new string(newText.ToArray()));
 		}
 
-		bool SetText (ustring text)
+		bool SetText(string text)
 		{
-			if (text.IsEmpty) {
+			if (string.IsNullOrEmpty(text)) {
 				return false;
 			}
 
-			ustring [] vals = text.Split (ustring.Make (sepChar));
+			string[] vals = text.Split(sepChar);
 			bool isValidTime = true;
-			int hour = Int32.Parse (vals [0].ToString ());
-			int minute = Int32.Parse (vals [1].ToString ());
-			int second = isShort ? 0 : vals.Length > 2 ? Int32.Parse (vals [2].ToString ()) : 0;
+			int hour = Int32.Parse(vals[0].ToString());
+			int minute = Int32.Parse(vals[1].ToString());
+			int second = isShort ? 0 : vals.Length > 2 ? Int32.Parse(vals[2].ToString()) : 0;
 			if (hour < 0) {
 				isValidTime = false;
 				hour = 0;
-				vals [0] = "0";
+				vals[0] = "0";
 			} else if (hour > 23) {
 				isValidTime = false;
 				hour = 23;
-				vals [0] = "23";
+				vals[0] = "23";
 			}
 			if (minute < 0) {
 				isValidTime = false;
 				minute = 0;
-				vals [1] = "0";
+				vals[1] = "0";
 			} else if (minute > 59) {
 				isValidTime = false;
 				minute = 59;
-				vals [1] = "59";
+				vals[1] = "59";
 			}
 			if (second < 0) {
 				isValidTime = false;
 				second = 0;
-				vals [2] = "0";
+				vals[2] = "0";
 			} else if (second > 59) {
 				isValidTime = false;
 				second = 59;
-				vals [2] = "59";
+				vals[2] = "59";
 			}
 			string t = isShort ? $" {hour,2:00}{sepChar}{minute,2:00}" : $" {hour,2:00}{sepChar}{minute,2:00}{sepChar}{second,2:00}";
 
-			if (!TimeSpan.TryParseExact (t.Trim (), format.Trim (), CultureInfo.CurrentCulture, TimeSpanStyles.None, out TimeSpan result) ||
+			if (!TimeSpan.TryParseExact(t.Trim(), format.Trim(), CultureInfo.CurrentCulture, TimeSpanStyles.None, out TimeSpan result) ||
 				!isValidTime)
 				return false;
 			Time = result;
 			return true;
 		}
 
-		void IncCursorPosition ()
+		void IncCursorPosition()
 		{
 			if (CursorPosition == fieldLen)
 				return;
-			if (Text [++CursorPosition] == sepChar.ToCharArray () [0])
+			if (Text[++CursorPosition] == sepChar.ToCharArray()[0])
 				CursorPosition++;
 		}
 
-		void DecCursorPosition ()
+		void DecCursorPosition()
 		{
 			if (CursorPosition == 1)
 				return;
-			if (Text [--CursorPosition] == sepChar.ToCharArray () [0])
+			if (Text[--CursorPosition] == sepChar.ToCharArray()[0])
 				CursorPosition--;
 		}
 
-		void AdjCursorPosition ()
+		void AdjCursorPosition()
 		{
-			if (Text [CursorPosition] == sepChar.ToCharArray () [0])
+			if (Text[CursorPosition] == sepChar.ToCharArray()[0])
 				CursorPosition++;
 		}
 
 		///<inheritdoc/>
-		public override bool ProcessKey (KeyEvent kb)
+		public override bool ProcessKey(KeyEvent kb)
 		{
-			var result = InvokeKeybindings (kb);
+			var result = InvokeKeybindings(kb);
 			if (result != null)
 				return (bool)result;
 
@@ -260,31 +265,31 @@ namespace Terminal.Gui {
 			if (ReadOnly)
 				return true;
 
-			if (SetText (TextModel.ToRunes (ustring.Make ((uint)kb.Key)).First ()))
-				IncCursorPosition ();
+			if (SetText((char)kb.Key))
+				IncCursorPosition();
 
 			return true;
 		}
 
-		bool MoveRight ()
+		bool MoveRight()
 		{
-			IncCursorPosition ();
+			IncCursorPosition();
 			return true;
 		}
 
-		bool MoveEnd ()
+		bool MoveEnd()
 		{
 			CursorPosition = fieldLen;
 			return true;
 		}
 
-		bool MoveLeft ()
+		bool MoveLeft()
 		{
-			DecCursorPosition ();
+			DecCursorPosition();
 			return true;
 		}
 
-		bool MoveHome ()
+		bool MoveHome()
 		{
 			// Home, C-A
 			CursorPosition = 1;
@@ -292,33 +297,33 @@ namespace Terminal.Gui {
 		}
 
 		/// <inheritdoc/>
-		public override void DeleteCharLeft (bool useOldCursorPos = true)
+		public override void DeleteCharLeft(bool useOldCursorPos = true)
 		{
 			if (ReadOnly)
 				return;
 
-			SetText ('0');
-			DecCursorPosition ();
+			SetText('0');
+			DecCursorPosition();
 			return;
 		}
 
 		/// <inheritdoc/>
-		public override void DeleteCharRight ()
+		public override void DeleteCharRight()
 		{
 			if (ReadOnly)
 				return;
 
-			SetText ('0');
+			SetText('0');
 			return;
 		}
 
 		///<inheritdoc/>
-		public override bool MouseEvent (MouseEvent ev)
+		public override bool MouseEvent(MouseEvent ev)
 		{
-			if (!ev.Flags.HasFlag (MouseFlags.Button1Clicked))
+			if (!ev.Flags.HasFlag(MouseFlags.Button1Clicked))
 				return false;
 			if (!HasFocus)
-				SetFocus ();
+				SetFocus();
 
 			var point = ev.X;
 			if (point > fieldLen)
@@ -326,7 +331,7 @@ namespace Terminal.Gui {
 			if (point < 1)
 				point = 1;
 			CursorPosition = point;
-			AdjCursorPosition ();
+			AdjCursorPosition();
 			return true;
 		}
 
@@ -334,9 +339,9 @@ namespace Terminal.Gui {
 		/// Event firing method that invokes the <see cref="TimeChanged"/> event.
 		/// </summary>
 		/// <param name="args">The event arguments</param>
-		public virtual void OnTimeChanged (DateTimeEventArgs<TimeSpan> args)
+		public virtual void OnTimeChanged(DateTimeEventArgs<TimeSpan> args)
 		{
-			TimeChanged?.Invoke (this, args);
+			TimeChanged?.Invoke(this, args);
 		}
 	}
 }

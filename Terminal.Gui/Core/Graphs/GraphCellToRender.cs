@@ -1,16 +1,16 @@
-﻿using System;
-
-namespace Terminal.Gui.Graphs {
+﻿namespace Terminal.Gui.Graphs
+{
 	/// <summary>
 	/// Describes how to render a single row/column of a <see cref="GraphView"/> based
 	/// on the value(s) in <see cref="ISeries"/> at that location
 	/// </summary>
-	public class GraphCellToRender {
+	public class GraphCellToRender
+	{
 
 		/// <summary>
 		/// The character to render in the console
 		/// </summary>
-		public Rune Rune { get; set; }
+		public char Rune { get; set; }
 
 		/// <summary>
 		/// Optional color to render the <see cref="Rune"/> with
@@ -21,7 +21,7 @@ namespace Terminal.Gui.Graphs {
 		/// Creates instance and sets <see cref="Rune"/> with default graph coloring
 		/// </summary>
 		/// <param name="rune"></param>
-		public GraphCellToRender (Rune rune)
+		public GraphCellToRender(char rune)
 		{
 			Rune = rune;
 		}
@@ -30,14 +30,14 @@ namespace Terminal.Gui.Graphs {
 		/// </summary>
 		/// <param name="rune"></param>
 		/// <param name="color"></param>
-		public GraphCellToRender (Rune rune, Attribute color) : this (rune)
+		public GraphCellToRender(char rune, Attribute color) : this(rune)
 		{
 			Color = color;
 		}
 		/// <summary>
 		/// Creates instance and sets <see cref="Rune"/> and <see cref="Color"/> (or default if null)
 		/// </summary>
-		public GraphCellToRender (Rune rune, Attribute? color) : this (rune)
+		public GraphCellToRender(char rune, Attribute? color) : this(rune)
 		{
 			Color = color;
 		}

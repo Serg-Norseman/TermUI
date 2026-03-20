@@ -470,10 +470,9 @@ namespace Terminal.Gui.ViewTests {
 			Assert.Equal ("1000", field.Text);
 			Assert.True (field.IsValid);
 
-			// HOME KEY
 			field.ProcessKey (new KeyEvent (Key.Home, new KeyModifiers { }));
+			Assert.Equal("1000", field.Text);
 
-			// DELETE
 			field.ProcessKey (new KeyEvent (Key.Delete, new KeyModifiers { }));
 
 			Assert.Equal ("000", field.Text);

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Terminal.Gui.Graphs {
+namespace Terminal.Gui.Graphs
+{
 	/// <summary>
 	/// Describes a series of data that can be rendered into a <see cref="GraphView"/>>
 	/// </summary>
-	public interface ISeries {
+	public interface ISeries
+	{
 
 		/// <summary>
 		/// Draws the <paramref name="graphBounds"/> section of a series into the
@@ -16,40 +18,41 @@ namespace Terminal.Gui.Graphs {
 		/// <param name="graph">Graph series is to be drawn onto</param>
 		/// <param name="drawBounds">Visible area of the graph in Console Screen units (excluding margins)</param>
 		/// <param name="graphBounds">Visible area of the graph in Graph space units</param>
-		void DrawSeries (GraphView graph, Rect drawBounds, RectangleF graphBounds);
+		void DrawSeries(GraphView graph, Rect drawBounds, RectangleF graphBounds);
 	}
 
 
 	/// <summary>
 	/// Series composed of any number of discrete data points 
 	/// </summary>
-	public class ScatterSeries : ISeries {
+	public class ScatterSeries : ISeries
+	{
 		/// <summary>
 		/// Collection of each discrete point in the series
 		/// </summary>
 		/// <returns></returns>
-		public List<PointF> Points { get; set; } = new List<PointF> ();
+		public List<PointF> Points { get; set; } = new List<PointF>();
 
 		/// <summary>
 		/// The color and character that will be rendered in the console
 		/// when there are point(s) in the corresponding graph space.
 		/// Defaults to uncolored 'x'
 		/// </summary>
-		public GraphCellToRender Fill { get; set; } = new GraphCellToRender ('x');
+		public GraphCellToRender Fill { get; set; } = new GraphCellToRender('x');
 
 		/// <summary>
 		/// Draws all points directly onto the graph
 		/// </summary>
-		public void DrawSeries (GraphView graph, Rect drawBounds, RectangleF graphBounds)
+		public void DrawSeries(GraphView graph, Rect drawBounds, RectangleF graphBounds)
 		{
 			if (Fill.Color.HasValue) {
-				Application.Driver.SetAttribute (Fill.Color.Value);
+				Application.Driver.SetAttribute(Fill.Color.Value);
 			}
 
-			foreach (var p in Points.Where (p => graphBounds.Contains (p))) {
+			foreach (var p in Points.Where(p => graphBounds.Contains(p))) {
 
-				var screenPoint = graph.GraphSpaceToScreen (p);
-				graph.AddRune (screenPoint.X, screenPoint.Y, Fill.Rune);
+				var screenPoint = graph.GraphSpaceToScreen(p);
+				graph.AddRune(screenPoint.X, screenPoint.Y, Fill.Rune);
 			}
 
 		}
@@ -60,16 +63,17 @@ namespace Terminal.Gui.Graphs {
 	/// <summary>
 	/// Collection of <see cref="BarSeries"/> in which bars are clustered by category
 	/// </summary>
-	public class MultiBarSeries : ISeries {
+	public class MultiBarSeries : ISeries
+	{
 
-		BarSeries [] subSeries;
+		BarSeries[] subSeries;
 
 		/// <summary>
 		/// Sub collections.  Each series contains the bars for a different category.  Thus 
 		/// SubSeries[0].Bars[0] is the first bar on the axis and SubSeries[1].Bars[0] is the
 		/// second etc
 		/// </summary>
-		public IReadOnlyCollection<BarSeries> SubSeries { get => new ReadOnlyCollection<BarSeries> (subSeries); }
+		public IReadOnlyCollection<BarSeries> SubSeries { get => new ReadOnlyCollection<BarSeries>(subSeries); }
 
 		/// <summary>
 		/// The number of units of graph space between bars.  Should be 
@@ -84,25 +88,25 @@ namespace Terminal.Gui.Graphs {
 		/// <param name="barsEvery">How far appart to put each category (in graph space)</param>
 		/// <param name="spacing">How much spacing between bars in a category (should be less than <paramref name="barsEvery"/>/<paramref name="numberOfBarsPerCategory"/>)</param>
 		/// <param name="colors">Array of colors that define bar color in each category.  Length must match <paramref name="numberOfBarsPerCategory"/></param>
-		public MultiBarSeries (int numberOfBarsPerCategory, float barsEvery, float spacing, Attribute [] colors = null)
+		public MultiBarSeries(int numberOfBarsPerCategory, float barsEvery, float spacing, Attribute[] colors = null)
 		{
-			subSeries = new BarSeries [numberOfBarsPerCategory];
+			subSeries = new BarSeries[numberOfBarsPerCategory];
 
 			if (colors != null && colors.Length != numberOfBarsPerCategory) {
-				throw new ArgumentException ("Number of colors must match the number of bars", nameof (numberOfBarsPerCategory));
+				throw new ArgumentException("Number of colors must match the number of bars", nameof(numberOfBarsPerCategory));
 			}
 
 
 			for (int i = 0; i < numberOfBarsPerCategory; i++) {
-				subSeries [i] = new BarSeries ();
-				subSeries [i].BarEvery = barsEvery;
-				subSeries [i].Offset = i * spacing;
+				subSeries[i] = new BarSeries();
+				subSeries[i].BarEvery = barsEvery;
+				subSeries[i].Offset = i * spacing;
 
 				// Only draw labels for the first bar in each category
-				subSeries [i].DrawLabels = i == 0;
+				subSeries[i].DrawLabels = i == 0;
 
 				if (colors != null) {
-					subSeries [i].OverrideBarColor = colors [i];
+					subSeries[i].OverrideBarColor = colors[i];
 				}
 			}
 			Spacing = spacing;
@@ -114,15 +118,15 @@ namespace Terminal.Gui.Graphs {
 		/// <param name="label"></param>
 		/// <param name="fill"></param>
 		/// <param name="values">Values for each bar in category, must match the number of bars per category</param>
-		public void AddBars (string label, Rune fill, params float [] values)
+		public void AddBars(string label, char fill, params float[] values)
 		{
 			if (values.Length != subSeries.Length) {
-				throw new ArgumentException ("Number of values must match the number of bars per category", nameof (values));
+				throw new ArgumentException("Number of values must match the number of bars per category", nameof(values));
 			}
 
 			for (int i = 0; i < values.Length; i++) {
-				subSeries [i].Bars.Add (new BarSeries.Bar (label,
-					new GraphCellToRender (fill), values [i]));
+				subSeries[i].Bars.Add(new BarSeries.Bar(label,
+					new GraphCellToRender(fill), values[i]));
 			}
 		}
 
@@ -132,10 +136,10 @@ namespace Terminal.Gui.Graphs {
 		/// <param name="graph"></param>
 		/// <param name="drawBounds"></param>
 		/// <param name="graphBounds"></param>
-		public void DrawSeries (GraphView graph, Rect drawBounds, RectangleF graphBounds)
+		public void DrawSeries(GraphView graph, Rect drawBounds, RectangleF graphBounds)
 		{
 			foreach (var bar in subSeries) {
-				bar.DrawSeries (graph, drawBounds, graphBounds);
+				bar.DrawSeries(graph, drawBounds, graphBounds);
 			}
 
 		}
@@ -144,12 +148,13 @@ namespace Terminal.Gui.Graphs {
 	/// <summary>
 	/// Series of bars positioned at regular intervals
 	/// </summary>
-	public class BarSeries : ISeries {
+	public class BarSeries : ISeries
+	{
 
 		/// <summary>
 		/// Ordered collection of graph bars to position along axis
 		/// </summary>
-		public List<Bar> Bars { get; set; } = new List<Bar> ();
+		public List<Bar> Bars { get; set; } = new List<Bar>();
 
 		/// <summary>
 		/// Determines the spacing of bars along the axis. Defaults to 1 i.e. 
@@ -186,7 +191,7 @@ namespace Terminal.Gui.Graphs {
 		/// </summary>
 		/// <param name="graphCellToRender"></param>
 		/// <returns></returns>
-		protected virtual GraphCellToRender AdjustColor (GraphCellToRender graphCellToRender)
+		protected virtual GraphCellToRender AdjustColor(GraphCellToRender graphCellToRender)
 		{
 			if (OverrideBarColor.HasValue) {
 				graphCellToRender.Color = OverrideBarColor;
@@ -201,27 +206,27 @@ namespace Terminal.Gui.Graphs {
 		/// <param name="graph"></param>
 		/// <param name="drawBounds">Screen area of the graph excluding margins</param>
 		/// <param name="graphBounds">Graph space area that should be drawn into <paramref name="drawBounds"/></param>
-		public virtual void DrawSeries (GraphView graph, Rect drawBounds, RectangleF graphBounds)
+		public virtual void DrawSeries(GraphView graph, Rect drawBounds, RectangleF graphBounds)
 		{
 			for (int i = 0; i < Bars.Count; i++) {
 
 				float xStart = Orientation == Orientation.Horizontal ? 0 : Offset + ((i + 1) * BarEvery);
 				float yStart = Orientation == Orientation.Horizontal ? Offset + ((i + 1) * BarEvery) : 0;
 
-				float endX = Orientation == Orientation.Horizontal ? Bars [i].Value : xStart;
-				float endY = Orientation == Orientation.Horizontal ? yStart : Bars [i].Value;
+				float endX = Orientation == Orientation.Horizontal ? Bars[i].Value : xStart;
+				float endY = Orientation == Orientation.Horizontal ? yStart : Bars[i].Value;
 
 				// translate to screen positions
-				var screenStart = graph.GraphSpaceToScreen (new PointF (xStart, yStart));
-				var screenEnd = graph.GraphSpaceToScreen (new PointF (endX, endY));
+				var screenStart = graph.GraphSpaceToScreen(new PointF(xStart, yStart));
+				var screenEnd = graph.GraphSpaceToScreen(new PointF(endX, endY));
 
 				// Start the bar from wherever the axis is
 				if (Orientation == Orientation.Horizontal) {
 
-					screenStart.X = graph.AxisY.GetAxisXPosition (graph);
+					screenStart.X = graph.AxisY.GetAxisXPosition(graph);
 
 					// dont draw bar off the right of the control
-					screenEnd.X = Math.Min (graph.Bounds.Width - 1, screenEnd.X);
+					screenEnd.X = Math.Min(graph.Bounds.Width - 1, screenEnd.X);
 
 					// if bar is off the screen
 					if (screenStart.Y < 0 || screenStart.Y > drawBounds.Height - graph.MarginBottom) {
@@ -230,10 +235,10 @@ namespace Terminal.Gui.Graphs {
 				} else {
 
 					// Start the axis
-					screenStart.Y = graph.AxisX.GetAxisYPosition (graph);
+					screenStart.Y = graph.AxisX.GetAxisYPosition(graph);
 
 					// dont draw bar up above top of control
-					screenEnd.Y = Math.Max (0, screenEnd.Y);
+					screenEnd.Y = Math.Max(0, screenEnd.Y);
 
 					// if bar is off the screen
 					if (screenStart.X < graph.MarginLeft || screenStart.X > graph.MarginLeft + drawBounds.Width - 1) {
@@ -242,20 +247,20 @@ namespace Terminal.Gui.Graphs {
 				}
 
 				// draw the bar unless it has no height
-				if (Bars [i].Value != 0) {
-					DrawBarLine (graph, screenStart, screenEnd, Bars [i]);
+				if (Bars[i].Value != 0) {
+					DrawBarLine(graph, screenStart, screenEnd, Bars[i]);
 				}
 
 				// If we are drawing labels and the bar has one
-				if (DrawLabels && !string.IsNullOrWhiteSpace (Bars [i].Text)) {
+				if (DrawLabels && !string.IsNullOrWhiteSpace(Bars[i].Text)) {
 
 					// Add the label to the relevant axis
 					if (Orientation == Orientation.Horizontal) {
 
-						graph.AxisY.DrawAxisLabel (graph, screenStart.Y, Bars [i].Text);
+						graph.AxisY.DrawAxisLabel(graph, screenStart.Y, Bars[i].Text);
 					} else if (Orientation == Orientation.Vertical) {
 
-						graph.AxisX.DrawAxisLabel (graph, screenStart.X, Bars [i].Text);
+						graph.AxisX.DrawAxisLabel(graph, screenStart.X, Bars[i].Text);
 					}
 				}
 			}
@@ -270,23 +275,24 @@ namespace Terminal.Gui.Graphs {
 		/// <param name="start">Screen position of the start of the bar</param>
 		/// <param name="end">Screen position of the end of the bar</param>
 		/// <param name="beingDrawn">The Bar that occupies this space and is being drawn</param>
-		protected virtual void DrawBarLine (GraphView graph, Point start, Point end, Bar beingDrawn)
+		protected virtual void DrawBarLine(GraphView graph, Point start, Point end, Bar beingDrawn)
 		{
-			var adjusted = AdjustColor (beingDrawn.Fill);
+			var adjusted = AdjustColor(beingDrawn.Fill);
 
 			if (adjusted.Color.HasValue) {
-				Application.Driver.SetAttribute (adjusted.Color.Value);
+				Application.Driver.SetAttribute(adjusted.Color.Value);
 			}
 
-			graph.DrawLine (start, end, adjusted.Rune);
+			graph.DrawLine(start, end, adjusted.Rune);
 
-			graph.SetDriverColorToGraphColor ();
+			graph.SetDriverColorToGraphColor();
 		}
 
 		/// <summary>
 		/// A single bar in a <see cref="BarSeries"/>
 		/// </summary>
-		public class Bar {
+		public class Bar
+		{
 
 			/// <summary>
 			/// Optional text that describes the bar.  This will be rendered on the corresponding
@@ -312,7 +318,7 @@ namespace Terminal.Gui.Graphs {
 			/// <param name="text"></param>
 			/// <param name="fill"></param>
 			/// <param name="value"></param>
-			public Bar (string text, GraphCellToRender fill, float value)
+			public Bar(string text, GraphCellToRender fill, float value)
 			{
 				Text = text;
 				Fill = fill;

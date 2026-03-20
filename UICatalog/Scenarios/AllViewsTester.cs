@@ -1,11 +1,7 @@
-﻿using NStack;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Terminal.Gui;
 
 namespace UICatalog.Scenarios {
@@ -109,7 +105,7 @@ namespace UICatalog.Scenarios {
 			};
 			_settingsPane.Add (_computedCheckBox);
 
-			var radioItems = new ustring [] { "Percent(x)", "AnchorEnd(x)", "Center", "At(x)" };
+			var radioItems = new string [] { "Percent(x)", "AnchorEnd(x)", "Center", "At(x)" };
 			_locationFrame = new FrameView ("Location (Pos)") {
 				X = Pos.Left (_computedCheckBox),
 				Y = Pos.Bottom (_computedCheckBox),
@@ -138,7 +134,7 @@ namespace UICatalog.Scenarios {
 
 			_locationFrame.Add (_xRadioGroup);
 
-			radioItems = new ustring [] { "Percent(y)", "AnchorEnd(y)", "Center", "At(y)" };
+			radioItems = new string [] { "Percent(y)", "AnchorEnd(y)", "Center", "At(y)" };
 			label = new Label ("y:") { X = Pos.Right (_xRadioGroup) + 1, Y = 0 };
 			_locationFrame.Add (label);
 			_yText = new TextField ($"{_yVal}") { X = Pos.Right (label) + 1, Y = 0, Width = 4 };
@@ -165,7 +161,7 @@ namespace UICatalog.Scenarios {
 				Width = 40,
 			};
 
-			radioItems = new ustring [] { "Percent(width)", "Fill(width)", "Sized(width)" };
+			radioItems = new string [] { "Percent(width)", "Fill(width)", "Sized(width)" };
 			label = new Label ("width:") { X = 0, Y = 0 };
 			_sizeFrame.Add (label);
 			_wRadioGroup = new RadioGroup (radioItems) {
@@ -193,7 +189,7 @@ namespace UICatalog.Scenarios {
 			_sizeFrame.Add (_wText);
 			_sizeFrame.Add (_wRadioGroup);
 
-			radioItems = new ustring [] { "Percent(height)", "Fill(height)", "Sized(height)" };
+			radioItems = new string [] { "Percent(height)", "Fill(height)", "Sized(height)" };
 			label = new Label ("height:") { X = Pos.Right (_wRadioGroup) + 1, Y = 0 };
 			_sizeFrame.Add (label);
 			_hText = new TextField ($"{_hVal}") { X = Pos.Right (label) + 1, Y = 0, Width = 4 };
@@ -389,7 +385,7 @@ namespace UICatalog.Scenarios {
 			// If the view supports a Text property, set it so we have something to look at
 			if (view.GetType ().GetProperty ("Text") != null) {
 				try {
-					view.GetType ().GetProperty ("Text")?.GetSetMethod ()?.Invoke (view, new [] { ustring.Make ("Test Text") });
+					view.GetType ().GetProperty ("Text")?.GetSetMethod ()?.Invoke (view, new [] { "Test Text" });
 				} catch (TargetInvocationException e) {
 					MessageBox.ErrorQuery ("Exception", e.InnerException.Message, "Ok");
 					view = null;
@@ -398,12 +394,12 @@ namespace UICatalog.Scenarios {
 
 			// If the view supports a Title property, set it so we have something to look at
 			if (view != null && view.GetType ().GetProperty ("Title") != null) {
-				view?.GetType ().GetProperty ("Title")?.GetSetMethod ()?.Invoke (view, new [] { ustring.Make ("Test Title") });
+				view?.GetType ().GetProperty ("Title")?.GetSetMethod ()?.Invoke (view, new [] { "Test Title" });
 			}
 
 			// If the view supports a Source property, set it so we have something to look at
 			if (view != null && view.GetType ().GetProperty ("Source") != null && view.GetType ().GetProperty ("Source").PropertyType == typeof (Terminal.Gui.IListDataSource)) {
-				var source = new ListWrapper (new List<ustring> () { ustring.Make ("Test Text #1"), ustring.Make ("Test Text #2"), ustring.Make ("Test Text #3") });
+				var source = new ListWrapper (new List<string> () { "Test Text #1", "Test Text #2", "Test Text #3" });
 				view?.GetType ().GetProperty ("Source")?.GetSetMethod ()?.Invoke (view, new [] { source });
 			}
 

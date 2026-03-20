@@ -1,9 +1,5 @@
-﻿using NStack;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Terminal.Gui {
 	/// <summary>
@@ -27,7 +23,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// The keystroke combination used in the <see cref="Shortcut"/> as string.
 		/// </summary>
-		public virtual ustring ShortcutTag => GetShortcutTag (shortcut);
+		public virtual string ShortcutTag => GetShortcutTag (shortcut);
 
 		/// <summary>
 		/// The action to run if the <see cref="Shortcut"/> is defined.
@@ -64,7 +60,7 @@ namespace Terminal.Gui {
 		/// <param name="shortcut">The shortcut key.</param>
 		/// <param name="delimiter">The delimiter string.</param>
 		/// <returns></returns>
-		public static ustring GetShortcutTag (Key shortcut, ustring delimiter = null)
+		public static string GetShortcutTag (Key shortcut, string delimiter = null)
 		{
 			if (shortcut == Key.Null) {
 				return "";
@@ -74,35 +70,35 @@ namespace Terminal.Gui {
 			if (delimiter == null) {
 				delimiter = MenuBar.ShortcutDelimiter;
 			}
-			ustring tag = ustring.Empty;
-			var sCut = GetKeyToString (k, out Key knm).ToString ();
+			string tag = string.Empty;
+			var sCut = GetKeyToString (k, out Key knm);
 			if (knm == Key.Unknown) {
 				k &= ~Key.Unknown;
-				sCut = GetKeyToString (k, out _).ToString ();
+				sCut = GetKeyToString (k, out _);
 			}
 			if ((k & Key.CtrlMask) != 0) {
 				tag = "Ctrl";
 			}
 			if ((k & Key.ShiftMask) != 0) {
-				if (!tag.IsEmpty) {
+				if (!string.IsNullOrEmpty(tag)) {
 					tag += delimiter;
 				}
 				tag += "Shift";
 			}
 			if ((k & Key.AltMask) != 0) {
-				if (!tag.IsEmpty) {
+				if (!string.IsNullOrEmpty (tag)) {
 					tag += delimiter;
 				}
 				tag += "Alt";
 			}
 
-			ustring [] keys = ustring.Make (sCut).Split (",");
+			string [] keys = sCut.Split (",");
 			for (int i = 0; i < keys.Length; i++) {
-				var key = keys [i].TrimSpace ();
+				var key = keys [i].Trim (' ');
 				if (key == Key.AltMask.ToString () || key == Key.ShiftMask.ToString () || key == Key.CtrlMask.ToString ()) {
 					continue;
 				}
-				if (!tag.IsEmpty) {
+				if (!string.IsNullOrEmpty (tag)) {
 					tag += delimiter;
 				}
 				if (!key.Contains ("F") && key.Length > 2 && keys.Length == 1) {
@@ -123,7 +119,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="key">The key to extract.</param>
 		/// <param name="knm">Correspond to the non modifier key.</param>
-		public static ustring GetKeyToString (Key key, out Key knm)
+		public static string GetKeyToString (Key key, out Key knm)
 		{
 			if (key == Key.Null) {
 				knm = Key.Null;
@@ -153,10 +149,10 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="tag">The key as string.</param>
 		/// <param name="delimiter">The delimiter string.</param>
-		public static Key GetShortcutFromTag (ustring tag, ustring delimiter = null)
+		public static Key GetShortcutFromTag (string tag, string delimiter = null)
 		{
 			var sCut = tag;
-			if (sCut.IsEmpty) {
+			if (string.IsNullOrEmpty (sCut)) {
 				return default;
 			}
 
@@ -166,7 +162,7 @@ namespace Terminal.Gui {
 				delimiter = MenuBar.ShortcutDelimiter;
 			}
 
-			ustring [] keys = sCut.Split (delimiter);
+			string [] keys = sCut.Split (delimiter);
 			for (int i = 0; i < keys.Length; i++) {
 				var k = keys [i];
 				if (k == "Ctrl") {

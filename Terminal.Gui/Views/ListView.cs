@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NStack;
 
 namespace Terminal.Gui {
 	/// <summary>
@@ -76,8 +75,6 @@ namespace Terminal.Gui {
 	/// </para>
 	/// <para>
 	///   <see cref="ListView"/> can display any object that implements the <see cref="IList"/> interface.
-	///   <see cref="string"/> values are converted into <see cref="ustring"/> values before rendering, and other values are
-	///   converted into <see cref="string"/> by calling <see cref="object.ToString"/> and then converting to <see cref="ustring"/> .
 	/// </para>
 	/// <para>
 	///   To change the contents of the ListView, set the <see cref="Source"/> property (when 
@@ -377,8 +374,7 @@ namespace Terminal.Gui {
 
 				Move (0, row);
 				if (source == null || item >= source.Count) {
-					for (int c = 0; c < f.Width; c++)
-						Driver.AddRune (' ');
+					Driver.AddRepeatedRune (' ', f.Width);
 				} else {
 					var rowEventArgs = new ListViewRowEventArgs (item);
 					OnRowRender (rowEventArgs);
@@ -868,21 +864,14 @@ namespace Terminal.Gui {
 
 		int GetMaxLengthItem ()
 		{
-			if (src == null || src?.Count == 0) {
+			if (src == null || src.Count == 0) {
 				return 0;
 			}
 
 			int maxLength = 0;
 			for (int i = 0; i < src.Count; i++) {
 				var t = src [i];
-				int l;
-				if (t is ustring u) {
-					l = TextFormatter.GetTextWidth (u);
-				} else if (t is string s) {
-					l = s.Length;
-				} else {
-					l = t.ToString ().Length;
-				}
+				int l = t == null ? 0 : t.ToString ().Length;
 
 				if (l > maxLength) {
 					maxLength = l;
@@ -892,39 +881,20 @@ namespace Terminal.Gui {
 			return maxLength;
 		}
 
-		void RenderUstr (ConsoleDriver driver, ustring ustr, int col, int line, int width, int start = 0)
-		{
-			ustring str = ustr.IsEmpty || start > ustr.ConsoleWidth ? string.Empty : ustr.Substring (Math.Min (start, ustr.ToRunes ().Length - 1));
-			ustring u = TextFormatter.ClipAndJustify (str, width, TextAlignment.Left);
-			driver.AddStr (u);
-			width -= TextFormatter.GetTextWidth (u);
-			while (width-- + start > 0) {
-				driver.AddRune (' ');
-			}
-		}
-
 		/// <inheritdoc/>
 		public void Render (ListView container, ConsoleDriver driver, bool marked, int item, int col, int line, int width, int start = 0)
 		{
 			var savedClip = container.ClipToBounds ();
 			container.Move (Math.Max (col - start, 0), line);
 			var t = src? [item];
-			if (t == null) {
-				RenderUstr (driver, ustring.Make (""), col, line, width);
-			} else {
-				if (t is ustring u) {
-					RenderUstr (driver, u, col, line, width, start);
-				} else if (t is string s) {
-					RenderUstr (driver, s, col, line, width, start);
-				} else {
-					var strItem = t.ToString ();
-					if (!string.IsNullOrEmpty (strItem)) {
-						RenderUstr (driver, strItem, col, line, width, start);
-					} else {
-						RenderUstr (driver, ustring.Make (""), col, line, width);
-					}
-				}
-			}
+			var strItem = (t == null) ? string.Empty : t.ToString ();
+
+			string str = string.IsNullOrEmpty (strItem) || start > strItem.Length ? string.Empty : strItem.Substring (Math.Min (start, strItem.Length - 1));
+			string u = TextFormatter.ClipAndJustify (str, width, TextAlignment.Left);
+			driver.AddStr (u);
+			width -= TextFormatter.GetTextWidth (u);
+			driver.AddRepeatedRune (' ', width);
+
 			driver.Clip = savedClip;
 		}
 
@@ -952,18 +922,14 @@ namespace Terminal.Gui {
 		/// <inheritdoc/>
 		public int StartsWith (string search)
 		{
-			if (src == null || src?.Count == 0) {
+			if (src == null || src.Count == 0) {
 				return -1;
 			}
 
 			for (int i = 0; i < src.Count; i++) {
 				var t = src [i];
-				if (t is ustring u) {
-					if (u.ToUpper ().StartsWith (search.ToUpperInvariant ())) {
-						return i;
-					}
-				} else if (t is string s) {
-					if (s.StartsWith (search, StringComparison.InvariantCultureIgnoreCase)) {
+				if (t != null) {
+					if (t.ToString ().StartsWith (search, StringComparison.InvariantCultureIgnoreCase)) {
 						return i;
 					}
 				}

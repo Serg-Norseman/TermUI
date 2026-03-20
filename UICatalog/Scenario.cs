@@ -1,5 +1,4 @@
-﻿using NStack;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terminal.Gui;
@@ -83,6 +82,25 @@ namespace UICatalog {
 			Application.Top.Add (Win);
 		}
 
+		// Demo changing hotkey
+		protected string MoveHotkey (string txt)
+		{
+			// Remove the '_'
+			var i = txt.IndexOf ('_');
+			if (i > -1) {
+				txt = txt.Remove(i, 1);
+			}
+
+			// Move over one or go to start
+			i++;
+			if (i >= txt.Length) {
+				i = 0;
+			}
+
+			// Slip in the '_'
+			return txt.Insert(i, "_");
+		}
+
 		/// <summary>
 		/// Defines the metadata (Name and Description) for a <see cref="Scenario"/>
 		/// </summary>
@@ -156,26 +174,41 @@ namespace UICatalog {
 			/// <param name="t"></param>
 			/// <returns>list of category names</returns>
 			public static List<string> GetCategories (Type t) => System.Attribute.GetCustomAttributes (t)
-				.ToList ()
 				.Where (a => a is ScenarioCategory)
 				.Select (a => ((ScenarioCategory)a).Name)
 				.ToList ();
 		}
 
+		private List<string> _categories = null;
+
 		/// <summary>
 		/// Helper function to get the list of categories a <see cref="Scenario"/> belongs to (defined in <see cref="ScenarioCategory"/>)
 		/// </summary>
 		/// <returns>list of category names</returns>
-		public List<string> GetCategories () => ScenarioCategory.GetCategories (this.GetType ());
+		public List<string> GetCategories ()
+		{
+			if (_categories == null) {
+				_categories = ScenarioCategory.GetCategories (this.GetType ());
+			}
+			return _categories;
+		}
 
 		private static int _maxScenarioNameLen = 30;
+
+		private string _scenarioFullName;
 
 		/// <summary>
 		/// Gets the Scenario Name + Description with the Description padded
 		/// based on the longest known Scenario name.
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString () => $"{GetName ().PadRight(_maxScenarioNameLen)}{GetDescription ()}";
+		public override string ToString ()
+		{
+			if (_scenarioFullName == null) {
+				_scenarioFullName = $"{GetName ().PadRight (_maxScenarioNameLen)}{GetDescription ()}";
+			}
+			return _scenarioFullName;
+		}
 
 		/// <summary>
 		/// Override this to implement the <see cref="Scenario"/> setup logic (create controls, etc...). 

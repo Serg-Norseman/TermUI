@@ -6,7 +6,6 @@
 //
 
 using System;
-using NStack;
 
 namespace Terminal.Gui {
 	/// <summary>
@@ -32,10 +31,10 @@ namespace Terminal.Gui {
 	/// </remarks>
 	public class Button : View {
 		bool is_default;
-		Rune _leftBracket;
-		Rune _rightBracket;
-		Rune _leftDefault;
-		Rune _rightDefault;
+		char _leftBracket;
+		char _rightBracket;
+		char _leftDefault;
+		char _rightDefault;
 
 		/// <summary>
 		///   Initializes a new instance of <see cref="Button"/> using <see cref="LayoutStyle.Computed"/> layout.
@@ -44,7 +43,7 @@ namespace Terminal.Gui {
 		///   The width of the <see cref="Button"/> is computed based on the
 		///   text length. The height will always be 1.
 		/// </remarks>
-		public Button () : this (text: string.Empty, is_default: false) { }
+		public Button() : this(text: string.Empty, is_default: false) { }
 
 		/// <summary>
 		///   Initializes a new instance of <see cref="Button"/> using <see cref="LayoutStyle.Computed"/> layout.
@@ -58,9 +57,9 @@ namespace Terminal.Gui {
 		///   If <c>true</c>, a special decoration is used, and the user pressing the enter key 
 		///   in a <see cref="Dialog"/> will implicitly activate this button.
 		/// </param>
-		public Button (ustring text, bool is_default = false) : base (text)
+		public Button(string text, bool is_default = false) : base(text)
 		{
-			Initialize (text, is_default);
+			Initialize(text, is_default);
 		}
 
 		/// <summary>
@@ -73,7 +72,7 @@ namespace Terminal.Gui {
 		/// <param name="x">X position where the button will be shown.</param>
 		/// <param name="y">Y position where the button will be shown.</param>
 		/// <param name="text">The button's text</param>
-		public Button (int x, int y, ustring text) : this (x, y, text, false) { }
+		public Button(int x, int y, string text) : this(x, y, text, false) { }
 
 		/// <summary>
 		///   Initializes a new instance of <see cref="Button"/> using <see cref="LayoutStyle.Absolute"/> layout, based on the given text.
@@ -89,39 +88,39 @@ namespace Terminal.Gui {
 		///   If <c>true</c>, a special decoration is used, and the user pressing the enter key 
 		///   in a <see cref="Dialog"/> will implicitly activate this button.
 		/// </param>
-		public Button (int x, int y, ustring text, bool is_default)
-		    : base (new Rect (x, y, text.RuneCount + 4 + (is_default ? 2 : 0), 1), text)
+		public Button(int x, int y, string text, bool is_default)
+		    : base(new Rect(x, y, text.Length + 4 + (is_default ? 2 : 0), 1), text)
 		{
-			Initialize (text, is_default);
+			Initialize(text, is_default);
 		}
 
-		void Initialize (ustring text, bool is_default)
+		void Initialize(string text, bool is_default)
 		{
 			TextAlignment = TextAlignment.Centered;
 			VerticalTextAlignment = VerticalTextAlignment.Middle;
 
-			HotKeySpecifier = new Rune ('_');
+			HotKeySpecifier = '_';
 
-			_leftBracket = new Rune (Driver != null ? Driver.LeftBracket : '[');
-			_rightBracket = new Rune (Driver != null ? Driver.RightBracket : ']');
-			_leftDefault = new Rune (Driver != null ? Driver.LeftDefaultIndicator : '<');
-			_rightDefault = new Rune (Driver != null ? Driver.RightDefaultIndicator : '>');
+			_leftBracket = (Driver != null ? Driver.LeftBracket : '[');
+			_rightBracket = (Driver != null ? Driver.RightBracket : ']');
+			_leftDefault = (Driver != null ? Driver.LeftDefaultIndicator : '<');
+			_rightDefault = (Driver != null ? Driver.RightDefaultIndicator : '>');
 
 			CanFocus = true;
 			AutoSize = true;
 			this.is_default = is_default;
 			Text = text ?? string.Empty;
-			UpdateTextFormatterText ();
-			ProcessResizeView ();
+			UpdateTextFormatterText();
+			ProcessResizeView();
 
 			// Things this view knows how to do
-			AddCommand (Command.Accept, () => AcceptKey ());
+			AddCommand(Command.Accept, () => AcceptKey());
 
 			// Default keybindings for this view
-			AddKeyBinding (Key.Enter, Command.Accept);
-			AddKeyBinding (Key.Space, Command.Accept);
+			AddKeyBinding(Key.Enter, Command.Accept);
+			AddKeyBinding(Key.Space, Command.Accept);
 			if (HotKey != Key.Null) {
-				AddKeyBinding (Key.Space | HotKey, Command.Accept);
+				AddKeyBinding(Key.Space | HotKey, Command.Accept);
 			}
 		}
 
@@ -137,8 +136,8 @@ namespace Terminal.Gui {
 			get => is_default;
 			set {
 				is_default = value;
-				UpdateTextFormatterText ();
-				ProcessResizeView ();
+				UpdateTextFormatterText();
+				ProcessResizeView();
 			}
 		}
 
@@ -148,14 +147,14 @@ namespace Terminal.Gui {
 			set {
 				if (base.HotKey != value) {
 					var v = value == Key.Unknown ? Key.Null : value;
-					if (base.HotKey != Key.Null && ContainsKeyBinding (Key.Space | base.HotKey)) {
+					if (base.HotKey != Key.Null && ContainsKeyBinding(Key.Space | base.HotKey)) {
 						if (v == Key.Null) {
-							ClearKeybinding (Key.Space | base.HotKey);
+							ClearKeybinding(Key.Space | base.HotKey);
 						} else {
-							ReplaceKeyBinding (Key.Space | base.HotKey, Key.Space | v);
+							ReplaceKeyBinding(Key.Space | base.HotKey, Key.Space | v);
 						}
 					} else if (v != Key.Null) {
-						AddKeyBinding (Key.Space | v, Command.Accept);
+						AddKeyBinding(Key.Space | v, Command.Accept);
 					}
 					base.HotKey = TextFormatter.HotKey = v;
 				}
@@ -163,79 +162,79 @@ namespace Terminal.Gui {
 		}
 
 		/// <inheritdoc/>
-		protected override void UpdateTextFormatterText ()
+		protected override void UpdateTextFormatterText()
 		{
 			if (IsDefault)
-				TextFormatter.Text = ustring.Make (_leftBracket) + ustring.Make (_leftDefault) + " " + Text + " " + ustring.Make (_rightDefault) + ustring.Make (_rightBracket);
+				TextFormatter.Text = string.Concat(_leftBracket, _leftDefault, " ", Text, " ", _rightDefault, _rightBracket);
 			else
-				TextFormatter.Text = ustring.Make (_leftBracket) + " " + Text + " " + ustring.Make (_rightBracket);
+				TextFormatter.Text = string.Concat(_leftBracket, " ", Text, " ", _rightBracket);
 		}
 
 		///<inheritdoc/>
-		public override bool ProcessHotKey (KeyEvent kb)
+		public override bool ProcessHotKey(KeyEvent kb)
 		{
 			if (!Enabled) {
 				return false;
 			}
 
-			return ExecuteHotKey (kb);
+			return ExecuteHotKey(kb);
 		}
 
 		///<inheritdoc/>
-		public override bool ProcessColdKey (KeyEvent kb)
+		public override bool ProcessColdKey(KeyEvent kb)
 		{
 			if (!Enabled) {
 				return false;
 			}
 
-			return ExecuteColdKey (kb);
+			return ExecuteColdKey(kb);
 		}
 
 		///<inheritdoc/>
-		public override bool ProcessKey (KeyEvent kb)
+		public override bool ProcessKey(KeyEvent kb)
 		{
 			if (!Enabled) {
 				return false;
 			}
 
-			var result = InvokeKeybindings (kb);
+			var result = InvokeKeybindings(kb);
 			if (result != null)
 				return (bool)result;
 
-			return base.ProcessKey (kb);
+			return base.ProcessKey(kb);
 		}
 
-		bool ExecuteHotKey (KeyEvent ke)
+		bool ExecuteHotKey(KeyEvent ke)
 		{
 			if (ke.Key == (Key.AltMask | HotKey)) {
-				return AcceptKey ();
+				return AcceptKey();
 			}
 			return false;
 		}
 
-		bool ExecuteColdKey (KeyEvent ke)
+		bool ExecuteColdKey(KeyEvent ke)
 		{
 			if (IsDefault && ke.KeyValue == '\n') {
-				return AcceptKey ();
+				return AcceptKey();
 			}
-			return ExecuteHotKey (ke);
+			return ExecuteHotKey(ke);
 		}
 
-		bool AcceptKey ()
+		bool AcceptKey()
 		{
 			if (!IsDefault && !HasFocus) {
-				SetFocus ();
+				SetFocus();
 			}
-			OnClicked ();
+			OnClicked();
 			return true;
 		}
 
 		/// <summary>
 		/// Virtual method to invoke the <see cref="Clicked"/> event.
 		/// </summary>
-		public virtual void OnClicked ()
+		public virtual void OnClicked()
 		{
-			Clicked?.Invoke (this, EventArgs.Empty);
+			Clicked?.Invoke(this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -250,16 +249,16 @@ namespace Terminal.Gui {
 		public event EventHandler Clicked;
 
 		///<inheritdoc/>
-		public override bool MouseEvent (MouseEvent me)
+		public override bool MouseEvent(MouseEvent me)
 		{
 			if (me.Flags == MouseFlags.Button1Clicked) {
 				if (CanFocus && Enabled) {
 					if (!HasFocus) {
-						SetFocus ();
-						SetNeedsDisplay ();
-						Redraw (Bounds);
+						SetFocus();
+						SetNeedsDisplay();
+						Redraw(Bounds);
 					}
-					OnClicked ();
+					OnClicked();
 				}
 
 				return true;
@@ -268,25 +267,25 @@ namespace Terminal.Gui {
 		}
 
 		///<inheritdoc/>
-		public override void PositionCursor ()
+		public override void PositionCursor()
 		{
 			if (HotKey == Key.Unknown && Text != "") {
-				for (int i = 0; i < TextFormatter.Text.RuneCount; i++) {
-					if (TextFormatter.Text [i] == Text [0]) {
-						Move (i, 0);
+				for (int i = 0; i < TextFormatter.Text.Length; i++) {
+					if (TextFormatter.Text[i] == Text[0]) {
+						Move(i, 0);
 						return;
 					}
 				}
 			}
-			base.PositionCursor ();
+			base.PositionCursor();
 		}
 
 		///<inheritdoc/>
-		public override bool OnEnter (View view)
+		public override bool OnEnter(View view)
 		{
-			Application.Driver.SetCursorVisibility (CursorVisibility.Invisible);
+			Application.Driver.SetCursorVisibility(CursorVisibility.Invisible);
 
-			return base.OnEnter (view);
+			return base.OnEnter(view);
 		}
 	}
 }

@@ -75,7 +75,7 @@ namespace UICatalog.Scenarios {
 						int.Parse (e.NewText.ToString ()), smartView.Border.Padding.Right,
 						smartView.Border.Padding.Bottom);
 				} catch {
-					if (!e.NewText.IsEmpty) {
+					if (!string.IsNullOrEmpty(e.NewText)) {
 						e.Cancel = true;
 					}
 				}
@@ -95,7 +95,7 @@ namespace UICatalog.Scenarios {
 						smartView.Border.Padding.Top, smartView.Border.Padding.Right,
 						smartView.Border.Padding.Bottom);
 				} catch {
-					if (!e.NewText.IsEmpty) {
+					if (!string.IsNullOrEmpty(e.NewText)) {
 						e.Cancel = true;
 					}
 				}
@@ -114,7 +114,7 @@ namespace UICatalog.Scenarios {
 						smartView.Border.Padding.Top, int.Parse (e.NewText.ToString ()),
 						smartView.Border.Padding.Bottom);
 				} catch {
-					if (!e.NewText.IsEmpty) {
+					if (!string.IsNullOrEmpty(e.NewText)) {
 						e.Cancel = true;
 					}
 				}
@@ -133,7 +133,7 @@ namespace UICatalog.Scenarios {
 						smartView.Border.Padding.Top, smartView.Border.Padding.Right,
 						int.Parse (e.NewText.ToString ()));
 				} catch {
-					if (!e.NewText.IsEmpty) {
+					if (!string.IsNullOrEmpty(e.NewText)) {
 						e.Cancel = true;
 					}
 				}
@@ -147,7 +147,7 @@ namespace UICatalog.Scenarios {
 			};
 			replacePadding.Clicked += (sender, e) => {
 				smartView.Border.Padding = new Thickness (smartView.Border.Padding.Top);
-				if (paddingTopEdit.Text.IsEmpty) {
+				if (string.IsNullOrEmpty (paddingTopEdit.Text)) {
 					paddingTopEdit.Text = "0";
 				}
 				paddingBottomEdit.Text = paddingLeftEdit.Text = paddingRightEdit.Text = paddingTopEdit.Text;
@@ -169,7 +169,7 @@ namespace UICatalog.Scenarios {
 						int.Parse (e.NewText.ToString ()), smartView.Border.BorderThickness.Right,
 						smartView.Border.BorderThickness.Bottom);
 				} catch {
-					if (!e.NewText.IsEmpty) {
+					if (!string.IsNullOrEmpty(e.NewText)) {
 						e.Cancel = true;
 					}
 				}
@@ -189,7 +189,7 @@ namespace UICatalog.Scenarios {
 						smartView.Border.BorderThickness.Top, smartView.Border.BorderThickness.Right,
 						smartView.Border.BorderThickness.Bottom);
 				} catch {
-					if (!e.NewText.IsEmpty) {
+					if (!string.IsNullOrEmpty(e.NewText)) {
 						e.Cancel = true;
 					}
 				}
@@ -208,7 +208,7 @@ namespace UICatalog.Scenarios {
 						smartView.Border.BorderThickness.Top, int.Parse (e.NewText.ToString ()),
 						smartView.Border.BorderThickness.Bottom);
 				} catch {
-					if (!e.NewText.IsEmpty) {
+					if (!string.IsNullOrEmpty(e.NewText)) {
 						e.Cancel = true;
 					}
 				}
@@ -227,7 +227,7 @@ namespace UICatalog.Scenarios {
 						smartView.Border.BorderThickness.Top, smartView.Border.BorderThickness.Right,
 						int.Parse (e.NewText.ToString ()));
 				} catch {
-					if (!e.NewText.IsEmpty) {
+					if (!string.IsNullOrEmpty(e.NewText)) {
 						e.Cancel = true;
 					}
 				}
@@ -241,7 +241,7 @@ namespace UICatalog.Scenarios {
 			};
 			replaceBorder.Clicked += (sender, e) => {
 				smartView.Border.BorderThickness = new Thickness (smartView.Border.BorderThickness.Top);
-				if (borderTopEdit.Text.IsEmpty) {
+				if (string.IsNullOrEmpty (borderTopEdit.Text)) {
 					borderTopEdit.Text = "0";
 				}
 				borderBottomEdit.Text = borderLeftEdit.Text = borderRightEdit.Text = borderTopEdit.Text;
@@ -252,7 +252,7 @@ namespace UICatalog.Scenarios {
 
 			var borderStyleEnum = Enum.GetValues (typeof (BorderStyle)).Cast<BorderStyle> ().ToList ();
 			var rbBorderStyle = new RadioGroup (borderStyleEnum.Select (
-				e => NStack.ustring.Make (e.ToString ())).ToArray ()) {
+				e => e.ToString ()).ToArray ()) {
 
 				X = 2,
 				Y = 1,
@@ -309,7 +309,7 @@ namespace UICatalog.Scenarios {
 					smartView.Border.Effect3DOffset = new Point (int.Parse (e.NewText.ToString ()),
 						smartView.Border.Effect3DOffset.Y);
 				} catch {
-					if (!e.NewText.IsEmpty && e.NewText != CultureInfo.CurrentCulture.NumberFormat.NegativeSign) {
+					if (!string.IsNullOrEmpty(e.NewText) && e.NewText != CultureInfo.CurrentCulture.NumberFormat.NegativeSign) {
 						e.Cancel = true;
 					}
 				}
@@ -332,7 +332,7 @@ namespace UICatalog.Scenarios {
 					smartView.Border.Effect3DOffset = new Point (smartView.Border.Effect3DOffset.X,
 						int.Parse (e.NewText.ToString ()));
 				} catch {
-					if (!e.NewText.IsEmpty && e.NewText != CultureInfo.CurrentCulture.NumberFormat.NegativeSign) {
+					if (!string.IsNullOrEmpty(e.NewText) && e.NewText != CultureInfo.CurrentCulture.NumberFormat.NegativeSign) {
 						e.Cancel = true;
 					}
 				}
@@ -353,7 +353,7 @@ namespace UICatalog.Scenarios {
 
 			var colorEnum = Enum.GetValues (typeof (Color)).Cast<Color> ().ToList ();
 			var rbBackground = new RadioGroup (colorEnum.Select (
-				e => NStack.ustring.Make (e.ToString ())).ToArray ()) {
+				e => e.ToString ()).ToArray ()) {
 
 				X = 2,
 				Y = 6,
@@ -370,7 +370,7 @@ namespace UICatalog.Scenarios {
 			});
 
 			var rbBorderBrush = new RadioGroup (colorEnum.Select (
-				e => NStack.ustring.Make (e.ToString ())).ToArray ()) {
+				e => e.ToString ()).ToArray ()) {
 
 				X = Pos.AnchorEnd (18),
 				Y = 6,

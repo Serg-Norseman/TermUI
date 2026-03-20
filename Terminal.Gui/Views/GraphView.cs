@@ -1,15 +1,16 @@
-﻿using NStack;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terminal.Gui.Graphs;
 
-namespace Terminal.Gui {
+namespace Terminal.Gui
+{
 
 	/// <summary>
 	/// Control for rendering graphs (bar, scatter etc)
 	/// </summary>
-	public class GraphView : View {
+	public class GraphView : View
+	{
 
 		/// <summary>
 		/// Horizontal axis
@@ -26,13 +27,13 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Collection of data series that are rendered in the graph
 		/// </summary>
-		public List<ISeries> Series { get; } = new List<ISeries> ();
+		public List<ISeries> Series { get; } = new List<ISeries>();
 
 
 		/// <summary>
 		/// Elements drawn into graph after series have been drawn e.g. Legends etc
 		/// </summary>
-		public List<IAnnotation> Annotations { get; } = new List<IAnnotation> ();
+		public List<IAnnotation> Annotations { get; } = new List<IAnnotation>();
 
 		/// <summary>
 		/// Amount of space to leave on left of control.  Graph content (<see cref="Series"/>)
@@ -51,14 +52,14 @@ namespace Terminal.Gui {
 		/// Changing this scrolls the viewport around in the graph
 		/// </summary>
 		/// <value></value>
-		public PointF ScrollOffset { get; set; } = new PointF (0, 0);
+		public PointF ScrollOffset { get; set; } = new PointF(0, 0);
 
 		/// <summary>
 		/// Translates console width/height into graph space. Defaults
 		/// to 1 row/col of console space being 1 unit of graph space. 
 		/// </summary>
 		/// <returns></returns>
-		public PointF CellSize { get; set; } = new PointF (1, 1);
+		public PointF CellSize { get; set; } = new PointF(1, 1);
 
 		/// <summary>
 		/// The color of the background of the graph and axis/labels
@@ -68,26 +69,26 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Creates a new graph with a 1 to 1 graph space with absolute layout
 		/// </summary>
-		public GraphView ()
+		public GraphView()
 		{
 			CanFocus = true;
 
-			AxisX = new HorizontalAxis ();
-			AxisY = new VerticalAxis ();
+			AxisX = new HorizontalAxis();
+			AxisY = new VerticalAxis();
 
 			// Things this view knows how to do
-			AddCommand (Command.ScrollUp, () => { Scroll (0, CellSize.Y); return true; });
-			AddCommand (Command.ScrollDown, () => { Scroll (0, -CellSize.Y); return true; });
-			AddCommand (Command.ScrollRight, () => { Scroll (CellSize.X, 0); return true; });
-			AddCommand (Command.ScrollLeft, () => { Scroll (-CellSize.X, 0); return true; });
-			AddCommand (Command.PageUp, () => { PageUp (); return true; });
-			AddCommand (Command.PageDown, () => { PageDown(); return true; });
+			AddCommand(Command.ScrollUp, () => { Scroll(0, CellSize.Y); return true; });
+			AddCommand(Command.ScrollDown, () => { Scroll(0, -CellSize.Y); return true; });
+			AddCommand(Command.ScrollRight, () => { Scroll(CellSize.X, 0); return true; });
+			AddCommand(Command.ScrollLeft, () => { Scroll(-CellSize.X, 0); return true; });
+			AddCommand(Command.PageUp, () => { PageUp(); return true; });
+			AddCommand(Command.PageDown, () => { PageDown(); return true; });
 
-			AddKeyBinding (Key.CursorRight, Command.ScrollRight);
-			AddKeyBinding (Key.CursorLeft, Command.ScrollLeft);
-			AddKeyBinding (Key.CursorUp, Command.ScrollUp);
-			AddKeyBinding (Key.CursorDown, Command.ScrollDown);
-			
+			AddKeyBinding(Key.CursorRight, Command.ScrollRight);
+			AddKeyBinding(Key.CursorLeft, Command.ScrollLeft);
+			AddKeyBinding(Key.CursorUp, Command.ScrollUp);
+			AddKeyBinding(Key.CursorDown, Command.ScrollDown);
+
 			// Not bound by default (preserves backwards compatibility)
 			//AddKeyBinding (Key.PageUp, Command.PageUp);
 			//AddKeyBinding (Key.PageDown, Command.PageDown);
@@ -97,37 +98,37 @@ namespace Terminal.Gui {
 		/// Clears all settings configured on the graph and resets all properties
 		/// to default values (<see cref="CellSize"/>, <see cref="ScrollOffset"/> etc) 
 		/// </summary>
-		public void Reset ()
+		public void Reset()
 		{
-			ScrollOffset = new PointF (0, 0);
-			CellSize = new PointF (1, 1);
-			AxisX.Reset ();
-			AxisY.Reset ();
-			Series.Clear ();
-			Annotations.Clear ();
+			ScrollOffset = new PointF(0, 0);
+			CellSize = new PointF(1, 1);
+			AxisX.Reset();
+			AxisY.Reset();
+			Series.Clear();
+			Annotations.Clear();
 			GraphColor = null;
-			SetNeedsDisplay ();
+			SetNeedsDisplay();
 		}
 
 		///<inheritdoc/>
-		public override void Redraw (Rect bounds)
+		public override void Redraw(Rect bounds)
 		{
-			if(CellSize.X == 0 || CellSize.Y == 0) {
-				throw new Exception ($"{nameof(CellSize)} cannot be 0");
+			if (CellSize.X == 0 || CellSize.Y == 0) {
+				throw new Exception($"{nameof(CellSize)} cannot be 0");
 			}
 
-			SetDriverColorToGraphColor ();
+			SetDriverColorToGraphColor();
 
-			Move (0, 0);
+			Move(0, 0);
 
 			// clear all old content
 			for (int i = 0; i < Bounds.Height; i++) {
-				Move (0, i);
-				Driver.AddStr (new string (' ', Bounds.Width));
+				Move(0, i);
+				Driver.AddRepeatedRune(' ', Bounds.Width);
 			}
 
 			// If there is no data do not display a graph
-			if (!Series.Any () && !Annotations.Any ()) {
+			if (!Series.Any() && !Annotations.Any()) {
 				return;
 			}
 
@@ -141,46 +142,46 @@ namespace Terminal.Gui {
 			}
 
 			// Draw 'before' annotations
-			foreach (var a in Annotations.ToArray().Where (a => a.BeforeSeries)) {
-				a.Render (this);
+			foreach (var a in Annotations.ToArray().Where(a => a.BeforeSeries)) {
+				a.Render(this);
 			}
 
-			SetDriverColorToGraphColor ();
+			SetDriverColorToGraphColor();
 
-			AxisY.DrawAxisLine (this);
-			AxisX.DrawAxisLine (this);
+			AxisY.DrawAxisLine(this);
+			AxisX.DrawAxisLine(this);
 
-			AxisY.DrawAxisLabels (this);
-			AxisX.DrawAxisLabels (this);
+			AxisY.DrawAxisLabels(this);
+			AxisX.DrawAxisLabels(this);
 
 			// Draw a cross where the two axis cross
-			var axisIntersection = new Point(AxisY.GetAxisXPosition(this),AxisX.GetAxisYPosition(this));
+			var axisIntersection = new Point(AxisY.GetAxisXPosition(this), AxisX.GetAxisYPosition(this));
 
 			if (AxisX.Visible && AxisY.Visible) {
-				Move (axisIntersection.X, axisIntersection.Y);
-				AddRune (axisIntersection.X, axisIntersection.Y, '\u253C');
+				Move(axisIntersection.X, axisIntersection.Y);
+				AddRune(axisIntersection.X, axisIntersection.Y, '\u253C');
 			}
 
-			SetDriverColorToGraphColor ();
+			SetDriverColorToGraphColor();
 
 
-			Rect drawBounds = new Rect((int)MarginLeft,0, graphScreenWidth, graphScreenHeight);
-			
-			RectangleF graphSpace = ScreenToGraphSpace (drawBounds);
+			Rect drawBounds = new Rect((int)MarginLeft, 0, graphScreenWidth, graphScreenHeight);
 
-			foreach (var s in Series.ToArray ()) {
+			RectangleF graphSpace = ScreenToGraphSpace(drawBounds);
 
-				s.DrawSeries (this, drawBounds, graphSpace);
+			foreach (var s in Series.ToArray()) {
+
+				s.DrawSeries(this, drawBounds, graphSpace);
 
 				// If a series changes the graph color reset it
-				SetDriverColorToGraphColor ();
+				SetDriverColorToGraphColor();
 			}
 
-			SetDriverColorToGraphColor ();
+			SetDriverColorToGraphColor();
 
 			// Draw 'after' annotations
-			foreach (var a in Annotations.ToArray ().Where (a => !a.BeforeSeries)) {
-				a.Render (this);
+			foreach (var a in Annotations.ToArray().Where(a => !a.BeforeSeries)) {
+				a.Render(this);
 			}
 
 		}
@@ -189,9 +190,9 @@ namespace Terminal.Gui {
 		/// Sets the color attribute of <see cref="Application.Driver"/> to the <see cref="GraphColor"/>
 		/// (if defined) or <see cref="ColorScheme"/> otherwise.
 		/// </summary>
-		public void SetDriverColorToGraphColor ()
+		public void SetDriverColorToGraphColor()
 		{
-			Driver.SetAttribute (GraphColor ?? (GetNormalColor ()));
+			Driver.SetAttribute(GraphColor ?? (GetNormalColor()));
 		}
 
 		/// <summary>
@@ -201,9 +202,9 @@ namespace Terminal.Gui {
 		/// <param name="col"></param>
 		/// <param name="row"></param>
 		/// <returns></returns>
-		public RectangleF ScreenToGraphSpace (int col, int row)
+		public RectangleF ScreenToGraphSpace(int col, int row)
 		{
-			return new RectangleF (
+			return new RectangleF(
 				ScrollOffset.X + ((col - MarginLeft) * CellSize.X),
 				ScrollOffset.Y + ((Bounds.Height - (row + MarginBottom + 1)) * CellSize.Y),
 				CellSize.X, CellSize.Y);
@@ -215,12 +216,12 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="screenArea"></param>
 		/// <returns></returns>
-		public RectangleF ScreenToGraphSpace (Rect screenArea)
+		public RectangleF ScreenToGraphSpace(Rect screenArea)
 		{
 			// get position of the bottom left
-			var pos = ScreenToGraphSpace (screenArea.Left, screenArea.Bottom-1);
+			var pos = ScreenToGraphSpace(screenArea.Left, screenArea.Bottom - 1);
 
-			return new RectangleF (pos.X, pos.Y, screenArea.Width * CellSize.X, screenArea.Height * CellSize.Y);
+			return new RectangleF(pos.X, pos.Y, screenArea.Width * CellSize.X, screenArea.Height * CellSize.Y);
 		}
 		/// <summary>
 		/// Calculates the screen location for a given point in graph space.
@@ -230,9 +231,9 @@ namespace Terminal.Gui {
 		/// visible area of graph currently presented.  E.g. 0,0 for origin</param>
 		/// <returns>Screen position (Column/Row) which would be used to render the graph <paramref name="location"/>.
 		/// Note that this can be outside the current client area of the control</returns>
-		public Point GraphSpaceToScreen (PointF location)
+		public Point GraphSpaceToScreen(PointF location)
 		{
-			return new Point (
+			return new Point(
 
 				(int)((location.X - ScrollOffset.X) / CellSize.X) + (int)MarginLeft,
 				 // screen coordinates are top down while graph coordinates are bottom up
@@ -242,22 +243,22 @@ namespace Terminal.Gui {
 
 		/// <inheritdoc/>
 		/// <remarks>Also ensures that cursor is invisible after entering the <see cref="GraphView"/>.</remarks>
-		public override bool OnEnter (View view)
+		public override bool OnEnter(View view)
 		{
-			Driver.SetCursorVisibility (CursorVisibility.Invisible);
-			return base.OnEnter (view);
+			Driver.SetCursorVisibility(CursorVisibility.Invisible);
+			return base.OnEnter(view);
 		}
 
 		/// <inheritdoc/>
-		public override bool ProcessKey (KeyEvent keyEvent)
+		public override bool ProcessKey(KeyEvent keyEvent)
 		{
 			if (HasFocus && CanFocus) {
-				var result =  InvokeKeybindings (keyEvent);
+				var result = InvokeKeybindings(keyEvent);
 				if (result != null)
 					return (bool)result;
 			}
 
-			return base.ProcessKey (keyEvent);
+			return base.ProcessKey(keyEvent);
 		}
 
 		/// <summary>
@@ -265,7 +266,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		public void PageUp()
 		{
-			Scroll (0, CellSize.Y * Bounds.Height);
+			Scroll(0, CellSize.Y * Bounds.Height);
 		}
 
 		/// <summary>
@@ -281,26 +282,26 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="offsetX"></param>
 		/// <param name="offsetY"></param>
-		public void Scroll (float offsetX, float offsetY)
+		public void Scroll(float offsetX, float offsetY)
 		{
-			ScrollOffset = new PointF (
+			ScrollOffset = new PointF(
 				ScrollOffset.X + offsetX,
 				ScrollOffset.Y + offsetY);
 
-			SetNeedsDisplay ();
+			SetNeedsDisplay();
 		}
 
 
 		#region Bresenham's line algorithm
 		// https://rosettacode.org/wiki/Bitmap/Bresenham%27s_line_algorithm#C.23
 
-		int ipart (decimal x) { return (int)x; }
+		int ipart(decimal x) { return (int)x; }
 
 
-		decimal fpart (decimal x)
+		decimal fpart(decimal x)
 		{
-			if (x < 0) return (1 - (x - Math.Floor (x)));
-			return (x - Math.Floor (x));
+			if (x < 0) return (1 - (x - Math.Floor(x)));
+			return (x - Math.Floor(x));
 		}
 
 		/// <summary>
@@ -309,9 +310,9 @@ namespace Terminal.Gui {
 		/// <param name="start"></param>
 		/// <param name="end"></param>
 		/// <param name="symbol">The symbol to use for the line</param>
-		public void DrawLine (Point start, Point end, Rune symbol)
+		public void DrawLine(Point start, Point end, Rune symbol)
 		{
-			if (Equals (start, end)) {
+			if (Equals(start, end)) {
 				return;
 			}
 
@@ -320,13 +321,13 @@ namespace Terminal.Gui {
 			int x1 = end.X;
 			int y1 = end.Y;
 
-			int dx = Math.Abs (x1 - x0), sx = x0 < x1 ? 1 : -1;
-			int dy = Math.Abs (y1 - y0), sy = y0 < y1 ? 1 : -1;
+			int dx = Math.Abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+			int dy = Math.Abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
 			int err = (dx > dy ? dx : -dy) / 2, e2;
 
 			while (true) {
 
-				AddRune (x0, y0, symbol);
+				AddRune(x0, y0, symbol);
 
 				if (x0 == x1 && y0 == y1) break;
 				e2 = err;

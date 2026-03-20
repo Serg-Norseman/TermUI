@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection.Emit;
 using Xunit;
 using Xunit.Abstractions;
 using Rune = System.Rune;
@@ -30,7 +29,7 @@ namespace Terminal.Gui.CoreTests {
 			Assert.False (b.Effect3D);
 			Assert.Equal (new Point (1, 1), b.Effect3DOffset);
 			Assert.Null (b.Effect3DBrush);
-			Assert.Equal (NStack.ustring.Empty, b.Title);
+			Assert.Equal (string.Empty, b.Title);
 		}
 
 		[Fact]

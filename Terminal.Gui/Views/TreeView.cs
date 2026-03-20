@@ -2,7 +2,6 @@
 // by phillip.piper@gmail.com). Phillip has explicitly granted permission for his design
 // and code to be used in this library under the MIT license.
 
-using NStack;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -161,7 +160,7 @@ namespace Terminal.Gui {
 		/// Error message to display when the control is not properly initialized at draw time 
 		/// (nodes added but no tree builder set).
 		/// </summary>
-		public static ustring NoBuilderError = "ERROR: TreeBuilder Not Set";
+		public static string NoBuilderError = "ERROR: TreeBuilder Not Set";
 		private Key objectActivationKey = Key.Enter;
 
 		/// <summary>
@@ -475,7 +474,7 @@ namespace Terminal.Gui {
 					// Else clear the line to prevent stale symbols due to scrolling etc
 					Move (0, line);
 					Driver.SetAttribute (GetNormalColor ());
-					Driver.AddStr (new string (' ', bounds.Width));
+					Driver.AddRepeatedRune (' ', bounds.Width);
 				}
 			}
 		}

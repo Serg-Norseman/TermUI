@@ -1,5 +1,4 @@
-﻿using NStack;
-using Xunit;
+﻿using Xunit;
 using Xunit.Abstractions;
 
 namespace Terminal.Gui.ViewTests {
@@ -324,7 +323,7 @@ namespace Terminal.Gui.ViewTests {
 			private Label labelFill;
 			private Label labelText;
 
-			public CustomButton (string fill, ustring text, int width, int height)
+			public CustomButton (string fill, string text, int width, int height)
 			{
 				Width = width;
 				Height = height;

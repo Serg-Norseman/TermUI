@@ -1,4 +1,3 @@
-using NStack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +7,13 @@ namespace Terminal.Gui {
 	/// A single tab in a <see cref="TabView"/>
 	/// </summary>
 	public class TabPage {
-		private ustring text;
+		private string text;
 
 		/// <summary>
 		/// The text to display in a <see cref="TabView"/>
 		/// </summary>
 		/// <value></value>
-		public ustring Text { get => text ?? "Unamed"; set => text = value; }
+		public string Text { get => text ?? "Unamed"; set => text = value; }
 
 		/// <summary>
 		/// The control to display when the tab is selected
@@ -646,7 +645,7 @@ namespace Terminal.Gui {
 				var selected = tabLocations.FirstOrDefault (t => t.IsSelected);
 
 				// Clear out everything
-				Driver.AddStr (new string (' ', width));
+				Driver.AddRepeatedRune(' ', width);
 
 				// Nothing is selected... odd but we are done
 				if (selected == null) {
@@ -692,7 +691,7 @@ namespace Terminal.Gui {
 
 				// clear any old text
 				Move (0, y);
-				Driver.AddStr (new string (' ', width));
+				Driver.AddRepeatedRune (' ', width);
 
 				foreach (var toRender in tabLocations) {
 
@@ -759,7 +758,7 @@ namespace Terminal.Gui {
 				Driver.AddRune (selected.X == 1 ? Driver.VLine :
 			(host.Style.TabsOnBottom ? Driver.URCorner : Driver.LRCorner));
 
-				Driver.AddStr (new string (' ', selected.Width));
+				Driver.AddRepeatedRune (' ', selected.Width);
 
 
 				Driver.AddRune (selected.X + selected.Width == width - 1 ?

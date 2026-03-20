@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Terminal.Gui.Graphs {
-
-
+namespace Terminal.Gui.Graphs
+{
 	/// <summary>
 	/// Facilitates box drawing and line intersection detection
 	/// and rendering.  Does not support diagonal lines.
 	/// </summary>
-	public class LineCanvas {
-
-
-		private List<StraightLine> lines = new List<StraightLine> ();
+	public class LineCanvas
+	{
+		private List<StraightLine> lines = new List<StraightLine>();
 
 		Dictionary<IntersectionRuneType, IntersectionRuneResolver> runeResolvers = new Dictionary<IntersectionRuneType, IntersectionRuneResolver> {
 			{IntersectionRuneType.ULCorner,new ULIntersectionRuneResolver()},
@@ -42,9 +40,9 @@ namespace Terminal.Gui.Graphs {
 		/// Positive for Down/Right.  Negative for Up/Left.</param>
 		/// <param name="orientation">Direction of the line.</param>
 		/// <param name="style">The style of line to use</param>
-		public void AddLine (Point from, int length, Orientation orientation, BorderStyle style)
+		public void AddLine(Point from, int length, Orientation orientation, BorderStyle style)
 		{
-			lines.Add (new StraightLine (from, length, orientation, style));
+			lines.Add(new StraightLine(from, length, orientation, style));
 		}
 		/// <summary>
 		/// Evaluate all currently defined lines that lie within 
@@ -57,25 +55,24 @@ namespace Terminal.Gui.Graphs {
 		/// <param name="inArea"></param>
 		/// <returns>Mapping of all the points within <paramref name="inArea"/> to
 		/// line or intersection runes which should be drawn there.</returns>
-		public Dictionary<Point,Rune> GenerateImage (Rect inArea)
+		public Dictionary<Point, Rune> GenerateImage(Rect inArea)
 		{
-			var map = new Dictionary<Point,Rune>();
+			var map = new Dictionary<Point, Rune>();
 
 			// walk through each pixel of the bitmap
 			for (int y = inArea.Y; y < inArea.Height; y++) {
 				for (int x = inArea.X; x < inArea.Width; x++) {
 
 					var intersects = lines
-						.Select (l => l.Intersects (x, y))
-						.Where (i => i != null)
-						.ToArray ();
+						.Select(l => l.Intersects(x, y))
+						.Where(i => i != null)
+						.ToArray();
 
 					// TODO: use Driver and LineStyle to map
-					var rune = GetRuneForIntersects (Application.Driver, intersects);
+					var rune = GetRuneForIntersects(Application.Driver, intersects);
 
-					if(rune != null)
-					{
-						map.Add(new Point(x,y),rune.Value);
+					if (rune != null) {
+						map.Add(new Point(x, y), rune.Value);
 					}
 				}
 			}
@@ -83,14 +80,15 @@ namespace Terminal.Gui.Graphs {
 			return map;
 		}
 
-		private abstract class IntersectionRuneResolver {
-			readonly Rune round;
-			readonly Rune doubleH;
-			readonly Rune doubleV;
-			readonly Rune doubleBoth;
-			readonly Rune normal;
+		private abstract class IntersectionRuneResolver
+		{
+			readonly char round;
+			readonly char doubleH;
+			readonly char doubleV;
+			readonly char doubleBoth;
+			readonly char normal;
 
-			public IntersectionRuneResolver (Rune round, Rune doubleH, Rune doubleV, Rune doubleBoth, Rune normal)
+			public IntersectionRuneResolver(char round, char doubleH, char doubleV, char doubleBoth, char normal)
 			{
 				this.round = round;
 				this.doubleH = doubleH;
@@ -99,12 +97,12 @@ namespace Terminal.Gui.Graphs {
 				this.normal = normal;
 			}
 
-			public Rune? GetRuneForIntersects (ConsoleDriver driver, IntersectionDefinition [] intersects)
+			public char? GetRuneForIntersects(ConsoleDriver driver, IntersectionDefinition[] intersects)
 			{
-				var useRounded = intersects.Any (i => i.Line.Style == BorderStyle.Rounded && i.Line.Length != 0);
+				var useRounded = intersects.Any(i => i.Line.Style == BorderStyle.Rounded && i.Line.Length != 0);
 
-				bool doubleHorizontal = intersects.Any (l => l.Line.Orientation == Orientation.Horizontal && l.Line.Style == BorderStyle.Double);
-				bool doubleVertical = intersects.Any (l => l.Line.Orientation == Orientation.Vertical && l.Line.Style == BorderStyle.Double);
+				bool doubleHorizontal = intersects.Any(l => l.Line.Orientation == Orientation.Horizontal && l.Line.Style == BorderStyle.Double);
+				bool doubleVertical = intersects.Any(l => l.Line.Orientation == Orientation.Vertical && l.Line.Style == BorderStyle.Double);
 
 
 				if (doubleHorizontal) {
@@ -119,87 +117,96 @@ namespace Terminal.Gui.Graphs {
 			}
 		}
 
-		private class ULIntersectionRuneResolver : IntersectionRuneResolver {
-			public ULIntersectionRuneResolver () :
-				base ('╭', '╒', '╓', '╔', '┌')
-			{
-
-			}
-		}
-		private class URIntersectionRuneResolver : IntersectionRuneResolver {
-
-			public URIntersectionRuneResolver () :
-				base ('╮', '╕', '╖', '╗', '┐')
-			{
-
-			}
-		}
-		private class LLIntersectionRuneResolver : IntersectionRuneResolver {
-
-			public LLIntersectionRuneResolver () :
-				base ('╰', '╘', '╙', '╚', '└')
-			{
-
-			}
-		}
-		private class LRIntersectionRuneResolver : IntersectionRuneResolver {
-			public LRIntersectionRuneResolver () :
-				base ('╯', '╛', '╜', '╝', '┘')
-			{
-
-			}
-		}
-
-		private class TopTeeIntersectionRuneResolver : IntersectionRuneResolver {
-			public TopTeeIntersectionRuneResolver () :
-				base ('┬', '╤', '╥', '╦', '┬')
-			{
-
-			}
-		}
-		private class LeftTeeIntersectionRuneResolver : IntersectionRuneResolver {
-			public LeftTeeIntersectionRuneResolver () :
-				base ('├', '╞', '╟', '╠', '├')
-			{
-
-			}
-		}
-		private class RightTeeIntersectionRuneResolver : IntersectionRuneResolver {
-			public RightTeeIntersectionRuneResolver () :
-				base ('┤', '╡', '╢', '╣', '┤')
-			{
-
-			}
-		}
-		private class BottomTeeIntersectionRuneResolver : IntersectionRuneResolver {
-			public BottomTeeIntersectionRuneResolver () :
-				base ('┴', '╧', '╨', '╩', '┴')
-			{
-
-			}
-		}
-		private class CrosshairIntersectionRuneResolver : IntersectionRuneResolver {
-			public CrosshairIntersectionRuneResolver () :
-				base ('┼', '╪', '╫', '╬', '┼')
-			{
-
-			}
-		}
-
-		private Rune? GetRuneForIntersects (ConsoleDriver driver, IntersectionDefinition [] intersects)
+		private class ULIntersectionRuneResolver : IntersectionRuneResolver
 		{
-			if (!intersects.Any ())
+			public ULIntersectionRuneResolver() :
+				base('╭', '╒', '╓', '╔', '┌')
+			{
+
+			}
+		}
+		private class URIntersectionRuneResolver : IntersectionRuneResolver
+		{
+
+			public URIntersectionRuneResolver() :
+				base('╮', '╕', '╖', '╗', '┐')
+			{
+
+			}
+		}
+		private class LLIntersectionRuneResolver : IntersectionRuneResolver
+		{
+
+			public LLIntersectionRuneResolver() :
+				base('╰', '╘', '╙', '╚', '└')
+			{
+
+			}
+		}
+		private class LRIntersectionRuneResolver : IntersectionRuneResolver
+		{
+			public LRIntersectionRuneResolver() :
+				base('╯', '╛', '╜', '╝', '┘')
+			{
+
+			}
+		}
+
+		private class TopTeeIntersectionRuneResolver : IntersectionRuneResolver
+		{
+			public TopTeeIntersectionRuneResolver() :
+				base('┬', '╤', '╥', '╦', '┬')
+			{
+
+			}
+		}
+		private class LeftTeeIntersectionRuneResolver : IntersectionRuneResolver
+		{
+			public LeftTeeIntersectionRuneResolver() :
+				base('├', '╞', '╟', '╠', '├')
+			{
+
+			}
+		}
+		private class RightTeeIntersectionRuneResolver : IntersectionRuneResolver
+		{
+			public RightTeeIntersectionRuneResolver() :
+				base('┤', '╡', '╢', '╣', '┤')
+			{
+
+			}
+		}
+		private class BottomTeeIntersectionRuneResolver : IntersectionRuneResolver
+		{
+			public BottomTeeIntersectionRuneResolver() :
+				base('┴', '╧', '╨', '╩', '┴')
+			{
+
+			}
+		}
+		private class CrosshairIntersectionRuneResolver : IntersectionRuneResolver
+		{
+			public CrosshairIntersectionRuneResolver() :
+				base('┼', '╪', '╫', '╬', '┼')
+			{
+
+			}
+		}
+
+		private Rune? GetRuneForIntersects(ConsoleDriver driver, IntersectionDefinition[] intersects)
+		{
+			if (!intersects.Any())
 				return null;
 
-			var runeType = GetRuneTypeForIntersects (intersects);
+			var runeType = GetRuneTypeForIntersects(intersects);
 
-			if (runeResolvers.ContainsKey (runeType)) {
-				return runeResolvers [runeType].GetRuneForIntersects (driver, intersects);
+			if (runeResolvers.ContainsKey(runeType)) {
+				return runeResolvers[runeType].GetRuneForIntersects(driver, intersects);
 			}
 
 			// TODO: Remove these two once we have all of the below ported to IntersectionRuneResolvers
-			var useDouble = intersects.Any (i => i.Line.Style == BorderStyle.Double && i.Line.Length != 0);
-			var useRounded = intersects.Any (i => i.Line.Style == BorderStyle.Rounded && i.Line.Length != 0);
+			var useDouble = intersects.Any(i => i.Line.Style == BorderStyle.Double && i.Line.Length != 0);
+			var useRounded = intersects.Any(i => i.Line.Style == BorderStyle.Rounded && i.Line.Length != 0);
 
 			// TODO: maybe make these resolvers to for simplicity?
 			// or for dotted lines later on or that kind of thing?
@@ -212,31 +219,31 @@ namespace Terminal.Gui.Graphs {
 				return useDouble ? driver.HDLine : driver.HLine;
 			case IntersectionRuneType.VLine:
 				return useDouble ? driver.VDLine : driver.VLine;
-			default: throw new Exception ("Could not find resolver or switch case for " + nameof (runeType) + ":" + runeType);
+			default: throw new Exception("Could not find resolver or switch case for " + nameof(runeType) + ":" + runeType);
 			}
 		}
 
 
-		private IntersectionRuneType GetRuneTypeForIntersects (IntersectionDefinition [] intersects)
+		private IntersectionRuneType GetRuneTypeForIntersects(IntersectionDefinition[] intersects)
 		{
-			if (intersects.All (i => i.Line.Length == 0)) {
+			if (intersects.All(i => i.Line.Length == 0)) {
 				return IntersectionRuneType.Dot;
 			}
 
 			// ignore dots
-			intersects = intersects.Where (i => i.Type != IntersectionType.Dot).ToArray ();
+			intersects = intersects.Where(i => i.Type != IntersectionType.Dot).ToArray();
 
-			var set = new HashSet<IntersectionType> (intersects.Select (i => i.Type));
+			var set = new HashSet<IntersectionType>(intersects.Select(i => i.Type));
 
 			#region Crosshair Conditions
-			if (Has (set,
+			if (Has(set,
 				IntersectionType.PassOverHorizontal,
 				IntersectionType.PassOverVertical
 				)) {
 				return IntersectionRuneType.Crosshair;
 			}
 
-			if (Has (set,
+			if (Has(set,
 				IntersectionType.PassOverVertical,
 				IntersectionType.StartLeft,
 				IntersectionType.StartRight
@@ -244,7 +251,7 @@ namespace Terminal.Gui.Graphs {
 				return IntersectionRuneType.Crosshair;
 			}
 
-			if (Has (set,
+			if (Has(set,
 				IntersectionType.PassOverHorizontal,
 				IntersectionType.StartUp,
 				IntersectionType.StartDown
@@ -253,7 +260,7 @@ namespace Terminal.Gui.Graphs {
 			}
 
 
-			if (Has (set,
+			if (Has(set,
 				IntersectionType.StartLeft,
 				IntersectionType.StartRight,
 				IntersectionType.StartUp,
@@ -264,25 +271,25 @@ namespace Terminal.Gui.Graphs {
 
 
 			#region Corner Conditions
-			if (Exactly (set,
+			if (Exactly(set,
 				IntersectionType.StartRight,
 				IntersectionType.StartDown)) {
 				return IntersectionRuneType.ULCorner;
 			}
 
-			if (Exactly (set,
+			if (Exactly(set,
 				IntersectionType.StartLeft,
 				IntersectionType.StartDown)) {
 				return IntersectionRuneType.URCorner;
 			}
 
-			if (Exactly (set,
+			if (Exactly(set,
 				IntersectionType.StartUp,
 				IntersectionType.StartLeft)) {
 				return IntersectionRuneType.LRCorner;
 			}
 
-			if (Exactly (set,
+			if (Exactly(set,
 				IntersectionType.StartUp,
 				IntersectionType.StartRight)) {
 				return IntersectionRuneType.LLCorner;
@@ -290,24 +297,24 @@ namespace Terminal.Gui.Graphs {
 			#endregion Corner Conditions
 
 			#region T Conditions
-			if (Has (set,
+			if (Has(set,
 				IntersectionType.PassOverHorizontal,
 				IntersectionType.StartDown)) {
 				return IntersectionRuneType.TopTee;
 			}
-			if (Has (set,
+			if (Has(set,
 				IntersectionType.StartRight,
 				IntersectionType.StartLeft,
 				IntersectionType.StartDown)) {
 				return IntersectionRuneType.TopTee;
 			}
 
-			if (Has (set,
+			if (Has(set,
 				IntersectionType.PassOverHorizontal,
 				IntersectionType.StartUp)) {
 				return IntersectionRuneType.BottomTee;
 			}
-			if (Has (set,
+			if (Has(set,
 				IntersectionType.StartRight,
 				IntersectionType.StartLeft,
 				IntersectionType.StartUp)) {
@@ -315,12 +322,12 @@ namespace Terminal.Gui.Graphs {
 			}
 
 
-			if (Has (set,
+			if (Has(set,
 				IntersectionType.PassOverVertical,
 				IntersectionType.StartRight)) {
 				return IntersectionRuneType.LeftTee;
 			}
-			if (Has (set,
+			if (Has(set,
 				IntersectionType.StartRight,
 				IntersectionType.StartDown,
 				IntersectionType.StartUp)) {
@@ -328,12 +335,12 @@ namespace Terminal.Gui.Graphs {
 			}
 
 
-			if (Has (set,
+			if (Has(set,
 				IntersectionType.PassOverVertical,
 				IntersectionType.StartLeft)) {
 				return IntersectionRuneType.RightTee;
 			}
-			if (Has (set,
+			if (Has(set,
 				IntersectionType.StartLeft,
 				IntersectionType.StartDown,
 				IntersectionType.StartUp)) {
@@ -341,20 +348,20 @@ namespace Terminal.Gui.Graphs {
 			}
 			#endregion
 
-			if (All (intersects, Orientation.Horizontal)) {
+			if (All(intersects, Orientation.Horizontal)) {
 				return IntersectionRuneType.HLine;
 			}
 
-			if (All (intersects, Orientation.Vertical)) {
+			if (All(intersects, Orientation.Vertical)) {
 				return IntersectionRuneType.VLine;
 			}
 
 			return IntersectionRuneType.Dot;
 		}
 
-		private bool All (IntersectionDefinition [] intersects, Orientation orientation)
+		private bool All(IntersectionDefinition[] intersects, Orientation orientation)
 		{
-			return intersects.All (i => i.Line.Orientation == orientation);
+			return intersects.All(i => i.Line.Orientation == orientation);
 		}
 
 		/// <summary>
@@ -364,9 +371,9 @@ namespace Terminal.Gui.Graphs {
 		/// <param name="intersects"></param>
 		/// <param name="types"></param>
 		/// <returns></returns>
-		private bool Has (HashSet<IntersectionType> intersects, params IntersectionType [] types)
+		private bool Has(HashSet<IntersectionType> intersects, params IntersectionType[] types)
 		{
-			return types.All (t => intersects.Contains (t));
+			return types.All(t => intersects.Contains(t));
 		}
 
 		/// <summary>
@@ -376,12 +383,13 @@ namespace Terminal.Gui.Graphs {
 		/// <param name="intersects"></param>
 		/// <param name="types"></param>
 		/// <returns></returns>
-		private bool Exactly (HashSet<IntersectionType> intersects, params IntersectionType [] types)
+		private bool Exactly(HashSet<IntersectionType> intersects, params IntersectionType[] types)
 		{
-			return intersects.SetEquals (types);
+			return intersects.SetEquals(types);
 		}
 
-		class IntersectionDefinition {
+		class IntersectionDefinition
+		{
 			/// <summary>
 			/// The point at which the intersection happens
 			/// </summary>
@@ -398,7 +406,7 @@ namespace Terminal.Gui.Graphs {
 			/// </summary>
 			public StraightLine Line { get; }
 
-			public IntersectionDefinition (Point point, IntersectionType type, StraightLine line)
+			public IntersectionDefinition(Point point, IntersectionType type, StraightLine line)
 			{
 				Point = point;
 				Type = type;
@@ -410,7 +418,8 @@ namespace Terminal.Gui.Graphs {
 		/// The type of Rune that we will use before considering
 		/// double width, curved borders etc
 		/// </summary>
-		enum IntersectionRuneType {
+		enum IntersectionRuneType
+		{
 			None,
 			Dot,
 			ULCorner,
@@ -426,7 +435,8 @@ namespace Terminal.Gui.Graphs {
 			VLine,
 		}
 
-		enum IntersectionType {
+		enum IntersectionType
+		{
 			/// <summary>
 			/// There is no intersection
 			/// </summary>
@@ -470,13 +480,14 @@ namespace Terminal.Gui.Graphs {
 			Dot
 		}
 
-		class StraightLine {
+		class StraightLine
+		{
 			public Point Start { get; }
 			public int Length { get; }
 			public Orientation Orientation { get; }
 			public BorderStyle Style { get; }
 
-			public StraightLine (Point start, int length, Orientation orientation, BorderStyle style)
+			public StraightLine(Point start, int length, Orientation orientation, BorderStyle style)
 			{
 				this.Start = start;
 				this.Length = length;
@@ -484,32 +495,32 @@ namespace Terminal.Gui.Graphs {
 				this.Style = style;
 			}
 
-			internal IntersectionDefinition Intersects (int x, int y)
+			internal IntersectionDefinition Intersects(int x, int y)
 			{
-				if (IsDot ()) {
-					if (StartsAt (x, y)) {
-						return new IntersectionDefinition (Start, IntersectionType.Dot, this);
+				if (IsDot()) {
+					if (StartsAt(x, y)) {
+						return new IntersectionDefinition(Start, IntersectionType.Dot, this);
 					} else {
 						return null;
 					}
 				}
 
 				switch (Orientation) {
-				case Orientation.Horizontal: return IntersectsHorizontally (x, y);
-				case Orientation.Vertical: return IntersectsVertically (x, y);
-				default: throw new ArgumentOutOfRangeException (nameof (Orientation));
+				case Orientation.Horizontal: return IntersectsHorizontally(x, y);
+				case Orientation.Vertical: return IntersectsVertically(x, y);
+				default: throw new ArgumentOutOfRangeException(nameof(Orientation));
 				}
 
 			}
 
-			private IntersectionDefinition IntersectsHorizontally (int x, int y)
+			private IntersectionDefinition IntersectsHorizontally(int x, int y)
 			{
 				if (Start.Y != y) {
 					return null;
 				} else {
-					if (StartsAt (x, y)) {
+					if (StartsAt(x, y)) {
 
-						return new IntersectionDefinition (
+						return new IntersectionDefinition(
 							Start,
 							Length < 0 ? IntersectionType.StartLeft : IntersectionType.StartRight,
 							this
@@ -517,21 +528,21 @@ namespace Terminal.Gui.Graphs {
 
 					}
 
-					if (EndsAt (x, y)) {
+					if (EndsAt(x, y)) {
 
-						return new IntersectionDefinition (
+						return new IntersectionDefinition(
 							Start,
 							Length < 0 ? IntersectionType.StartRight : IntersectionType.StartLeft,
 							this
 							);
 
 					} else {
-						var xmin = Math.Min (Start.X, Start.X + Length);
-						var xmax = Math.Max (Start.X, Start.X + Length);
+						var xmin = Math.Min(Start.X, Start.X + Length);
+						var xmax = Math.Max(Start.X, Start.X + Length);
 
 						if (xmin < x && xmax > x) {
-							return new IntersectionDefinition (
-							new Point (x, y),
+							return new IntersectionDefinition(
+							new Point(x, y),
 							IntersectionType.PassOverHorizontal,
 							this
 							);
@@ -542,14 +553,14 @@ namespace Terminal.Gui.Graphs {
 				}
 			}
 
-			private IntersectionDefinition IntersectsVertically (int x, int y)
+			private IntersectionDefinition IntersectsVertically(int x, int y)
 			{
 				if (Start.X != x) {
 					return null;
 				} else {
-					if (StartsAt (x, y)) {
+					if (StartsAt(x, y)) {
 
-						return new IntersectionDefinition (
+						return new IntersectionDefinition(
 							Start,
 							Length < 0 ? IntersectionType.StartUp : IntersectionType.StartDown,
 							this
@@ -557,21 +568,21 @@ namespace Terminal.Gui.Graphs {
 
 					}
 
-					if (EndsAt (x, y)) {
+					if (EndsAt(x, y)) {
 
-						return new IntersectionDefinition (
+						return new IntersectionDefinition(
 							Start,
 							Length < 0 ? IntersectionType.StartDown : IntersectionType.StartUp,
 							this
 							);
 
 					} else {
-						var ymin = Math.Min (Start.Y, Start.Y + Length);
-						var ymax = Math.Max (Start.Y, Start.Y + Length);
+						var ymin = Math.Min(Start.Y, Start.Y + Length);
+						var ymax = Math.Max(Start.Y, Start.Y + Length);
 
 						if (ymin < y && ymax > y) {
-							return new IntersectionDefinition (
-							new Point (x, y),
+							return new IntersectionDefinition(
+							new Point(x, y),
 							IntersectionType.PassOverVertical,
 							this
 							);
@@ -582,7 +593,7 @@ namespace Terminal.Gui.Graphs {
 				}
 			}
 
-			private bool EndsAt (int x, int y)
+			private bool EndsAt(int x, int y)
 			{
 				if (Orientation == Orientation.Horizontal) {
 					return Start.X + Length == x && Start.Y == y;
@@ -591,12 +602,12 @@ namespace Terminal.Gui.Graphs {
 				return Start.X == x && Start.Y + Length == y;
 			}
 
-			private bool StartsAt (int x, int y)
+			private bool StartsAt(int x, int y)
 			{
 				return Start.X == x && Start.Y == y;
 			}
 
-			private bool IsDot ()
+			private bool IsDot()
 			{
 				return Length == 0;
 			}

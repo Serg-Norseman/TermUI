@@ -100,8 +100,8 @@ namespace UICatalog.Scenarios {
 
 			enableHotKeyCheckBox.CheckedChanged += (s, previous) => {
 				foreach (var alignment in alignments) {
-					singleLines [(int)alignment].HotKeySpecifier = previous ? (Rune)0xffff : (Rune)'_';
-					multipleLines [(int)alignment].HotKeySpecifier = previous ? (Rune)0xffff : (Rune)'_';
+					singleLines [(int)alignment].HotKeySpecifier = previous ? (char)0xffff : '_';
+					multipleLines [(int)alignment].HotKeySpecifier = previous ? (char)0xffff : '_';
 				}
 				Win.SetNeedsDisplay ();
 				Win.LayoutSubviews ();

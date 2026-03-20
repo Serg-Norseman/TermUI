@@ -1,7 +1,6 @@
 //
 // WindowsDriver.cs: Windows specific driver
 //
-using NStack;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using static Terminal.Gui.WindowsConsole;
 
 namespace Terminal.Gui {
 
@@ -1485,14 +1485,20 @@ namespace Terminal.Gui {
 
 		public override void UpdateOffScreen ()
 		{
+			var ntlClr = (ushort)Colors.TopLevel.Normal;
+
 			contents = new int [rows, cols, 3];
 			for (int row = 0; row < rows; row++) {
 				for (int col = 0; col < cols; col++) {
 					int position = row * cols + col;
-					OutputBuffer [position].Attributes = (ushort)Colors.TopLevel.Normal;
-					OutputBuffer [position].Char.UnicodeChar = ' ';
-					contents [row, col, 0] = OutputBuffer [position].Char.UnicodeChar;
-					contents [row, col, 1] = OutputBuffer [position].Attributes;
+
+					CharInfo outChr = OutputBuffer [position];
+					outChr.Attributes = ntlClr;
+					outChr.Char.UnicodeChar = ' ';
+					OutputBuffer [position] = outChr;
+
+					contents [row, col, 0] = ' ';
+					contents [row, col, 1] = ntlClr;
 					contents [row, col, 2] = 0;
 				}
 			}
@@ -1584,12 +1590,6 @@ namespace Terminal.Gui {
 			if (sync) {
 				UpdateScreen ();
 			}
-		}
-
-		public override void AddStr (ustring str)
-		{
-			foreach (var rune in str)
-				AddRune (rune);
 		}
 
 		public override void SetAttribute (Attribute c)
@@ -1978,7 +1978,7 @@ namespace Terminal.Gui {
 		private static bool CheckClipboardIsAvailable ()
 		{
 			// Attempt to open the clipboard
-			if (OpenClipboard (IntPtr.Zero)) {
+			if (OpenClipboard ()) {
 				// Clipboard is available
 				// Close the clipboard after use
 				CloseClipboard ();
@@ -1993,33 +1993,24 @@ namespace Terminal.Gui {
 
 		protected override string GetClipboardDataImpl ()
 		{
-			//if (!IsClipboardFormatAvailable (cfUnicodeText))
-			//	return null;
-
 			try {
-				if (!OpenClipboard (IntPtr.Zero))
+				if (!OpenClipboard ())
 					return null;
 
-				IntPtr handle = GetClipboardData (cfUnicodeText);
+				IntPtr handle = GetClipboardData (CF_UNICODETEXT);
 				if (handle == IntPtr.Zero)
 					return null;
 
-				IntPtr pointer = IntPtr.Zero;
+				IntPtr lpstr = IntPtr.Zero;
 
 				try {
-					pointer = GlobalLock (handle);
-					if (pointer == IntPtr.Zero)
+					lpstr = GlobalLock (handle);
+					if (lpstr == IntPtr.Zero)
 						return null;
 
-					int size = GlobalSize (handle);
-					byte [] buff = new byte [size];
-
-					Marshal.Copy (pointer, buff, 0, size);
-
-					return System.Text.Encoding.Unicode.GetString (buff)
-						.TrimEnd ('\0');
+					return Marshal.PtrToStringUni (lpstr);
 				} finally {
-					if (pointer != IntPtr.Zero)
+					if (lpstr != IntPtr.Zero)
 						GlobalUnlock (handle);
 				}
 			} finally {
@@ -2029,7 +2020,8 @@ namespace Terminal.Gui {
 
 		protected override void SetClipboardDataImpl (string text)
 		{
-			OpenClipboard ();
+			if (!OpenClipboard ())
+				return;
 
 			EmptyClipboard ();
 			IntPtr hGlobal = default;
@@ -2053,7 +2045,7 @@ namespace Terminal.Gui {
 					GlobalUnlock (target);
 				}
 
-				if (SetClipboardData (cfUnicodeText, hGlobal) == default) {
+				if (SetClipboardData (CF_UNICODETEXT, hGlobal) == default) {
 					ThrowWin32 ();
 				}
 
@@ -2067,25 +2059,23 @@ namespace Terminal.Gui {
 			}
 		}
 
-		void OpenClipboard ()
+		static bool OpenClipboard ()
 		{
 			var num = 10;
-			while (true) {
-				if (OpenClipboard (default)) {
-					break;
+			while (--num >= 0) {
+				if (OpenClipboard (IntPtr.Zero)) {
+					return true;
 				}
-
-				if (--num == 0) {
-					ThrowWin32 ();
-				}
-
 				Thread.Sleep (100);
 			}
+			ThrowWin32 ();
+			return false;
 		}
 
-		const uint cfUnicodeText = 13;
+		const uint GHND = 0x0042; // GMEM_MOVEABLE | GMEM_ZEROINIT
+		const uint CF_UNICODETEXT = 13;
 
-		void ThrowWin32 ()
+		static void ThrowWin32 ()
 		{
 			throw new Win32Exception (Marshal.GetLastWin32Error ());
 		}

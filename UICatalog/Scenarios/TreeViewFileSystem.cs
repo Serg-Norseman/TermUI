@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.PortableExecutable;
 using Terminal.Gui;
 using Terminal.Gui.Trees;
 
@@ -164,7 +163,7 @@ namespace UICatalog.Scenarios {
 			{
 				Title = "Details";
 				Visible = true;
-				CanFocus = true;				
+				CanFocus = true;
 			}
 
 			public FileSystemInfo FileInfo {
@@ -255,7 +254,7 @@ namespace UICatalog.Scenarios {
 			treeViewFiles.SetNeedsDisplay ();
 		}
 
-		private void SetExpandableSymbols (Rune? expand, Rune? collapse)
+		private void SetExpandableSymbols (char? expand, char? collapse)
 		{
 			miPlusMinus.Checked = expand == '+';
 			miArrowSymbols.Checked = expand == '>';

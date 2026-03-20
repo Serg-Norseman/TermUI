@@ -1,11 +1,9 @@
-﻿using NStack;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Terminal.Gui;
 
 namespace UICatalog.Scenarios {
@@ -25,12 +23,12 @@ namespace UICatalog.Scenarios {
 		}
 
 		public class DynamicMenuItemList {
-			public ustring Title { get; set; }
+			public string Title { get; set; }
 			public MenuItem MenuItem { get; set; }
 
 			public DynamicMenuItemList () { }
 
-			public DynamicMenuItemList (ustring title, MenuItem menuItem)
+			public DynamicMenuItemList (string title, MenuItem menuItem)
 			{
 				Title = title;
 				MenuItem = menuItem;
@@ -40,23 +38,23 @@ namespace UICatalog.Scenarios {
 		}
 
 		public class DynamicMenuItem {
-			public ustring title = "_New";
-			public ustring help = "";
-			public ustring action = "";
+			public string title = "_New";
+			public string help = "";
+			public string action = "";
 			public bool isTopLevel;
 			public bool hasSubMenu;
 			public MenuItemCheckStyle checkStyle;
-			public ustring shortcut;
+			public string shortcut;
 
 			public DynamicMenuItem () { }
 
-			public DynamicMenuItem (ustring title, bool hasSubMenu = false)
+			public DynamicMenuItem (string title, bool hasSubMenu = false)
 			{
 				this.title = title;
 				this.hasSubMenu = hasSubMenu;
 			}
 
-			public DynamicMenuItem (ustring title, ustring help, ustring action, bool isTopLevel, bool hasSubMenu, MenuItemCheckStyle checkStyle = MenuItemCheckStyle.NoCheck, ustring shortcut = null)
+			public DynamicMenuItem (string title, string help, string action, bool isTopLevel, bool hasSubMenu, MenuItemCheckStyle checkStyle = MenuItemCheckStyle.NoCheck, string shortcut = null)
 			{
 				this.title = title;
 				this.help = help;
@@ -77,7 +75,7 @@ namespace UICatalog.Scenarios {
 
 			public DynamicMenuItemModel DataContext { get; set; }
 
-			public DynamicMenuBarSample (ustring title) : base (title)
+			public DynamicMenuBarSample (string title) : base (title)
 			{
 				DataContext = new DynamicMenuItemModel ();
 
@@ -92,7 +90,7 @@ namespace UICatalog.Scenarios {
 					X = Pos.Center (),
 					Width = 2,
 				};
-				_txtDelimiter.TextChanged += (s, _) => MenuBar.ShortcutDelimiter = _txtDelimiter.Text;
+				_txtDelimiter.TextChanged += (s, _) => MenuBar.ShortcutDelimiter = _txtDelimiter.Text.ToString();
 				_frmDelimiter.Add (_txtDelimiter);
 
 				Add (_frmDelimiter);
@@ -282,10 +280,10 @@ namespace UICatalog.Scenarios {
 						if (_currentMenuBarItem.Parent != null) {
 							DataContext.Parent = _currentMenuBarItem.Title;
 						} else {
-							DataContext.Parent = ustring.Empty;
+							DataContext.Parent = string.Empty;
 						}
 					} else {
-						DataContext.Parent = ustring.Empty;
+						DataContext.Parent = string.Empty;
 					}
 				};
 
@@ -310,7 +308,7 @@ namespace UICatalog.Scenarios {
 				};
 
 				_btnOk.Clicked += (sender, e) => {
-					if (ustring.IsNullOrEmpty (_frmMenuDetails._txtTitle.Text) && _currentEditMenuBarItem != null) {
+					if (string.IsNullOrEmpty (_frmMenuDetails._txtTitle.Text) && _currentEditMenuBarItem != null) {
 						MessageBox.ErrorQuery ("Invalid title", "Must enter a valid title!.", "Ok");
 					} else if (_currentEditMenuBarItem != null) {
 						var menuItem = new DynamicMenuItem (_frmMenuDetails._txtTitle.Text, _frmMenuDetails._txtHelp.Text,
@@ -488,7 +486,7 @@ namespace UICatalog.Scenarios {
 						DataContext.Menus = new List<DynamicMenuItemList> ();
 						_currentMenuBarItem = null;
 						_currentSelectedMenuBar = -1;
-						_lblMenuBar.Text = ustring.Empty;
+						_lblMenuBar.Text = string.Empty;
 					} else {
 						_lblMenuBar.Text = _menuBar.Menus [_currentSelectedMenuBar].Title;
 					}
@@ -500,7 +498,7 @@ namespace UICatalog.Scenarios {
 				SetFrameDetails ();
 
 
-				var ustringConverter = new UStringValueConverter ();
+				IValueConverter ustringConverter = null;
 				var listWrapperConverter = new ListWrapperConverter ();
 
 				var lblMenuBar = new Binding (this, "MenuBar", _lblMenuBar, "Text", ustringConverter);
@@ -538,7 +536,7 @@ namespace UICatalog.Scenarios {
 					_currentMenuBarItem = menuBarItem;
 					DataContext.Menus = new List<DynamicMenuItemList> ();
 					SetListViewSource (_currentMenuBarItem, true);
-					_lblParent.Text = ustring.Empty;
+					_lblParent.Text = string.Empty;
 				}
 
 				void SetListViewSource (MenuItem _currentMenuBarItem, bool fill = false)
@@ -651,7 +649,7 @@ namespace UICatalog.Scenarios {
 				this.hasParent = hasParent;
 			}
 
-			public DynamicMenuBarDetails (ustring title) : base (title)
+			public DynamicMenuBarDetails (string title) : base (title)
 			{
 				var _lblTitle = new Label ("Title:") {
 					Y = 1
@@ -705,7 +703,7 @@ namespace UICatalog.Scenarios {
 				};
 				Add (_ckbSubMenu);
 
-				var _rChkLabels = new ustring [] { "NoCheck", "Checked", "Radio" };
+				var _rChkLabels = new string [] { "NoCheck", "Checked", "Radio" };
 				_rbChkStyle = new RadioGroup (_rChkLabels) {
 					X = Pos.Left (_lblTitle),
 					Y = Pos.Bottom (_ckbSubMenu) + 1,
@@ -756,7 +754,7 @@ namespace UICatalog.Scenarios {
 						return false;
 					}
 					if (!pre) {
-						if (!ShortcutHelper.PostShortcutValidation (ShortcutHelper.GetShortcutFromTag (_txtShortcut.Text))) {
+						if (!ShortcutHelper.PostShortcutValidation (ShortcutHelper.GetShortcutFromTag (_txtShortcut.Text.ToString()))) {
 							_txtShortcut.Text = "";
 							return false;
 						}
@@ -858,7 +856,7 @@ namespace UICatalog.Scenarios {
 					IsDefault = true,
 				};
 				_btnOk.Clicked += (sender, e) => {
-					if (ustring.IsNullOrEmpty (_txtTitle.Text)) {
+					if (string.IsNullOrEmpty (_txtTitle.Text)) {
 						MessageBox.ErrorQuery ("Invalid title", "Must enter a valid title!.", "Ok");
 					} else {
 						valid = true;
@@ -867,7 +865,7 @@ namespace UICatalog.Scenarios {
 				};
 				var _btnCancel = new Button ("Cancel");
 				_btnCancel.Clicked += (sender, e) => {
-					_txtTitle.Text = ustring.Empty;
+					_txtTitle.Text = string.Empty;
 					Application.RequestStop ();
 				};
 				var _dialog = new Dialog ("Please enter the menu details.", _btnOk, _btnCancel);
@@ -906,7 +904,7 @@ namespace UICatalog.Scenarios {
 				_txtTitle.Text = menuItem?.Title ?? "";
 				_txtHelp.Text = menuItem?.Help ?? "";
 				// FIXME
-				//_txtAction.Text = menuItem != null && menuItem.HasAction () ? GetTargetAction (menuItem.Action) : ustring.Empty;
+				//_txtAction.Text = menuItem != null && menuItem.HasAction () ? GetTargetAction (menuItem.Action) : string.Empty;
 				_ckbIsTopLevel.Checked = IsTopLevel (menuItem);
 				_ckbSubMenu.Checked = HasSubMenus (menuItem);
 				_txtHelp.Enabled = !_ckbSubMenu.Checked;
@@ -927,7 +925,7 @@ namespace UICatalog.Scenarios {
 				_txtShortcut.Text = "";
 			}
 
-			ustring GetTargetAction (EventHandler action)
+			string GetTargetAction (EventHandler action)
 			{
 				var me = action.Target;
 
@@ -940,7 +938,7 @@ namespace UICatalog.Scenarios {
 						v = field.GetValue (me);
 					}
 				}
-				return v == null || !(v is DynamicMenuItem item) ? ustring.Empty : item.action;
+				return v == null || !(v is DynamicMenuItem item) ? string.Empty : item.action;
 			}
 
 			bool IsTopLevel (MenuItem menuItem)
@@ -1009,11 +1007,11 @@ namespace UICatalog.Scenarios {
 		public class DynamicMenuItemModel : INotifyPropertyChanged {
 			public event PropertyChangedEventHandler PropertyChanged;
 
-			private ustring menuBar;
-			private ustring parent;
+			private string menuBar;
+			private string parent;
 			private List<DynamicMenuItemList> menus;
 
-			public ustring MenuBar {
+			public string MenuBar {
 				get => menuBar;
 				set {
 					if (value != menuBar) {
@@ -1023,7 +1021,7 @@ namespace UICatalog.Scenarios {
 				}
 			}
 
-			public ustring Parent {
+			public string Parent {
 				get => parent;
 				set {
 					if (value != parent) {
@@ -1112,14 +1110,6 @@ namespace UICatalog.Scenarios {
 			public object Convert (object value, object parameter = null)
 			{
 				return new ListWrapper ((IList)value);
-			}
-		}
-
-		public class UStringValueConverter : IValueConverter {
-			public object Convert (object value, object parameter = null)
-			{
-				var data = Encoding.ASCII.GetBytes (value.ToString ());
-				return ustring.Make (data);
 			}
 		}
 	}

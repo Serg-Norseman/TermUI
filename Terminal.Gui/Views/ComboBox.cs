@@ -6,7 +6,6 @@
 //   Serg V. Zhdanovskikh
 //
 
-using NStack;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -322,7 +321,7 @@ namespace Terminal.Gui {
 		/// Public constructor
 		/// </summary>
 		/// <param name="text"></param>
-		public ComboBox (ustring text) : this ()
+		public ComboBox (string text) : this ()
 		{
 			Text = text;
 		}
@@ -533,7 +532,7 @@ namespace Terminal.Gui {
 				search.SetFocus ();
 			}
 
-			search.CursorPosition = search.Text.RuneCount;
+			search.CursorPosition = search.Text.Length;
 
 			if (ReadOnly)
 				Application.Driver.SetCursorVisibility (CursorVisibility.Invisible);
@@ -674,7 +673,7 @@ namespace Terminal.Gui {
 
 			if (listview.HasFocus && listview.SelectedItem == 0 && searchset.Count > 0) // jump back to search
 			{
-				search.CursorPosition = search.Text.RuneCount;
+				search.CursorPosition = search.Text.Length;
 				search.SetFocus ();
 				return true;
 			}
@@ -766,7 +765,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// The currently selected list item or entered text
 		/// </summary>
-		public new ustring Text {
+		public new string Text {
 			get {
 				return search.Text;
 			}
@@ -797,7 +796,7 @@ namespace Terminal.Gui {
 			}
 
 			SetValue (searchset [listview.SelectedItem]);
-			search.CursorPosition = search.Text.ConsoleWidth;
+			search.CursorPosition = search.Text.Length;
 			Search_Changed (this, search.Text.ToString ());
 			OnOpenSelectedItem ();
 			Reset (keepSearchText: true);

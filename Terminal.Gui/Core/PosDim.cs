@@ -297,9 +297,7 @@ namespace Terminal.Gui {
 		static void SetPosCombine (Pos left, PosCombine newPos)
 		{
 			var view = left as PosView;
-			if (view != null) {
-				view.Target.SetNeedsLayout ();
-			}
+			view?.Target.SetNeedsLayout ();
 		}
 
 		internal class PosView : Pos {
@@ -633,9 +631,7 @@ namespace Terminal.Gui {
 		static void SetDimCombine (Dim left, DimCombine newPos)
 		{
 			var view = left as DimView;
-			if (view != null) {
-				view.Target.SetNeedsLayout ();
-			}
+			view?.Target.SetNeedsLayout ();
 		}
 
 		internal class DimView : Dim {

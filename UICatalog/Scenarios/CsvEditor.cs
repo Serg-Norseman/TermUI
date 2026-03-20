@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CsvHelper;
+using System;
 using System.Data;
-using Terminal.Gui;
-using Terminal.Gui.Trees;
-using System.Linq;
 using System.Globalization;
 using System.IO;
-using System.Text;
-using NStack;
+using System.Linq;
 using System.Text.RegularExpressions;
-using CsvHelper;
+using Terminal.Gui;
 
 namespace UICatalog.Scenarios {
 
@@ -338,7 +334,7 @@ namespace UICatalog.Scenarios {
 
 				var newColIdx = Math.Min (Math.Max (0, tableView.SelectedColumn + 1), tableView.Table.Columns.Count);
 
-				int result = MessageBox.Query ("Column Type", "Pick a data type for the column", new ustring [] { "Date", "Integer", "Double", "Text", "Cancel" });
+				int result = MessageBox.Query ("Column Type", "Pick a data type for the column", new string [] { "Date", "Integer", "Double", "Text", "Cancel" });
 
 				if (result <= -1 || result >= 4)
 					return;

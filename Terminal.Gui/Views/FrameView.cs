@@ -10,34 +10,37 @@
 // Any udpates done here should probably be done in Window as well; TODO: Merge these classes
 
 using System.Linq;
-using NStack;
 
-namespace Terminal.Gui {
+namespace Terminal.Gui
+{
 	/// <summary>
 	/// The FrameView is a container frame that draws a frame around the contents. It is similar to
 	/// a GroupBox in Windows.
 	/// </summary>
-	public class FrameView : View {
+	public class FrameView : View
+	{
 		View contentView;
-		ustring title;
+		string title;
 
 		/// <summary>
 		/// The title to be displayed for this <see cref="FrameView"/>.
 		/// </summary>
 		/// <value>The title.</value>
-		public ustring Title {
+		public string Title
+		{
 			get => title;
 			set {
 				title = value;
 				if (Border != null) {
 					Border.Title = title;
 				}
-				SetNeedsDisplay ();
+				SetNeedsDisplay();
 			}
 		}
 
 		/// <inheritdoc/>
-		public override Border Border {
+		public override Border Border
+		{
 			get => base.Border;
 			set {
 				if (base.Border != null && base.Border.Child != null && value.Child == null) {
@@ -53,13 +56,13 @@ namespace Terminal.Gui {
 				} else {
 					frame = Frame;
 				}
-				AdjustContentView (frame);
+				AdjustContentView(frame);
 
 				Border.BorderChanged += Border_BorderChanged;
 			}
 		}
 
-		void Border_BorderChanged (object sender, Border border)
+		void Border_BorderChanged(object sender, Border border)
 		{
 			Rect frame;
 			if (contentView != null && (contentView.Width is Dim || contentView.Height is Dim)) {
@@ -67,7 +70,7 @@ namespace Terminal.Gui {
 			} else {
 				frame = Frame;
 			}
-			AdjustContentView (frame);
+			AdjustContentView(frame);
 		}
 
 		/// <summary>
@@ -75,9 +78,10 @@ namespace Terminal.Gui {
 		/// Its ONLY reason for being is to provide a simple way for Window to expose to those SubViews that the Window's Bounds 
 		/// are actually deflated due to the border. 
 		/// </summary>
-		class ContentView : View {
-			public ContentView (Rect frame) : base (frame) { }
-			public ContentView () : base () { }
+		class ContentView : View
+		{
+			public ContentView(Rect frame) : base(frame) { }
+			public ContentView() : base() { }
 		}
 
 		/// <summary>
@@ -87,10 +91,10 @@ namespace Terminal.Gui {
 		/// <param name="title">Title.</param>
 		/// <param name="views">Views.</param>
 		/// <param name="border">The <see cref="Border"/>.</param>
-		public FrameView (Rect frame, ustring title = null, View [] views = null, Border border = null) : base (frame)
+		public FrameView(Rect frame, string title = null, View[] views = null, Border border = null) : base(frame)
 		{
 			//var cFrame = new Rect (1, 1, Math.Max (frame.Width - 2, 0), Math.Max (frame.Height - 2, 0));
-			Initialize (frame, title, views, border);
+			Initialize(frame, title, views, border);
 		}
 
 		/// <summary>
@@ -98,75 +102,75 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="title">Title.</param>
 		/// <param name="border">The <see cref="Border"/>.</param>
-		public FrameView (ustring title, Border border = null)
+		public FrameView(string title, Border border = null)
 		{
-			Initialize (Rect.Empty, title, null, border);
+			Initialize(Rect.Empty, title, null, border);
 		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Gui.FrameView"/> class using <see cref="LayoutStyle.Computed"/> layout.
 		/// </summary>
-		public FrameView () : this (title: string.Empty) { }
+		public FrameView() : this(title: string.Empty) { }
 
-		void Initialize (Rect frame, ustring title, View [] views = null, Border border = null)
+		void Initialize(Rect frame, string title, View[] views = null, Border border = null)
 		{
-			if (title == null) title = ustring.Empty;
+			if (title == null) title = string.Empty;
 			this.Title = title;
 			if (border == null) {
-				Border = new Border () {
+				Border = new Border() {
 					BorderStyle = BorderStyle.Single,
 					Title = title
 				};
 			} else {
 				Border = border;
-				if (ustring.IsNullOrEmpty (border.Title)) {
+				if (string.IsNullOrEmpty(border.Title)) {
 					border.Title = title;
 				}
 			}
-			AdjustContentView (frame, views);
+			AdjustContentView(frame, views);
 		}
 
-		void AdjustContentView (Rect frame, View [] views = null)
+		void AdjustContentView(Rect frame, View[] views = null)
 		{
 			var borderLength = Border.DrawMarginFrame ? 1 : 0;
-			var sumPadding = Border.GetSumThickness ();
-			var wp = new Point ();
-			var wb = new Size ();
+			var sumPadding = Border.GetSumThickness();
+			var wp = new Point();
+			var wb = new Size();
 			if (frame == Rect.Empty) {
 				wp.X = borderLength + sumPadding.Left;
 				wp.Y = borderLength + sumPadding.Top;
 				wb.Width = borderLength + sumPadding.Right;
 				wb.Height = borderLength + sumPadding.Bottom;
 				if (contentView == null) {
-					contentView = new ContentView () {
+					contentView = new ContentView() {
 						X = wp.X,
 						Y = wp.Y,
-						Width = Dim.Fill (wb.Width),
-						Height = Dim.Fill (wb.Height)
+						Width = Dim.Fill(wb.Width),
+						Height = Dim.Fill(wb.Height)
 					};
 				} else {
 					contentView.X = wp.X;
 					contentView.Y = wp.Y;
-					contentView.Width = Dim.Fill (wb.Width);
-					contentView.Height = Dim.Fill (wb.Height);
+					contentView.Width = Dim.Fill(wb.Width);
+					contentView.Height = Dim.Fill(wb.Height);
 				}
 			} else {
 				wb.Width = (2 * borderLength) + sumPadding.Right + sumPadding.Left;
 				wb.Height = (2 * borderLength) + sumPadding.Bottom + sumPadding.Top;
-				var cFrame = new Rect (borderLength + sumPadding.Left, borderLength + sumPadding.Top, frame.Width - wb.Width, frame.Height - wb.Height);
+				var cFrame = new Rect(borderLength + sumPadding.Left, borderLength + sumPadding.Top, frame.Width - wb.Width, frame.Height - wb.Height);
 				if (contentView == null) {
-					contentView = new ContentView (cFrame);
+					contentView = new ContentView(cFrame);
 				} else {
 					contentView.Frame = cFrame;
 				}
 			}
 			if (views != null) {
 				foreach (var view in views) {
-					contentView.Add (view);
+					contentView.Add(view);
 				}
 			}
 			if (Subviews?.Count == 0) {
-				base.Add (contentView);
+				base.Add(contentView);
 				contentView.Text = base.Text;
 			}
 			Border.Child = contentView;
@@ -176,9 +180,9 @@ namespace Terminal.Gui {
 		/// Add the specified <see cref="View"/> to this container.
 		/// </summary>
 		/// <param name="view"><see cref="View"/> to add to this container</param>
-		public override void Add (View view)
+		public override void Add(View view)
 		{
-			contentView.Add (view);
+			contentView.Add(view);
 			if (view.CanFocus)
 				CanFocus = true;
 		}
@@ -189,17 +193,17 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <remarks>
 		/// </remarks>
-		public override void Remove (View view)
+		public override void Remove(View view)
 		{
 			if (view == null)
 				return;
 
-			SetNeedsDisplay ();
+			SetNeedsDisplay();
 			var touched = view.Frame;
 			if (view == contentView) {
-				base.Remove (view);
+				base.Remove(view);
 			} else {
-				contentView.Remove (view);
+				contentView.Remove(view);
 			}
 
 			if (contentView.InternalSubviews.Count < 1)
@@ -211,36 +215,37 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <remarks>
 		/// </remarks>
-		public override void RemoveAll ()
+		public override void RemoveAll()
 		{
-			contentView.RemoveAll ();
+			contentView.RemoveAll();
 		}
 
 		///<inheritdoc/>
-		public override void Redraw (Rect bounds)
+		public override void Redraw(Rect bounds)
 		{
 			if (!NeedDisplay.IsEmpty) {
-				Driver.SetAttribute (GetNormalColor ());
-				Clear ();
+				Driver.SetAttribute(GetNormalColor());
+				Clear();
 			}
 
 			// If this is located after the content output, as in the original,
 			// then when the overlapping (Popover) is output, the border is output on top
-			Driver.SetAttribute (GetNormalColor ());
-			Border.DrawContent (this, false);
+			Driver.SetAttribute(GetNormalColor());
+			Border.DrawContent(this, false);
 
-			var savedClip = contentView.ClipToBounds ();
-			contentView.Redraw (!NeedDisplay.IsEmpty ? contentView.Bounds : bounds);
+			var savedClip = contentView.ClipToBounds();
+			contentView.Redraw(!NeedDisplay.IsEmpty ? contentView.Bounds : bounds);
 			Driver.Clip = savedClip;
 
-			ClearLayoutNeeded ();
-			ClearNeedsDisplay ();
+			ClearLayoutNeeded();
+			ClearNeedsDisplay();
 		}
 
 		/// <summary>
 		///   The text displayed by the <see cref="Label"/>.
 		/// </summary>
-		public override ustring Text {
+		public override string Text
+		{
 			get => contentView?.Text;
 			set {
 				base.Text = value;
@@ -254,7 +259,8 @@ namespace Terminal.Gui {
 		/// Controls the text-alignment property of the label, changing it will redisplay the <see cref="Label"/>.
 		/// </summary>
 		/// <value>The text alignment.</value>
-		public override TextAlignment TextAlignment {
+		public override TextAlignment TextAlignment
+		{
 			get => contentView.TextAlignment;
 			set {
 				base.TextAlignment = contentView.TextAlignment = value;
@@ -262,22 +268,22 @@ namespace Terminal.Gui {
 		}
 
 		///<inheritdoc/>
-		public override bool OnEnter (View view)
+		public override bool OnEnter(View view)
 		{
-			if (Subviews.Count == 0 || !Subviews.Any (subview => subview.CanFocus)) {
-				Application.Driver?.SetCursorVisibility (CursorVisibility.Invisible);
+			if (Subviews.Count == 0 || !Subviews.Any(subview => subview.CanFocus)) {
+				Application.Driver?.SetCursorVisibility(CursorVisibility.Invisible);
 			}
 
-			return base.OnEnter (view);
+			return base.OnEnter(view);
 		}
 
 		/// <inheritdoc/>
-		public override void OnCanFocusChanged ()
+		public override void OnCanFocusChanged()
 		{
 			if (contentView != null) {
 				contentView.CanFocus = CanFocus;
 			}
-			base.OnCanFocusChanged ();
+			base.OnCanFocusChanged();
 		}
 	}
 }

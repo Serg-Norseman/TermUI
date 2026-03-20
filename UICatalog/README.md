@@ -11,20 +11,21 @@ said concepts & features.
 
 ## Motivation
 
-The original `demo.cs` sample app for Terminal.Gui is neither good to showcase, nor does it explain different concepts. In addition, because it is built on a single source file, it has proven to cause friction when multiple contributors are simultaneously working on different aspects of Terminal.Gui. 
-See [Issue #368](https://github.com/gui-cs/Terminal.Gui/issues/368) for more background.
+The original `demo.cs` sample app for Terminal.Gui is neither good to showcase, nor does it explain different concepts.
+In addition, because it is built on a single source file, it has proven to cause friction when multiple contributors are
+simultaneously working on different aspects of Terminal.Gui. 
 
 # API Reference
-
-* [UI Catalog API Reference](https://gui-cs.github.io/Terminal.Gui/api/UICatalog/UICatalog.html)
 
 ## How To Use
 
 Build and run UI Catalog by typing `dotnet run` from the `UI Catalog` folder or by using the `Terminal.Gui` Visual Studio solution.
 
-`Program.cs` is the main **UI Catalog** app and provides a UI for selecting and running **Scenarios**. Each **Scenario* is implemented as a class derived from `Scenario` and `Program.cs` uses reflection to dynamically build the UI.
+`Program.cs` is the main **UI Catalog** app and provides a UI for selecting and running **Scenarios**.
+Each **Scenario* is implemented as a class derived from `Scenario` and `Program.cs` uses reflection to dynamically build the UI.
 
-**Scenarios** are tagged with categories using the `[ScenarioCategory]` attribute. The left pane of the main screen lists the categories. Clicking on a category shows all the scenarios in that category.
+**Scenarios** are tagged with categories using the `[ScenarioCategory]` attribute. The left pane of the main screen lists the categories.
+Clicking on a category shows all the scenarios in that category.
 
 **Scenarios** can be run either from the **UICatalog.exe** app UI or by being specified on the command line:
 
@@ -40,7 +41,8 @@ UICatalog.exe Buttons
 
 Hitting ENTER on a selected Scenario or double-clicking on a Scenario runs that scenario as though it were a stand-alone Terminal.Gui app.
 
-When a **Scenario** is run, it runs as though it were a standalone `Terminal.Gui` app. However, scaffolding is provided (in the `Scenario` base class) that (optionally) takes care of `Terminal.Gui` initialization.
+When a **Scenario** is run, it runs as though it were a standalone `Terminal.Gui` app. However, scaffolding is provided
+(in the `Scenario` base class) that (optionally) takes care of `Terminal.Gui` initialization.
 
 ## Contributing by Adding Scenarios
 
@@ -80,7 +82,8 @@ The default `Window` shows the Scenario name and supports exiting the Scenario t
 
 ![screenshot](generic_screenshot.png)
 
-To build a more advanced scenario, where control of the `Toplevel` and `Window` is needed (e.g. for scenarios using `MenuBar` or `StatusBar`), simply use `Application.Top` per normal Terminal.Gui programming, as seen in the `Notepad` scenario.
+To build a more advanced scenario, where control of the `Toplevel` and `Window` is needed (e.g. for scenarios using `MenuBar` or `StatusBar`),
+simply use `Application.Top` per normal Terminal.Gui programming, as seen in the `Notepad` scenario.
 
 For complete control, the `Init` and `Run` overrides can be implemented. The `base.Init` creates `Win`. The `base.Run` simply calls `Application.Run(Application.Top)`.
 

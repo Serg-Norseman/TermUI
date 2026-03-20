@@ -6,9 +6,9 @@
 //
 // TODO:
 //   Add mouse support
+
 using System;
 using System.Collections.Generic;
-using NStack;
 
 namespace Terminal.Gui {
 	/// <summary>
@@ -28,7 +28,7 @@ namespace Terminal.Gui {
 		/// <param name="title">Title for the <see cref="StatusItem"/>.</param>
 		/// <param name="action">Action to invoke when the <see cref="StatusItem"/> is activated.</param>
 		/// <param name="canExecute">Function to determine if the action can currently be executed.</param>
-		public StatusItem (Key shortcut, ustring title, EventHandler action, Func<bool> canExecute = null)
+		public StatusItem (Key shortcut, string title, EventHandler action, Func<bool> canExecute = null)
 		{
 			Title = title ?? "";
 			Shortcut = shortcut;
@@ -50,7 +50,7 @@ namespace Terminal.Gui {
 		/// A <see cref="StatusItem.Title"/> set to `~F1~ Help` will render as *F1* using <see cref="ColorScheme.HotNormal"/> and
 		/// *Help* as <see cref="ColorScheme.HotNormal"/>.
 		/// </remarks>
-		public ustring Title { get; set; }
+		public string Title { get; set; }
 
 		/// <summary>
 		/// Gets or sets the action to be invoked when the statusbar item is triggered
@@ -72,7 +72,7 @@ namespace Terminal.Gui {
 		/// In order to use '~' as part of the title (e.g., to denote the home directory as a part of the current directory),
 		/// <see cref="HotTextSpecifier"/> should be changed to a different rune.
 		/// </summary>
-		public Rune HotTextSpecifier { get; set; } = '~';
+		public char HotTextSpecifier { get; set; } = '~';
 
 		/// <summary>
 		/// Returns <see langword="true"/> if the status item is enabled. This method is a wrapper around <see cref="CanExecute"/>.
@@ -133,15 +133,15 @@ namespace Terminal.Gui {
 			Height = 1;
 		}
 
-		static ustring shortcutDelimiter = "-";
+		static string shortcutDelimiter = "-";
 		/// <summary>
 		/// Used for change the shortcut delimiter separator.
 		/// </summary>
-		public static ustring ShortcutDelimiter {
+		public static string ShortcutDelimiter {
 			get => shortcutDelimiter;
 			set {
 				if (shortcutDelimiter != value) {
-					shortcutDelimiter = value == ustring.Empty ? " " : value;
+					shortcutDelimiter = value == string.Empty ? " " : value;
 				}
 			}
 		}
@@ -179,7 +179,7 @@ namespace Terminal.Gui {
 				var title = Items [i].Title.ToString ();
 				var hotTextSpecifier = Items [i].HotTextSpecifier;
 				Driver.SetAttribute (DetermineColorSchemeFor (Items [i]));
-				for (int n = 0; n < Items [i].Title.RuneCount; n++) {
+				for (int n = 0; n < Items [i].Title.Length; n++) {
 					if (title [n] == hotTextSpecifier) {
 						if (Items [i].IsEnabled ()) {
 							scheme = ToggleScheme (scheme);

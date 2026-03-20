@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Threading;
-using Terminal.Gui;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -1156,7 +1152,7 @@ namespace Terminal.Gui.TypeTests {
 						if (listLabels.Count > 0)
 							field.Text = listLabels [count - 1].Text;
 						else
-							field.Text = NStack.ustring.Empty;
+							field.Text = string.Empty;
 					}
 					Assert.Equal ($"Dim.Absolute({count + 1})", view.Height.ToString ());
 				}

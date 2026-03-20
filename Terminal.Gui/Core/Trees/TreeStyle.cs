@@ -1,10 +1,10 @@
-﻿using System;
-
-namespace Terminal.Gui.Trees {
+﻿namespace Terminal.Gui.Trees
+{
 	/// <summary>
 	/// Defines rendering options that affect how the tree is displayed.
 	/// </summary>
-	public class TreeStyle {
+	public class TreeStyle
+	{
 
 		/// <summary>
 		/// <see langword="true"/> to render vertical lines under expanded nodes to show which node belongs to which 
@@ -17,13 +17,13 @@ namespace Terminal.Gui.Trees {
 		/// Symbol to use for branch nodes that can be expanded to indicate this to the user. 
 		/// Defaults to '+'. Set to null to hide.
 		/// </summary>
-		public Rune? ExpandableSymbol { get; set; } = '+';
+		public char? ExpandableSymbol { get; set; } = '+';
 
 		/// <summary>
 		/// Symbol to use for branch nodes that can be collapsed (are currently expanded).
 		/// Defaults to '-'. Set to null to hide.
 		/// </summary>
-		public Rune? CollapseableSymbol { get; set; } = '-';
+		public char? CollapseableSymbol { get; set; } = '-';
 
 		/// <summary>
 		/// Set to <see langword="true"/> to highlight expand/collapse symbols in hot key color.

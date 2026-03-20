@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Rune = System.Rune;
 
-namespace Terminal.Gui {
-
+namespace Terminal.Gui
+{
 	/// <summary>
 	/// Renders an overlay on another view at a given point that allows selecting
 	/// from a range of 'autocomplete' options.
 	/// </summary>
-	public interface IAutocomplete {
-
+	public interface IAutocomplete
+	{
 		/// <summary>
 		/// The host control that will use autocomplete.
 		/// </summary>
@@ -78,7 +76,7 @@ namespace Terminal.Gui {
 		/// given point.
 		/// </summary>
 		/// <param name="renderAt"></param>
-		void RenderOverlay (Point renderAt);
+		void RenderOverlay(Point renderAt);
 
 
 		/// <summary>
@@ -88,7 +86,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="kb">The key event.</param>
 		/// <returns><c>true</c>if the key can be handled <c>false</c>otherwise.</returns>
-		bool ProcessKey (KeyEvent kb);
+		bool ProcessKey(KeyEvent kb);
 
 		/// <summary>
 		/// Handle mouse events before <see cref="HostControl"/> e.g. to make mouse events like
@@ -98,18 +96,18 @@ namespace Terminal.Gui {
 		/// <param name="me">The mouse event.</param>
 		/// <param name="fromHost">If was called from the popup or from the host.</param>
 		/// <returns><c>true</c>if the mouse can be handled <c>false</c>otherwise.</returns>
-		bool MouseEvent (MouseEvent me, bool fromHost = false);
+		bool MouseEvent(MouseEvent me, bool fromHost = false);
 
 		/// <summary>
 		/// Clears <see cref="Suggestions"/>
 		/// </summary>
-		void ClearSuggestions ();
+		void ClearSuggestions();
 
 		/// <summary>
 		/// Populates <see cref="Suggestions"/> with all strings in <see cref="AllSuggestions"/> that
 		/// match with the current cursor position/text in the <see cref="HostControl"/>.
 		/// </summary>
 		/// <param name="columnOffset">The column offset. Current (zero - default), left (negative), right (positive).</param>
-		void GenerateSuggestions (int columnOffset = 0);
+		void GenerateSuggestions(int columnOffset = 0);
 	}
 }

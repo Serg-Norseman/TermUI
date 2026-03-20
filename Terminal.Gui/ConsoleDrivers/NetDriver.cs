@@ -4,14 +4,13 @@
 // Authors:
 //   Miguel de Icaza (miguel@gnome.org)
 //
+
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using NStack;
 
 namespace Terminal.Gui {
 	internal class NetWinVTConsole {
@@ -698,12 +697,6 @@ namespace Terminal.Gui {
 			}
 		}
 
-		public override void AddStr (ustring str)
-		{
-			foreach (var rune in str)
-				AddRune (rune);
-		}
-
 		public override void End ()
 		{
 			mainLoop.Dispose ();
@@ -803,6 +796,8 @@ namespace Terminal.Gui {
 
 		public override void UpdateOffScreen ()
 		{
+			var ntlClr = (ushort)Colors.TopLevel.Normal;
+
 			contents = new int [Rows, Cols, 3];
 			dirtyLine = new bool [Rows];
 
@@ -812,7 +807,7 @@ namespace Terminal.Gui {
 					for (int row = 0; row < rows; row++) {
 						for (int c = 0; c < cols; c++) {
 							contents [row, c, 0] = ' ';
-							contents [row, c, 1] = (ushort)Colors.TopLevel.Normal;
+							contents [row, c, 1] = ntlClr;
 							contents [row, c, 2] = 0;
 							dirtyLine [row] = true;
 						}

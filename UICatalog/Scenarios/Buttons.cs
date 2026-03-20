@@ -1,9 +1,4 @@
-﻿using NStack;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 
 namespace UICatalog.Scenarios {
 	[ScenarioMetadata (Name: "Buttons", Description: "Demonstrates all sorts of Buttons.")]
@@ -40,10 +35,10 @@ namespace UICatalog.Scenarios {
 			};
 			Win.Add (swapButton);
 
-			static void DoMessage (Button button, ustring txt)
+			static void DoMessage (Button button, string txt)
 			{
 				button.Clicked += (sender, e) => {
-					var btnText = button.Text.ToString ();
+					var btnText = button.Text;
 					MessageBox.Query ("Message", $"Did you click {txt}?", "Yes", "No");
 				};
 			}
@@ -178,38 +173,12 @@ namespace UICatalog.Scenarios {
 			};
 			Win.Add (label);
 
-			var radioGroup = new RadioGroup (new ustring [] { "Left", "Right", "Centered", "Justified" }) {
+			var radioGroup = new RadioGroup (new string [] { "Left", "Right", "Centered", "Justified" }) {
 				X = 4,
 				Y = Pos.Bottom (label) + 1,
 				SelectedItem = 2,
 			};
 			Win.Add (radioGroup);
-
-			// Demo changing hotkey
-			ustring MoveHotkey (ustring txt)
-			{
-				// Remove the '_'
-				var runes = txt.ToRuneList ();
-
-				var i = runes.IndexOf ('_');
-				ustring start = "";
-				if (i > -1) {
-					start = ustring.Make (runes.GetRange (0, i));
-				}
-				txt = start + ustring.Make (runes.GetRange (i + 1, runes.Count - (i + 1)));
-
-				runes = txt.ToRuneList ();
-
-				// Move over one or go to start
-				i++;
-				if (i >= runes.Count) {
-					i = 0;
-				}
-
-				// Slip in the '_'
-				start = ustring.Make (runes.GetRange (0, i));
-				return start + ustring.Make ('_') + ustring.Make (runes.GetRange (i, runes.Count - i));
-			}
 
 			var mhkb = "Click to Change th_is Button's Hotkey";
 			var moveHotKeyBtn = new Button (mhkb) {
@@ -223,7 +192,7 @@ namespace UICatalog.Scenarios {
 			};
 			Win.Add (moveHotKeyBtn);
 
-			var muhkb = ustring.Make (" ~  s  gui.cs   master ↑10 = Сохранить");
+			var muhkb = " ~  s  gui.cs   master ↑10 = Сохранить";
 			var moveUnicodeHotKeyBtn = new Button (muhkb) {
 				X = Pos.Left (absoluteFrame) + 1,
 				Y = Pos.Bottom (radioGroup) + 1,

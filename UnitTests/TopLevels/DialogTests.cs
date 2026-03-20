@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using Terminal.Gui;
-using Xunit;
-using System.Globalization;
+﻿using Xunit;
 using Xunit.Abstractions;
-using NStack;
 
 namespace Terminal.Gui.TopLevelTests {
 
@@ -367,7 +359,7 @@ namespace Terminal.Gui.TopLevelTests {
 			// Note extra spaces to make dialog even wider
 			//                         12345                           123456
 			var buttonRow = $"{d.VLine}     {btn1} {btn2} {btn3} {btn4}      {d.VLine}";
-			var width = ustring.Make (buttonRow).ConsoleWidth;
+			var width = buttonRow.Length;
 			var topRow = $"┌ {title} {new string (d.HLine.ToString () [0], width - title.Length - 4)}┐";
 			var bottomRow = $"└{new string (d.HLine.ToString () [0], width - 2)}┘";
 			d.SetBufferSize (width, 3);
@@ -379,21 +371,21 @@ namespace Terminal.Gui.TopLevelTests {
 
 			// Justify
 			buttonRow = $"{d.VLine}{btn1}    {btn2}     {btn3}     {btn4}{d.VLine}";
-			Assert.Equal (width, ustring.Make (buttonRow).ConsoleWidth);
+			Assert.Equal (width, buttonRow.Length);
 			(runstate, var _) = RunButtonTestDialog (title, width, Dialog.ButtonAlignments.Justify, new Button (btn1Text), new Button (btn2Text), new Button (btn3Text), new Button (btn4Text));
 			TestHelpers.AssertDriverContentsWithFrameAre ($"{topRow}\n{buttonRow}\n{bottomRow}", output);
 			Application.End (runstate);
 
 			// Right
 			buttonRow = $"{d.VLine}           {btn1} {btn2} {btn3} {btn4}{d.VLine}";
-			Assert.Equal (width, ustring.Make (buttonRow).ConsoleWidth);
+			Assert.Equal (width, buttonRow.Length);
 			(runstate, var _) = RunButtonTestDialog (title, width, Dialog.ButtonAlignments.Right, new Button (btn1Text), new Button (btn2Text), new Button (btn3Text), new Button (btn4Text));
 			TestHelpers.AssertDriverContentsWithFrameAre ($"{topRow}\n{buttonRow}\n{bottomRow}", output);
 			Application.End (runstate);
 
 			// Left
 			buttonRow = $"{d.VLine}{btn1} {btn2} {btn3} {btn4}           {d.VLine}";
-			Assert.Equal (width, ustring.Make (buttonRow).ConsoleWidth);
+			Assert.Equal (width, buttonRow.Length);
 			(runstate, var _) = RunButtonTestDialog (title, width, Dialog.ButtonAlignments.Left, new Button (btn1Text), new Button (btn2Text), new Button (btn3Text), new Button (btn4Text));
 			TestHelpers.AssertDriverContentsWithFrameAre ($"{topRow}\n{buttonRow}\n{bottomRow}", output);
 			Application.End (runstate);

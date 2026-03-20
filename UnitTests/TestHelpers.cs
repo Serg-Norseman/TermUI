@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit.Abstractions;
-using Xunit;
-using Terminal.Gui;
-using Rune = System.Rune;
-using Attribute = Terminal.Gui.Attribute;
-using System.Text.RegularExpressions;
-using System.Reflection;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+using Terminal.Gui;
+using Xunit;
+using Xunit.Abstractions;
+using Attribute = Terminal.Gui.Attribute;
+using Rune = System.Rune;
 
 
 // This class enables test functions annotated with the [AutoInitShutdown] attribute to 
@@ -191,7 +190,10 @@ class TestHelpers {
 
 		// Convert Rune list to string
 		for (int r = 0; r < lines.Count; r++) {
-			var line = NStack.ustring.Make (lines [r]).ToString ();
+			var runes = lines [r];
+			var xline = new char[runes.Count];
+			for (int c = 0; c < runes.Count; c++) xline[c] = (char)runes[c].Value;
+			var line = new string(xline);
 			if (r == lines.Count - 1) {
 				sb.Append (line);
 			} else {

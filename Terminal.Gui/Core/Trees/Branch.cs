@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Terminal.Gui.Trees {
-	class Branch<T> where T : class {
+namespace Terminal.Gui.Trees
+{
+	class Branch<T> where T : class
+	{
 		/// <summary>
 		/// True if the branch is expanded to reveal child branches.
 		/// </summary>
@@ -40,7 +42,7 @@ namespace Terminal.Gui.Trees {
 		/// <param name="parentBranchIfAny">Pass null for root level branches, otherwise
 		/// pass the parent.</param>
 		/// <param name="model">The user's object that should be displayed.</param>
-		public Branch (TreeView<T> tree, Branch<T> parentBranchIfAny, T model)
+		public Branch(TreeView<T> tree, Branch<T> parentBranchIfAny, T model)
 		{
 			this.tree = tree;
 			this.Model = model;
@@ -55,7 +57,7 @@ namespace Terminal.Gui.Trees {
 		/// <summary>
 		/// Fetch the children of this branch. This method populates <see cref="ChildBranches"/>.
 		/// </summary>
-		public virtual void FetchChildren ()
+		public virtual void FetchChildren()
 		{
 			if (tree.TreeBuilder == null) {
 				return;
@@ -64,13 +66,12 @@ namespace Terminal.Gui.Trees {
 			IEnumerable<T> children;
 
 			if (Depth >= tree.MaxDepth) {
-				children = Enumerable.Empty<T> ();
+				children = Enumerable.Empty<T>();
+			} else {
+				children = tree.TreeBuilder.GetChildren(this.Model) ?? Enumerable.Empty<T>();
 			}
-			else {
-				children = tree.TreeBuilder.GetChildren (this.Model) ?? Enumerable.Empty<T> ();
-			}
-			
-			this.ChildBranches = children.ToDictionary (k => k, val => new Branch<T> (tree, this, val));
+
+			this.ChildBranches = children.ToDictionary(k => k, val => new Branch<T>(tree, this, val));
 		}
 
 		/// <summary>
@@ -78,12 +79,12 @@ namespace Terminal.Gui.Trees {
 		/// of <see cref="TreeView{T}.AspectGetter"/> (the line body).
 		/// </summary>
 		/// <returns></returns>
-		public virtual int GetWidth (ConsoleDriver driver)
+		public virtual int GetWidth(ConsoleDriver driver)
 		{
 			return
-				GetLinePrefix (driver).Sum (Rune.ColumnWidth) +
-				Rune.ColumnWidth (GetExpandableSymbol (driver)) +
-				(tree.AspectGetter (Model) ?? "").Length;
+				GetLinePrefix(driver).Sum(Rune.ColumnWidth) +
+				Rune.ColumnWidth(GetExpandableSymbol(driver)) +
+				(tree.AspectGetter(Model) ?? "").Length;
 		}
 
 		/// <summary>
@@ -93,33 +94,33 @@ namespace Terminal.Gui.Trees {
 		/// <param name="colorScheme"></param>
 		/// <param name="y"></param>
 		/// <param name="availableWidth"></param>
-		public virtual void Draw (ConsoleDriver driver, ColorScheme colorScheme, int y, int availableWidth)
+		public virtual void Draw(ConsoleDriver driver, ColorScheme colorScheme, int y, int availableWidth)
 		{
 			// true if the current line of the tree is the selected one and control has focus
-			bool isSelected = tree.IsSelected (Model);
+			bool isSelected = tree.IsSelected(Model);
 
 			Attribute textColor = isSelected ? (tree.HasFocus ? colorScheme.Focus : colorScheme.HotNormal) : colorScheme.Normal;
 			Attribute symbolColor = tree.Style.HighlightModelTextOnly ? colorScheme.Normal : textColor;
 
 			// Everything on line before the expansion run and branch text
-			Rune [] prefix = GetLinePrefix (driver).ToArray ();
-			Rune expansion = GetExpandableSymbol (driver);
-			string lineBody = tree.AspectGetter (Model) ?? "";
+			Rune[] prefix = GetLinePrefix(driver).ToArray();
+			Rune expansion = GetExpandableSymbol(driver);
+			string lineBody = tree.AspectGetter(Model) ?? "";
 
-			tree.Move (0, y);
+			tree.Move(0, y);
 
 			// if we have scrolled to the right then bits of the prefix will have dispeared off the screen
 			int toSkip = tree.ScrollOffsetHorizontal;
 
-			driver.SetAttribute (symbolColor);
+			driver.SetAttribute(symbolColor);
 			// Draw the line prefix (all parallel lanes or whitespace and an expand/collapse/leaf symbol)
 			foreach (Rune r in prefix) {
 
 				if (toSkip > 0) {
 					toSkip--;
 				} else {
-					driver.AddRune (r);
-					availableWidth -= Rune.ColumnWidth (r);
+					driver.AddRune(r);
+					availableWidth -= Rune.ColumnWidth(r);
 				}
 			}
 
@@ -138,17 +139,17 @@ namespace Terminal.Gui.Trees {
 				}
 
 				if (tree.Style.InvertExpandSymbolColors) {
-					color = new Attribute (color.Background, color.Foreground);
+					color = new Attribute(color.Background, color.Foreground);
 				}
 
-				driver.SetAttribute (color);
+				driver.SetAttribute(color);
 			}
 
 			if (toSkip > 0) {
 				toSkip--;
 			} else {
-				driver.AddRune (expansion);
-				availableWidth -= Rune.ColumnWidth (expansion);
+				driver.AddRune(expansion);
+				availableWidth -= Rune.ColumnWidth(expansion);
 			}
 
 			// horizontal scrolling has already skipped the prefix but now must also skip some of the line body
@@ -156,14 +157,14 @@ namespace Terminal.Gui.Trees {
 				if (toSkip > lineBody.Length) {
 					lineBody = "";
 				} else {
-					lineBody = lineBody.Substring (toSkip);
+					lineBody = lineBody.Substring(toSkip);
 				}
 			}
 
 			// If body of line is too long
-			if (lineBody.Sum (l => Rune.ColumnWidth (l)) > availableWidth) {
+			if (lineBody.Sum(l => Rune.ColumnWidth(l)) > availableWidth) {
 				// remaining space is zero and truncate the line
-				lineBody = new string (lineBody.TakeWhile (c => (availableWidth -= Rune.ColumnWidth (c)) >= 0).ToArray ());
+				lineBody = new string(lineBody.TakeWhile(c => (availableWidth -= Rune.ColumnWidth(c)) >= 0).ToArray());
 				availableWidth = 0;
 			} else {
 
@@ -178,7 +179,7 @@ namespace Terminal.Gui.Trees {
 
 			// if custom color delegate invoke it
 			if (tree.ColorGetter != null) {
-				var modelScheme = tree.ColorGetter (Model);
+				var modelScheme = tree.ColorGetter(Model);
 
 				// if custom color scheme is defined for this Model
 				if (modelScheme != null) {
@@ -187,14 +188,14 @@ namespace Terminal.Gui.Trees {
 				}
 			}
 
-			driver.SetAttribute (modelColor);
-			driver.AddStr (lineBody);
+			driver.SetAttribute(modelColor);
+			driver.AddStr(lineBody);
 
 			if (availableWidth > 0) {
-				driver.SetAttribute (symbolColor);
-				driver.AddStr (new string (' ', availableWidth));
+				driver.SetAttribute(symbolColor);
+				driver.AddRepeatedRune(' ', availableWidth);
 			}
-			driver.SetAttribute (colorScheme.Normal);
+			driver.SetAttribute(colorScheme.Normal);
 		}
 
 		/// <summary>
@@ -203,29 +204,29 @@ namespace Terminal.Gui.Trees {
 		/// </summary>
 		/// <param name="driver"></param>
 		/// <returns></returns>
-		private IEnumerable<Rune> GetLinePrefix (ConsoleDriver driver)
+		private IEnumerable<Rune> GetLinePrefix(ConsoleDriver driver)
 		{
 			// If not showing line branches or this is a root object.
 			if (!tree.Style.ShowBranchLines) {
 				for (int i = 0; i < Depth; i++) {
-					yield return new Rune (' ');
+					yield return new Rune(' ');
 				}
 
 				yield break;
 			}
 
 			// yield indentations with runes appropriate to the state of the parents
-			foreach (var cur in GetParentBranches ().Reverse ()) {
-				if (cur.IsLast ()) {
-					yield return new Rune (' ');
+			foreach (var cur in GetParentBranches().Reverse()) {
+				if (cur.IsLast()) {
+					yield return new Rune(' ');
 				} else {
 					yield return driver.VLine;
 				}
 
-				yield return new Rune (' ');
+				yield return new Rune(' ');
 			}
 
-			if (IsLast ()) {
+			if (IsLast()) {
 				yield return driver.LLCorner;
 			} else {
 				yield return driver.LeftTee;
@@ -236,7 +237,7 @@ namespace Terminal.Gui.Trees {
 		/// Returns all parents starting with the immediate parent and ending at the root.
 		/// </summary>
 		/// <returns></returns>
-		private IEnumerable<Branch<T>> GetParentBranches ()
+		private IEnumerable<Branch<T>> GetParentBranches()
 		{
 			var cur = Parent;
 
@@ -253,7 +254,7 @@ namespace Terminal.Gui.Trees {
 		/// </summary>
 		/// <param name="driver"></param>
 		/// <returns></returns>
-		public Rune GetExpandableSymbol (ConsoleDriver driver)
+		public Rune GetExpandableSymbol(ConsoleDriver driver)
 		{
 			var leafSymbol = tree.Style.ShowBranchLines ? driver.HLine : ' ';
 
@@ -261,7 +262,7 @@ namespace Terminal.Gui.Trees {
 				return tree.Style.CollapseableSymbol ?? leafSymbol;
 			}
 
-			if (CanExpand ()) {
+			if (CanExpand()) {
 				return tree.Style.ExpandableSymbol ?? leafSymbol;
 			}
 
@@ -273,34 +274,34 @@ namespace Terminal.Gui.Trees {
 		/// the <see cref="TreeBuilder{T}"/> or cached children already fetched.
 		/// </summary>
 		/// <returns></returns>
-		public bool CanExpand ()
+		public bool CanExpand()
 		{
 			// if we do not know the children yet
 			if (ChildBranches == null) {
 
 				//if there is a rapid method for determining whether there are children
 				if (tree.TreeBuilder.SupportsCanExpand) {
-					return tree.TreeBuilder.CanExpand (Model);
+					return tree.TreeBuilder.CanExpand(Model);
 				}
 
 				//there is no way of knowing whether we can expand without fetching the children
-				FetchChildren ();
+				FetchChildren();
 			}
 
 			//we fetched or already know the children, so return whether we have any
-			return ChildBranches.Any ();
+			return ChildBranches.Any();
 		}
 
 		/// <summary>
 		/// Expands the current branch if possible.
 		/// </summary>
-		public void Expand ()
+		public void Expand()
 		{
 			if (ChildBranches == null) {
-				FetchChildren ();
+				FetchChildren();
 			}
 
-			if (ChildBranches.Any ()) {
+			if (ChildBranches.Any()) {
 				IsExpanded = true;
 			}
 		}
@@ -308,7 +309,7 @@ namespace Terminal.Gui.Trees {
 		/// <summary>
 		/// Marks the branch as collapsed (<see cref="IsExpanded"/> false).
 		/// </summary>
-		public void Collapse ()
+		public void Collapse()
 		{
 			IsExpanded = false;
 		}
@@ -318,29 +319,29 @@ namespace Terminal.Gui.Trees {
 		/// </summary>
 		/// <param name="startAtTop">True to also refresh all <see cref="Parent"/> 
 		/// branches (starting with the root).</param>
-		public void Refresh (bool startAtTop)
+		public void Refresh(bool startAtTop)
 		{
 			// if we must go up and refresh from the top down
 			if (startAtTop) {
-				Parent?.Refresh (true);
+				Parent?.Refresh(true);
 			}
 
 			// we don't want to loose the state of our children so lets be selective about how we refresh
 			//if we don't know about any children yet just use the normal method
 			if (ChildBranches == null) {
-				FetchChildren ();
+				FetchChildren();
 			} else {
 				// we already knew about some children so preserve the state of the old children
 
 				// first gather the new Children
-				var newChildren = tree.TreeBuilder?.GetChildren (this.Model) ?? Enumerable.Empty<T> ();
+				var newChildren = tree.TreeBuilder?.GetChildren(this.Model) ?? Enumerable.Empty<T>();
 
 				// Children who no longer appear need to go
-				foreach (var toRemove in ChildBranches.Keys.Except (newChildren).ToArray ()) {
-					ChildBranches.Remove (toRemove);
+				foreach (var toRemove in ChildBranches.Keys.Except(newChildren).ToArray()) {
+					ChildBranches.Remove(toRemove);
 
 					//also if the user has this node selected (its disapearing) so lets change selection to us (the parent object) to be helpful
-					if (Equals (tree.SelectedObject, toRemove)) {
+					if (Equals(tree.SelectedObject, toRemove)) {
 						tree.SelectedObject = Model;
 					}
 				}
@@ -348,11 +349,11 @@ namespace Terminal.Gui.Trees {
 				// New children need to be added
 				foreach (var newChild in newChildren) {
 					// If we don't know about the child yet we need a new branch
-					if (!ChildBranches.ContainsKey (newChild)) {
-						ChildBranches.Add (newChild, new Branch<T> (tree, this, newChild));
+					if (!ChildBranches.ContainsKey(newChild)) {
+						ChildBranches.Add(newChild, new Branch<T>(tree, this, newChild));
 					} else {
 						//we already have this object but update the reference anyway incase Equality match but the references are new
-						ChildBranches [newChild].Model = newChild;
+						ChildBranches[newChild].Model = newChild;
 					}
 				}
 			}
@@ -362,16 +363,16 @@ namespace Terminal.Gui.Trees {
 		/// <summary>
 		/// Calls <see cref="Refresh(bool)"/> on the current branch and all expanded children.
 		/// </summary>
-		internal void Rebuild ()
+		internal void Rebuild()
 		{
-			Refresh (false);
+			Refresh(false);
 
 			// if we know about our children
 			if (ChildBranches != null) {
 				if (IsExpanded) {
 					//if we are expanded we need to updatethe visible children
 					foreach (var child in ChildBranches) {
-						child.Value.Rebuild ();
+						child.Value.Rebuild();
 					}
 
 				} else {
@@ -387,13 +388,13 @@ namespace Terminal.Gui.Trees {
 		/// branches (or last root of the tree).
 		/// </summary>
 		/// <returns></returns>
-		private bool IsLast ()
+		private bool IsLast()
 		{
 			if (Parent == null) {
-				return this == tree.roots.Values.LastOrDefault ();
+				return this == tree.roots.Values.LastOrDefault();
 			}
 
-			return Parent.ChildBranches.Values.LastOrDefault () == this;
+			return Parent.ChildBranches.Values.LastOrDefault() == this;
 		}
 
 		/// <summary>
@@ -403,21 +404,21 @@ namespace Terminal.Gui.Trees {
 		/// <param name="driver"></param>
 		/// <param name="x"></param>
 		/// <returns></returns>
-		internal bool IsHitOnExpandableSymbol (ConsoleDriver driver, int x)
+		internal bool IsHitOnExpandableSymbol(ConsoleDriver driver, int x)
 		{
 			// if leaf node then we cannot expand
-			if (!CanExpand ()) {
+			if (!CanExpand()) {
 				return false;
 			}
 
 			// if we could theoretically expand
 			if (!IsExpanded && tree.Style.ExpandableSymbol != null) {
-				return x == GetLinePrefix (driver).Count ();
+				return x == GetLinePrefix(driver).Count();
 			}
 
 			// if we could theoretically collapse
 			if (IsExpanded && tree.Style.CollapseableSymbol != null) {
-				return x == GetLinePrefix (driver).Count ();
+				return x == GetLinePrefix(driver).Count();
 			}
 
 			return false;
@@ -426,13 +427,13 @@ namespace Terminal.Gui.Trees {
 		/// <summary>
 		/// Expands the current branch and all children branches.
 		/// </summary>
-		internal void ExpandAll ()
+		internal void ExpandAll()
 		{
-			Expand ();
+			Expand();
 
 			if (ChildBranches != null) {
 				foreach (var child in ChildBranches) {
-					child.Value.ExpandAll ();
+					child.Value.ExpandAll();
 				}
 			}
 		}
@@ -441,13 +442,13 @@ namespace Terminal.Gui.Trees {
 		/// Collapses the current branch and all children branches (even though those branches are 
 		/// no longer visible they retain collapse/expansion state).
 		/// </summary>
-		internal void CollapseAll ()
+		internal void CollapseAll()
 		{
-			Collapse ();
+			Collapse();
 
 			if (ChildBranches != null) {
 				foreach (var child in ChildBranches) {
-					child.Value.CollapseAll ();
+					child.Value.CollapseAll();
 				}
 			}
 		}

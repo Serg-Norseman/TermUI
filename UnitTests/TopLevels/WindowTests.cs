@@ -1,12 +1,7 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 using Xunit.Abstractions;
-//using GraphViewTests = Terminal.Gui.Views.GraphViewTests;
 
 // Alias Console to MockConsole so we don't accidentally use Console
-using Console = Terminal.Gui.FakeConsole;
-using NStack;
-using Terminal.Gui;
 
 namespace Terminal.Gui.TopLevelTests {
 	public class WindowTests {
@@ -23,7 +18,7 @@ namespace Terminal.Gui.TopLevelTests {
 			// Parameterless
 			var r = new Window ();
 			Assert.NotNull (r);
-			Assert.Equal (ustring.Empty, r.Title);
+			Assert.Equal (string.Empty, r.Title);
 			Assert.Equal (LayoutStyle.Computed, r.LayoutStyle);
 			Assert.Equal ("Window()({X=0,Y=0,Width=0,Height=0})", r.ToString ());
 			Assert.True (r.CanFocus);
@@ -101,7 +96,7 @@ namespace Terminal.Gui.TopLevelTests {
 		public void Set_Title_Fires_TitleChanging ()
 		{
 			var r = new Window ();
-			Assert.Equal (ustring.Empty, r.Title);
+			Assert.Equal (string.Empty, r.Title);
 
 			string expectedOld = null;
 			string expectedDuring = null;
@@ -134,7 +129,7 @@ namespace Terminal.Gui.TopLevelTests {
 		public void Set_Title_Fires_TitleChanged ()
 		{
 			var r = new Window ();
-			Assert.Equal (ustring.Empty, r.Title);
+			Assert.Equal (string.Empty, r.Title);
 
 			string expectedOld = null;
 			string expected = null;

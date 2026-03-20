@@ -1,16 +1,14 @@
 ﻿//
 // FakeDriver.cs: A fake ConsoleDriver for unit tests. 
 //
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
-using NStack;
 
 // Alias Console to MockConsole so we don't accidentally use Console
-using Console = Terminal.Gui.FakeConsole;
 
 namespace Terminal.Gui {
 	/// <summary>
@@ -184,20 +182,9 @@ namespace Terminal.Gui {
 				ccol++;
 			}
 
-			//if (ccol == Cols) {
-			//	ccol = 0;
-			//	if (crow + 1 < Rows)
-			//		crow++;
-			//}
 			if (sync) {
 				UpdateScreen ();
 			}
-		}
-
-		public override void AddStr (ustring str)
-		{
-			foreach (var rune in str)
-				AddRune (rune);
 		}
 
 		public override void End ()
@@ -589,6 +576,8 @@ namespace Terminal.Gui {
 
 		public override void UpdateOffScreen ()
 		{
+			var ntlClr = (ushort)Colors.TopLevel.Normal;
+
 			contents = new int [Rows, Cols, 3];
 			dirtyLine = new bool [Rows];
 
@@ -597,7 +586,7 @@ namespace Terminal.Gui {
 				for (int row = 0; row < rows; row++) {
 					for (int c = 0; c < cols; c++) {
 						contents [row, c, 0] = ' ';
-						contents [row, c, 1] = (ushort)Colors.TopLevel.Normal;
+						contents [row, c, 1] = ntlClr;
 						contents [row, c, 2] = 0;
 						dirtyLine [row] = true;
 					}

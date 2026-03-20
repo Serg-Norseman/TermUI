@@ -3,11 +3,8 @@
 //
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using NStack;
 using Unix.Terminal;
 
 namespace Terminal.Gui {
@@ -128,13 +125,6 @@ namespace Terminal.Gui {
 			if (sync) {
 				UpdateScreen ();
 			}
-		}
-
-		public override void AddStr (ustring str)
-		{
-			// TODO; optimize this to determine if the str fits in the clip region, and if so, use Curses.addstr directly
-			foreach (var rune in str)
-				AddRune (rune);
 		}
 
 		public override void Refresh ()
@@ -749,14 +739,16 @@ namespace Terminal.Gui {
 
 		public override void UpdateOffScreen ()
 		{
+			var ntlClr = Colors.TopLevel.Normal;
+
 			contents = new int [Rows, Cols, 3];
 			for (int row = 0; row < Rows; row++) {
 				for (int col = 0; col < Cols; col++) {
 					Curses.move (row, col);
-					Curses.attrset (Colors.TopLevel.Normal);
+					Curses.attrset (ntlClr);
 					Curses.addch ((int)(uint)' ');
 					contents [row, col, 0] = ' ';
-					contents [row, col, 1] = Colors.TopLevel.Normal;
+					contents [row, col, 1] = ntlClr;
 					contents [row, col, 2] = 0;
 				}
 			}

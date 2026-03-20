@@ -1569,12 +1569,12 @@ namespace Terminal.Gui.ViewTests {
 
 			// default behaviour of TableView is not to render
 			// columns unless there is sufficient space
-			string expected = 
+			string expected =
 				@"
-│A│B                    │
-├─┼─────────────────────►
-│1│2                    │
-│1│2                    │
+│A│B│Very Long Column   │
+├─┼─┼───────────────────┤
+│1│2│aaaaaaaaaaaaaaaaaaa│
+│1│2│aaa                │
 ";
 
 			TestHelpers.AssertDriverContentsAre (expected, output);
@@ -1650,10 +1650,10 @@ namespace Terminal.Gui.ViewTests {
 			tableView.Redraw (tableView.Bounds);
 			expected =
 @"
-│A│B    │
-├─┼─────►
-│1│2    │
-│1│2    │
+│A│B│Ver│
+├─┼─┼───┤
+│1│2│aaa│
+│1│2│aaa│
 
 ";
 			TestHelpers.AssertDriverContentsAre (expected, output);

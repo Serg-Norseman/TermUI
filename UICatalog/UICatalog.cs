@@ -1,5 +1,4 @@
-﻿using NStack;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -7,8 +6,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Terminal.Gui;
-using Microsoft.DotNet.PlatformAbstractions;
-using Rune = System.Rune;
 
 /// <summary>
 /// UI Catalog is a comprehensive sample library for Terminal.Gui. It provides a simple UI for adding to the catalog of scenarios.
@@ -415,7 +412,7 @@ namespace UICatalog {
 					return "";
 				}
 
-				Enum GetDiagnosticsEnumValue (ustring title)
+				Enum GetDiagnosticsEnumValue (string title)
 				{
 					switch (title.ToString ()) {
 					case FRAME_RULER:
@@ -509,7 +506,7 @@ namespace UICatalog {
 				} else {
 					newlist = _scenarios.Where (s => s.GetCategories ().Contains (item)).ToList ();
 				}
-				ScenarioListView.SetSource (newlist.ToList ());
+				ScenarioListView.SetSource (newlist);
 			}
 		}
 

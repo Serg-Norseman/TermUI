@@ -150,7 +150,7 @@ namespace UICatalog.Scenarios {
 				Driver.SetAttribute (white);
 			}
 
-			protected override void SetNormalColor (List<System.Rune> line, int idx)
+			protected override void SetNormalColor (List<char> line, int idx)
 			{
 				if (IsInStringLiteral (line, idx)) {
 					Driver.SetAttribute (magenta);
@@ -162,7 +162,7 @@ namespace UICatalog.Scenarios {
 				}
 			}
 
-			private bool IsInStringLiteral (List<System.Rune> line, int idx)
+			private bool IsInStringLiteral (List<char> line, int idx)
 			{
 				string strLine = new string (line.Select (r => (char)r).ToArray ());
 
@@ -175,7 +175,7 @@ namespace UICatalog.Scenarios {
 				return false;
 			}
 
-			private bool IsKeyword (List<System.Rune> line, int idx)
+			private bool IsKeyword (List<char> line, int idx)
 			{
 				var word = IdxToWord (line, idx);
 
@@ -186,7 +186,7 @@ namespace UICatalog.Scenarios {
 				return keywords.Contains (word, StringComparer.CurrentCultureIgnoreCase);
 			}
 
-			private string IdxToWord (List<System.Rune> line, int idx)
+			private string IdxToWord (List<char> line, int idx)
 			{
 				var words = Regex.Split (
 					new string (line.Select (r => (char)r).ToArray ()),

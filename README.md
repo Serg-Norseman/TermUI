@@ -33,5 +33,3 @@
 
 * Windows, Mac, and Linux - Build and run using the .NET SDK command line tools (`dotnet build` in the root directory). Run `UICatalog` with `dotnet run --project UICatalog`.
 * Windows - Open `Terminal.sln` with Visual Studio 2022.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for instructions for downloading and forking the source.

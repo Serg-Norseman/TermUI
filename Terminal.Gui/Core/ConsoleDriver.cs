@@ -1,23 +1,24 @@
 ﻿//
 // ConsoleDriver.cs: Base class for Terminal.Gui ConsoleDriver implementations.
 //
-using NStack;
+
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace Terminal.Gui {
+namespace Terminal.Gui
+{
 	/// <summary>
 	/// Colors that can be used to set the foreground and background colors in console applications.
 	/// </summary>
 	/// <remarks>
 	/// The <see cref="Attribute.HasValidColors"/> value indicates either no-color has been set or the color is invalid.
 	/// </remarks>
-	public enum Color {
+	public enum Color
+	{
 		/// <summary>
 		/// The black color.
 		/// </summary>
@@ -87,7 +88,8 @@ namespace Terminal.Gui {
 	/// <summary>
 	/// Indicates the RGB for true colors.
 	/// </summary>
-	public class TrueColor {
+	public class TrueColor
+	{
 		/// <summary>
 		/// Red color component.
 		/// </summary>
@@ -107,7 +109,7 @@ namespace Terminal.Gui {
 		/// <param name="red"></param>
 		/// <param name="green"></param>
 		/// <param name="blue"></param>
-		public TrueColor (int red, int green, int blue)
+		public TrueColor(int red, int green, int blue)
 		{
 			Red = red;
 			Green = green;
@@ -118,9 +120,9 @@ namespace Terminal.Gui {
 		/// Converts true color to console color.
 		/// </summary>
 		/// <returns></returns>
-		public Color ToConsoleColor ()
+		public Color ToConsoleColor()
 		{
-			var trueColorMap = new Dictionary<TrueColor, Color> () {
+			var trueColorMap = new Dictionary<TrueColor, Color>() {
 				{ new TrueColor (0,0,0),Color.Black},
 				{ new TrueColor (0, 0, 0x80),Color.Blue},
 				{ new TrueColor (0, 0x80, 0),Color.Green},
@@ -139,26 +141,26 @@ namespace Terminal.Gui {
 				{ new TrueColor (0xFF, 0xFF, 0xFF),Color.White},
 				};
 			// Iterate over all colors in the map
-			var distances = trueColorMap.Select (
-							k => Tuple.Create (
+			var distances = trueColorMap.Select(
+							k => Tuple.Create(
 								// the candidate we are considering matching against (RGB)
 								k.Key,
 
-								CalculateDistance (k.Key, this)
+								CalculateDistance(k.Key, this)
 							));
 
 			// get the closest
-			var match = distances.OrderBy (t => t.Item2).First ();
-			return trueColorMap [match.Item1];
+			var match = distances.OrderBy(t => t.Item2).First();
+			return trueColorMap[match.Item1];
 		}
 
-		private float CalculateDistance (TrueColor color1, TrueColor color2)
+		private float CalculateDistance(TrueColor color1, TrueColor color2)
 		{
 			// use RGB distance
 			return
-				Math.Abs (color1.Red - color2.Red) +
-				Math.Abs (color1.Green - color2.Green) +
-				Math.Abs (color1.Blue - color2.Blue);
+				Math.Abs(color1.Red - color2.Red) +
+				Math.Abs(color1.Green - color2.Green) +
+				Math.Abs(color1.Blue - color2.Blue);
 		}
 	}
 
@@ -170,7 +172,8 @@ namespace Terminal.Gui {
 	///   They encode both the foreground and the background color and are used in the <see cref="ColorScheme"/>
 	///   class to define color schemes that can be used in an application.
 	/// </remarks>
-	public struct Attribute {
+	public struct Attribute
+	{
 		/// <summary>
 		/// The <see cref="ConsoleDriver"/>-specific color attribute value. If <see cref="Initialized"/> is <see langword="false"/> 
 		/// the value of this property is invalid (typically because the Attribute was created before a driver was loaded)
@@ -193,14 +196,14 @@ namespace Terminal.Gui {
 		///   and trying to get the colors if defined.
 		/// </summary>
 		/// <param name="value">Value.</param>
-		public Attribute (int value)
+		public Attribute(int value)
 		{
 			Color foreground = default;
 			Color background = default;
 
 			Initialized = false;
 			if (Application.Driver != null) {
-				Application.Driver.GetColors (value, out foreground, out background);
+				Application.Driver.GetColors(value, out foreground, out background);
 				Initialized = true;
 			}
 			Value = value;
@@ -214,7 +217,7 @@ namespace Terminal.Gui {
 		/// <param name="value">Value.</param>
 		/// <param name="foreground">Foreground</param>
 		/// <param name="background">Background</param>
-		public Attribute (int value, Color foreground, Color background)
+		public Attribute(int value, Color foreground, Color background)
 		{
 			Value = value;
 			Foreground = foreground;
@@ -227,9 +230,9 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="foreground">Foreground</param>
 		/// <param name="background">Background</param>
-		public Attribute (Color foreground = new Color (), Color background = new Color ())
+		public Attribute(Color foreground = new Color(), Color background = new Color())
 		{
-			var make = Make (foreground, background);
+			var make = Make(foreground, background);
 			Initialized = make.Initialized;
 			Value = make.Value;
 			Foreground = foreground;
@@ -241,7 +244,7 @@ namespace Terminal.Gui {
 		///  with the same colors for the foreground and background.
 		/// </summary>
 		/// <param name="color">The color.</param>
-		public Attribute (Color color) : this (color, color) { }
+		public Attribute(Color color) : this(color, color) { }
 
 		/// <summary>
 		/// Implicit conversion from an <see cref="Attribute"/> to the underlying, driver-specific, Int32 representation
@@ -249,9 +252,9 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <returns>The driver-specific color value stored in the attribute.</returns>
 		/// <param name="c">The attribute to convert</param>
-		public static implicit operator int (Attribute c)
+		public static implicit operator int(Attribute c)
 		{
-			if (!c.Initialized) throw new InvalidOperationException ("Attribute: Attributes must be initialized by a driver before use.");
+			if (!c.Initialized) throw new InvalidOperationException("Attribute: Attributes must be initialized by a driver before use.");
 			return c.Value;
 		}
 
@@ -260,7 +263,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <returns>An attribute with the specified driver-specific color value.</returns>
 		/// <param name="v">value</param>
-		public static implicit operator Attribute (int v) => new Attribute (v);
+		public static implicit operator Attribute(int v) => new Attribute(v);
 
 		/// <summary>
 		/// Creates an <see cref="Attribute"/> from the specified foreground and background colors.
@@ -272,26 +275,26 @@ namespace Terminal.Gui {
 		/// <returns>The new attribute.</returns>
 		/// <param name="foreground">Foreground color to use.</param>
 		/// <param name="background">Background color to use.</param>
-		public static Attribute Make (Color foreground, Color background)
+		public static Attribute Make(Color foreground, Color background)
 		{
 			if (Application.Driver == null) {
 				// Create the attribute, but show it's not been initialized
-				return new Attribute (-1, foreground, background) {
+				return new Attribute(-1, foreground, background) {
 					Initialized = false
 				};
 			}
-			return Application.Driver.MakeAttribute (foreground, background);
+			return Application.Driver.MakeAttribute(foreground, background);
 		}
 
 		/// <summary>
 		/// Gets the current <see cref="Attribute"/> from the driver.
 		/// </summary>
 		/// <returns>The current attribute.</returns>
-		public static Attribute Get ()
+		public static Attribute Get()
 		{
 			if (Application.Driver == null)
-				throw new InvalidOperationException ("The Application has not been initialized");
-			return Application.Driver.GetAttribute ();
+				throw new InvalidOperationException("The Application has not been initialized");
+			return Application.Driver.GetAttribute();
 		}
 
 		/// <summary>
@@ -320,12 +323,13 @@ namespace Terminal.Gui {
 	/// <remarks>
 	/// See also: <see cref="Colors.ColorSchemes"/>.
 	/// </remarks>
-	public class ColorScheme : IEquatable<ColorScheme> {
-		Attribute _normal = new Attribute (Color.White, Color.Black);
-		Attribute _focus = new Attribute (Color.White, Color.Black);
-		Attribute _hotNormal = new Attribute (Color.White, Color.Black);
-		Attribute _hotFocus = new Attribute (Color.White, Color.Black);
-		Attribute _disabled = new Attribute (Color.White, Color.Black);
+	public class ColorScheme : IEquatable<ColorScheme>
+	{
+		Attribute _normal = new Attribute(Color.White, Color.Black);
+		Attribute _focus = new Attribute(Color.White, Color.Black);
+		Attribute _hotNormal = new Attribute(Color.White, Color.Black);
+		Attribute _hotFocus = new Attribute(Color.White, Color.Black);
+		Attribute _disabled = new Attribute(Color.White, Color.Black);
 
 		/// <summary>
 		/// Used by <see cref="Colors.SetColorScheme(ColorScheme, string)"/> and <see cref="Colors.GetColorScheme(string)"/> to track which ColorScheme 
@@ -336,7 +340,8 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// The foreground and background color for text when the view is not focused, hot, or disabled.
 		/// </summary>
-		public Attribute Normal {
+		public Attribute Normal
+		{
 			get { return _normal; }
 			set {
 				if (!value.HasValidColors) {
@@ -349,7 +354,8 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// The foreground and background color for text when the view has the focus.
 		/// </summary>
-		public Attribute Focus {
+		public Attribute Focus
+		{
 			get { return _focus; }
 			set {
 				if (!value.HasValidColors) {
@@ -362,7 +368,8 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// The foreground and background color for text when the view is highlighted (hot).
 		/// </summary>
-		public Attribute HotNormal {
+		public Attribute HotNormal
+		{
 			get { return _hotNormal; }
 			set {
 				if (!value.HasValidColors) {
@@ -375,7 +382,8 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// The foreground and background color for text when the view is highlighted (hot) and has focus.
 		/// </summary>
-		public Attribute HotFocus {
+		public Attribute HotFocus
+		{
 			get { return _hotFocus; }
 			set {
 				if (!value.HasValidColors) {
@@ -388,7 +396,8 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// The default foreground and background color for text, when the view is disabled.
 		/// </summary>
-		public Attribute Disabled {
+		public Attribute Disabled
+		{
 			get { return _disabled; }
 			set {
 				if (!value.HasValidColors) {
@@ -403,9 +412,9 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <returns>true if the two objects are equal</returns>
-		public override bool Equals (object obj)
+		public override bool Equals(object obj)
 		{
-			return Equals (obj as ColorScheme);
+			return Equals(obj as ColorScheme);
 		}
 
 		/// <summary>
@@ -413,28 +422,28 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="other"></param>
 		/// <returns>true if the two objects are equal</returns>
-		public bool Equals (ColorScheme other)
+		public bool Equals(ColorScheme other)
 		{
 			return other != null &&
-			       EqualityComparer<Attribute>.Default.Equals (_normal, other._normal) &&
-			       EqualityComparer<Attribute>.Default.Equals (_focus, other._focus) &&
-			       EqualityComparer<Attribute>.Default.Equals (_hotNormal, other._hotNormal) &&
-			       EqualityComparer<Attribute>.Default.Equals (_hotFocus, other._hotFocus) &&
-			       EqualityComparer<Attribute>.Default.Equals (_disabled, other._disabled);
+			       EqualityComparer<Attribute>.Default.Equals(_normal, other._normal) &&
+			       EqualityComparer<Attribute>.Default.Equals(_focus, other._focus) &&
+			       EqualityComparer<Attribute>.Default.Equals(_hotNormal, other._hotNormal) &&
+			       EqualityComparer<Attribute>.Default.Equals(_hotFocus, other._hotFocus) &&
+			       EqualityComparer<Attribute>.Default.Equals(_disabled, other._disabled);
 		}
 
 		/// <summary>
 		/// Returns a hashcode for this instance.
 		/// </summary>
 		/// <returns>hashcode for this instance</returns>
-		public override int GetHashCode ()
+		public override int GetHashCode()
 		{
 			int hashCode = -1242460230;
-			hashCode = hashCode * -1521134295 + _normal.GetHashCode ();
-			hashCode = hashCode * -1521134295 + _focus.GetHashCode ();
-			hashCode = hashCode * -1521134295 + _hotNormal.GetHashCode ();
-			hashCode = hashCode * -1521134295 + _hotFocus.GetHashCode ();
-			hashCode = hashCode * -1521134295 + _disabled.GetHashCode ();
+			hashCode = hashCode * -1521134295 + _normal.GetHashCode();
+			hashCode = hashCode * -1521134295 + _focus.GetHashCode();
+			hashCode = hashCode * -1521134295 + _hotNormal.GetHashCode();
+			hashCode = hashCode * -1521134295 + _hotFocus.GetHashCode();
+			hashCode = hashCode * -1521134295 + _disabled.GetHashCode();
 			return hashCode;
 		}
 
@@ -444,9 +453,9 @@ namespace Terminal.Gui {
 		/// <param name="left"></param>
 		/// <param name="right"></param>
 		/// <returns><c>true</c> if the two objects are equivalent</returns>
-		public static bool operator == (ColorScheme left, ColorScheme right)
+		public static bool operator ==(ColorScheme left, ColorScheme right)
 		{
-			return EqualityComparer<ColorScheme>.Default.Equals (left, right);
+			return EqualityComparer<ColorScheme>.Default.Equals(left, right);
 		}
 
 		/// <summary>
@@ -455,29 +464,29 @@ namespace Terminal.Gui {
 		/// <param name="left"></param>
 		/// <param name="right"></param>
 		/// <returns><c>true</c> if the two objects are not equivalent</returns>
-		public static bool operator != (ColorScheme left, ColorScheme right)
+		public static bool operator !=(ColorScheme left, ColorScheme right)
 		{
 			return !(left == right);
 		}
 
-		internal void Initialize ()
+		internal void Initialize()
 		{
 			// If the new scheme was created before a driver was loaded, we need to re-make
 			// the attributes
 			if (!_normal.Initialized) {
-				_normal = new Attribute (_normal.Foreground, _normal.Background);
+				_normal = new Attribute(_normal.Foreground, _normal.Background);
 			}
 			if (!_focus.Initialized) {
-				_focus = new Attribute (_focus.Foreground, _focus.Background);
+				_focus = new Attribute(_focus.Foreground, _focus.Background);
 			}
 			if (!_hotNormal.Initialized) {
-				_hotNormal = new Attribute (_hotNormal.Foreground, _hotNormal.Background);
+				_hotNormal = new Attribute(_hotNormal.Foreground, _hotNormal.Background);
 			}
 			if (!_hotFocus.Initialized) {
-				_hotFocus = new Attribute (_hotFocus.Foreground, _hotFocus.Background);
+				_hotFocus = new Attribute(_hotFocus.Foreground, _hotFocus.Background);
 			}
 			if (!_disabled.Initialized) {
-				_disabled = new Attribute (_disabled.Foreground, _disabled.Background);
+				_disabled = new Attribute(_disabled.Foreground, _disabled.Background);
 			}
 		}
 	}
@@ -488,38 +497,40 @@ namespace Terminal.Gui {
 	/// <remarks>
 	/// This property can be set in a Theme to change the default <see cref="Colors"/> for the application.
 	/// </remarks>
-	public static class Colors {
-		private class SchemeNameComparerIgnoreCase : IEqualityComparer<string> {
-			public bool Equals (string x, string y)
+	public static class Colors
+	{
+		private class SchemeNameComparerIgnoreCase : IEqualityComparer<string>
+		{
+			public bool Equals(string x, string y)
 			{
 				if (x != null && y != null) {
-					return string.Equals (x, y, StringComparison.InvariantCultureIgnoreCase);
+					return string.Equals(x, y, StringComparison.InvariantCultureIgnoreCase);
 				}
 				return false;
 			}
 
-			public int GetHashCode (string obj)
+			public int GetHashCode(string obj)
 			{
-				return obj.ToLowerInvariant ().GetHashCode ();
+				return obj.ToLowerInvariant().GetHashCode();
 			}
 		}
 
-		static Colors ()
+		static Colors()
 		{
-			ColorSchemes = Create ();
+			ColorSchemes = Create();
 		}
 
 		/// <summary>
 		/// Creates a new dictionary of new <see cref="ColorScheme"/> objects.
 		/// </summary>
-		public static Dictionary<string, ColorScheme> Create ()
+		public static Dictionary<string, ColorScheme> Create()
 		{
 			// Use reflection to dynamically create the default set of ColorSchemes from the list defined 
 			// by the class. 
-			return typeof (Colors).GetProperties ()
-				.Where (p => p.PropertyType == typeof (ColorScheme))
-				.Select (p => new KeyValuePair<string, ColorScheme> (p.Name, new ColorScheme ()))
-				.ToDictionary (t => t.Key, t => t.Value, comparer: new SchemeNameComparerIgnoreCase ());
+			return typeof(Colors).GetProperties()
+				.Where(p => p.PropertyType == typeof(ColorScheme))
+				.Select(p => new KeyValuePair<string, ColorScheme>(p.Name, new ColorScheme()))
+				.ToDictionary(t => t.Key, t => t.Value, comparer: new SchemeNameComparerIgnoreCase());
 		}
 
 		/// <summary>
@@ -530,7 +541,7 @@ namespace Terminal.Gui {
 		///	This API will be deprecated in the future. Use <see cref="Colors.ColorSchemes"/> instead (e.g. <c>edit.ColorScheme = Colors.ColorSchemes["TopLevel"];</c>
 		/// </para>
 		/// </remarks>
-		public static ColorScheme TopLevel { get => GetColorScheme (); set => SetColorScheme (value); }
+		public static ColorScheme TopLevel { get => GetColorScheme(); set => SetColorScheme(value); }
 
 		/// <summary>
 		/// The base color scheme, for the default toplevel views.
@@ -540,7 +551,7 @@ namespace Terminal.Gui {
 		///	This API will be deprecated in the future. Use <see cref="Colors.ColorSchemes"/> instead (e.g. <c>edit.ColorScheme = Colors.ColorSchemes["Base"];</c>
 		/// </para>
 		/// </remarks>
-		public static ColorScheme Base { get => GetColorScheme (); set => SetColorScheme (value); }
+		public static ColorScheme Base { get => GetColorScheme(); set => SetColorScheme(value); }
 
 		/// <summary>
 		/// The dialog color scheme, for standard popup dialog boxes
@@ -550,7 +561,7 @@ namespace Terminal.Gui {
 		///	This API will be deprecated in the future. Use <see cref="Colors.ColorSchemes"/> instead (e.g. <c>edit.ColorScheme = Colors.ColorSchemes["Dialog"];</c>
 		/// </para>
 		/// </remarks>
-		public static ColorScheme Dialog { get => GetColorScheme (); set => SetColorScheme (value); }
+		public static ColorScheme Dialog { get => GetColorScheme(); set => SetColorScheme(value); }
 
 		/// <summary>
 		/// The menu bar color
@@ -560,7 +571,7 @@ namespace Terminal.Gui {
 		///	This API will be deprecated in the future. Use <see cref="Colors.ColorSchemes"/> instead (e.g. <c>edit.ColorScheme = Colors.ColorSchemes["Menu"];</c>
 		/// </para>
 		/// </remarks>
-		public static ColorScheme Menu { get => GetColorScheme (); set => SetColorScheme (value); }
+		public static ColorScheme Menu { get => GetColorScheme(); set => SetColorScheme(value); }
 
 		/// <summary>
 		/// The color scheme for showing errors.
@@ -570,16 +581,16 @@ namespace Terminal.Gui {
 		///	This API will be deprecated in the future. Use <see cref="Colors.ColorSchemes"/> instead (e.g. <c>edit.ColorScheme = Colors.ColorSchemes["Error"];</c>
 		/// </para>
 		/// </remarks>
-		public static ColorScheme Error { get => GetColorScheme (); set => SetColorScheme (value); }
+		public static ColorScheme Error { get => GetColorScheme(); set => SetColorScheme(value); }
 
-		static ColorScheme GetColorScheme ([CallerMemberName] string schemeBeingSet = null)
+		static ColorScheme GetColorScheme([CallerMemberName] string schemeBeingSet = null)
 		{
-			return ColorSchemes [schemeBeingSet];
+			return ColorSchemes[schemeBeingSet];
 		}
 
-		static void SetColorScheme (ColorScheme colorScheme, [CallerMemberName] string schemeBeingSet = null)
+		static void SetColorScheme(ColorScheme colorScheme, [CallerMemberName] string schemeBeingSet = null)
 		{
-			ColorSchemes [schemeBeingSet] = colorScheme;
+			ColorSchemes[schemeBeingSet] = colorScheme;
 			colorScheme.schemeBeingSet = schemeBeingSet;
 		}
 
@@ -600,7 +611,8 @@ namespace Terminal.Gui {
 	//     CC stand for the CONSOLE_CURSOR_INFO.bVisible parameter value to be used under Windows
 	//     DD stand for the CONSOLE_CURSOR_INFO.dwSize parameter value to be used under Windows
 	//
-	public enum CursorVisibility {
+	public enum CursorVisibility
+	{
 		/// <summary>
 		///	Cursor caret has default
 		/// </summary>
@@ -646,12 +658,13 @@ namespace Terminal.Gui {
 		/// <remarks>Works under Xterm-like terminal otherwise this is equivalent to <see ref="Block"/></remarks>
 		BoxFix = 0x02020164,
 	}
-	
+
 	/// <summary>
 	/// ConsoleDriver is an abstract class that defines the requirements for a console driver.  
 	/// There are currently three implementations: <see cref="CursesDriver"/> (for Unix and Mac), <see cref="WindowsDriver"/>, and <see cref="NetDriver"/> that uses the .NET Console API.
 	/// </summary>
-	public abstract class ConsoleDriver {
+	public abstract class ConsoleDriver
+	{
 		/// <summary>
 		/// The handler fired when the terminal is resized.
 		/// </summary>
@@ -698,36 +711,49 @@ namespace Terminal.Gui {
 		/// <remarks>
 		/// NOTE: Changes to Windows Terminal prevents this functionality from working. It only really worked on Windows 'conhost' previously.
 		/// </remarks>
-		[Obsolete ("This API is deprecated and has no impact when enabled.", false)]
+		[Obsolete("This API is deprecated and has no impact when enabled.", false)]
 		public abstract bool EnableConsoleScrolling { get; set; }
 		/// <summary>
 		/// This API is deprecated and has no impact when enabled.
 		/// </summary>
-		[Obsolete ("This API is deprecated and has no impact when enabled.", false)]
+		[Obsolete("This API is deprecated and has no impact when enabled.", false)]
 		public abstract bool HeightAsBuffer { get; set; }
-		
+
 		/// <summary>
 		/// The format is rows, columns and 3 values on the last column: Rune, Attribute and Dirty Flag
 		/// </summary>
-		public virtual int [,,] Contents { get; }
+		public virtual int[,,] Contents { get; }
 
 		/// <summary>
 		/// Initializes the driver
 		/// </summary>
 		/// <param name="terminalResized">Method to invoke when the terminal is resized.</param>
-		public abstract void Init (Action terminalResized);
+		public abstract void Init(Action terminalResized);
 		/// <summary>
 		/// Moves the cursor to the specified column and row.
 		/// </summary>
 		/// <param name="col">Column to move the cursor to.</param>
 		/// <param name="row">Row to move the cursor to.</param>
-		public abstract void Move (int col, int row);
+		public abstract void Move(int col, int row);
 
 		/// <summary>
 		/// Adds the specified rune to the display at the current cursor position.
 		/// </summary>
 		/// <param name="rune">Rune to add.</param>
-		public abstract void AddRune (Rune rune);
+		public abstract void AddRune(Rune rune);
+
+		/// <summary>
+		/// Adds the specified rune to the screen at the current cursor position the specified number of times.
+		/// </summary>
+		/// <param name="rune">Rune to add.</param>
+		/// <param name="num">Number of times.</param>
+		public virtual void AddRepeatedRune(Rune rune, int num)
+		{
+			if (num <= 0) return;
+
+			for (int i = 1; i <= num; i++)
+				AddRune(rune);
+		}
 
 		/// <summary>
 		/// Ensures a Rune is not a control character and can be displayed by translating characters below 0x20
@@ -735,12 +761,12 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="c">Rune to translate</param>
 		/// <returns></returns>
-		public static Rune MakePrintable (Rune c)
+		public static Rune MakePrintable(Rune c)
 		{
 			if (c <= 0x1F || (c >= 0X7F && c <= 0x9F)) {
 				// ASCII (C0) control characters.
 				// C1 control characters (https://www.aivosto.com/articles/control-characters.html#c1)
-				return new Rune (c + 0x2400);
+				return new Rune(c + 0x2400);
 			}
 
 			return c;
@@ -753,14 +779,23 @@ namespace Terminal.Gui {
 		/// <param name="row">The row.</param>
 		/// <param name="clip">The clip.</param>
 		/// <returns><c>true</c>if it's a valid range,<c>false</c>otherwise.</returns>
-		public bool IsValidContent (int col, int row, Rect clip) =>
-			col >= 0 && row >= 0 && col < Cols && row < Rows && clip.Contains (col, row);
+		public bool IsValidContent(int col, int row, Rect clip) =>
+			col >= 0 && row >= 0 && col < Cols && row < Rows && clip.Contains(col, row);
 
 		/// <summary>
 		/// Adds the <paramref name="str"/> to the display at the cursor position.
 		/// </summary>
 		/// <param name="str">String.</param>
-		public abstract void AddStr (ustring str);
+		public virtual void AddStr(string str)
+		{
+			if (string.IsNullOrEmpty(str))
+				return;
+
+			for (int i = 0; i < str.Length; i++) {
+				char rune = str[i];
+				AddRune(rune);
+			}
+		}
 
 		/// <summary>
 		/// Prepare the driver and set the key and mouse events handlers.
@@ -770,69 +805,70 @@ namespace Terminal.Gui {
 		/// <param name="keyDownHandler">The handler for key down events</param>
 		/// <param name="keyUpHandler">The handler for key up events</param>
 		/// <param name="mouseHandler">The handler for mouse events</param>
-		public abstract void PrepareToRun (MainLoop mainLoop, Action<KeyEvent> keyHandler, Action<KeyEvent> keyDownHandler, Action<KeyEvent> keyUpHandler, Action<MouseEvent> mouseHandler);
+		public abstract void PrepareToRun(MainLoop mainLoop, Action<KeyEvent> keyHandler, Action<KeyEvent> keyDownHandler, Action<KeyEvent> keyUpHandler, Action<MouseEvent> mouseHandler);
 
 		/// <summary>
 		/// Updates the screen to reflect all the changes that have been done to the display buffer
 		/// </summary>
-		public abstract void Refresh ();
+		public abstract void Refresh();
 
 		/// <summary>
 		/// Updates the location of the cursor position
 		/// </summary>
-		public abstract void UpdateCursor ();
+		public abstract void UpdateCursor();
 
 		/// <summary>
 		/// Retreive the cursor caret visibility
 		/// </summary>
 		/// <param name="visibility">The current <see cref="CursorVisibility"/></param>
 		/// <returns>true upon success</returns>
-		public abstract bool GetCursorVisibility (out CursorVisibility visibility);
+		public abstract bool GetCursorVisibility(out CursorVisibility visibility);
 
 		/// <summary>
 		/// Change the cursor caret visibility
 		/// </summary>
 		/// <param name="visibility">The wished <see cref="CursorVisibility"/></param>
 		/// <returns>true upon success</returns>
-		public abstract bool SetCursorVisibility (CursorVisibility visibility);
+		public abstract bool SetCursorVisibility(CursorVisibility visibility);
 
 		/// <summary>
 		/// Ensure the cursor visibility
 		/// </summary>
 		/// <returns>true upon success</returns>
-		public abstract bool EnsureCursorVisibility ();
+		public abstract bool EnsureCursorVisibility();
 
 		/// <summary>
 		/// Ends the execution of the console driver.
 		/// </summary>
-		public abstract void End ();
+		public abstract void End();
 
 		/// <summary>
 		/// Resizes the clip area when the screen is resized.
 		/// </summary>
-		public abstract void ResizeScreen ();
+		public abstract void ResizeScreen();
 
 		/// <summary>
 		/// Reset and recreate the contents and the driver buffer.
 		/// </summary>
-		public abstract void UpdateOffScreen ();
+		public abstract void UpdateOffScreen();
 
 		/// <summary>
 		/// Redraws the physical screen with the contents that have been queued up via any of the printing commands.
 		/// </summary>
-		public abstract void UpdateScreen ();
+		public abstract void UpdateScreen();
 
 		/// <summary>
 		/// The current attribute the driver is using. 
 		/// </summary>
-		public virtual Attribute CurrentAttribute {
+		public virtual Attribute CurrentAttribute
+		{
 			get => currentAttribute;
 			set {
 				if (!value.Initialized && value.HasValidColors && Application.Driver != null) {
-					CurrentAttribute = Application.Driver.MakeAttribute (value.Foreground, value.Background);
+					CurrentAttribute = Application.Driver.MakeAttribute(value.Foreground, value.Background);
 					return;
 				}
-				if (!value.Initialized) Debug.WriteLine ("ConsoleDriver.CurrentAttribute: Attributes must be initialized before use.");
+				if (!value.Initialized) Debug.WriteLine("ConsoleDriver.CurrentAttribute: Attributes must be initialized before use.");
 
 				currentAttribute = value;
 			}
@@ -845,7 +881,7 @@ namespace Terminal.Gui {
 		/// Implementations should call <c>base.SetAttribute(c)</c>.
 		/// </remarks>
 		/// <param name="c">C.</param>
-		public virtual void SetAttribute (Attribute c)
+		public virtual void SetAttribute(Attribute c)
 		{
 			CurrentAttribute = c;
 		}
@@ -855,7 +891,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="foreground">Foreground.</param>
 		/// <param name="background">Background.</param>
-		public abstract void SetColors (ConsoleColor foreground, ConsoleColor background);
+		public abstract void SetColors(ConsoleColor foreground, ConsoleColor background);
 
 		// Advanced uses - set colors to any pre-set pairs, you would need to init_color
 		// that independently with the R, G, B values.
@@ -865,7 +901,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="foregroundColorId">Foreground color identifier.</param>
 		/// <param name="backgroundColorId">Background color identifier.</param>
-		public abstract void SetColors (short foregroundColorId, short backgroundColorId);
+		public abstract void SetColors(short foregroundColorId, short backgroundColorId);
 
 		/// <summary>
 		/// Gets the foreground and background colors based on the value.
@@ -874,7 +910,7 @@ namespace Terminal.Gui {
 		/// <param name="foreground">The foreground.</param>
 		/// <param name="background">The background.</param>
 		/// <returns></returns>
-		public abstract bool GetColors (int value, out Color foreground, out Color background);
+		public abstract bool GetColors(int value, out Color foreground, out Color background);
 
 		/// <summary>
 		/// Allows sending keys without typing on a keyboard.
@@ -884,13 +920,13 @@ namespace Terminal.Gui {
 		/// <param name="shift">If shift key is sending.</param>
 		/// <param name="alt">If alt key is sending.</param>
 		/// <param name="control">If control key is sending.</param>
-		public abstract void SendKeys (char keyChar, ConsoleKey key, bool shift, bool alt, bool control);
+		public abstract void SendKeys(char keyChar, ConsoleKey key, bool shift, bool alt, bool control);
 
 		/// <summary>
 		/// Set the handler when the terminal is resized.
 		/// </summary>
 		/// <param name="terminalResized"></param>
-		public void SetTerminalResized (Action terminalResized)
+		public void SetTerminalResized(Action terminalResized)
 		{
 			TerminalResized = terminalResized;
 		}
@@ -906,16 +942,16 @@ namespace Terminal.Gui {
 		/// <param name="paddingBottom">Number of rows to pad on the bottom (if 0 the border will not appear on the bottom).</param>
 		/// <param name="textAlignment">Not yet implemented.</param>
 		/// <remarks></remarks>
-		public virtual void DrawWindowTitle (Rect region, ustring title, int paddingLeft, int paddingTop, int paddingRight, int paddingBottom, TextAlignment textAlignment = TextAlignment.Left)
+		public virtual void DrawWindowTitle(Rect region, string title, int paddingLeft, int paddingTop, int paddingRight, int paddingBottom, TextAlignment textAlignment = TextAlignment.Left)
 		{
 			var width = region.Width - (paddingLeft + 2) * 2;
-			if (!ustring.IsNullOrEmpty (title) && width > 4 && region.Y + paddingTop <= region.Y + paddingBottom) {
-				Move (region.X + 1 + paddingLeft, region.Y + paddingTop);
-				AddRune (' ');
-				var str = title.Sum (r => Math.Max (Rune.ColumnWidth (r), 1)) >= width
-					? TextFormatter.Format (title, width - 2, false, false) [0] : title;
-				AddStr (str);
-				AddRune (' ');
+			if (!string.IsNullOrEmpty(title) && width > 4 && region.Y + paddingTop <= region.Y + paddingBottom) {
+				Move(region.X + 1 + paddingLeft, region.Y + paddingTop);
+				AddRune(' ');
+				var str = title.Sum(r => Math.Max(Rune.ColumnWidth(r), 1)) >= width
+					? TextFormatter.Format(title, width - 2, false, false)[0] : title;
+				AddStr(str);
+				AddRune(' ');
 			}
 		}
 
@@ -923,7 +959,8 @@ namespace Terminal.Gui {
 		/// Enables diagnostic functions
 		/// </summary>
 		[Flags]
-		public enum DiagnosticFlags : uint {
+		public enum DiagnosticFlags : uint
+		{
 			/// <summary>
 			/// All diagnostics off
 			/// </summary>
@@ -956,7 +993,7 @@ namespace Terminal.Gui {
 		/// <param name="border">If set to <c>true</c> and any padding dimension is > 0 the border will be drawn.</param>
 		/// <param name="fill">If set to <c>true</c> it will clear the content area (the area inside the padding) with the current color, otherwise the content area will be left untouched.</param>
 		/// <param name="borderStyle">The <see cref="Border"/> to be used if defined.</param>
-		public virtual void DrawWindowFrame (Rect region, int paddingLeft = 0, int paddingTop = 0, int paddingRight = 0,
+		public virtual void DrawWindowFrame(Rect region, int paddingLeft = 0, int paddingTop = 0, int paddingRight = 0,
 			int paddingBottom = 0, bool border = true, bool fill = false, BorderStyle borderStyle = BorderStyle.Single)
 		{
 			char clearChar = ' ';
@@ -973,10 +1010,10 @@ namespace Terminal.Gui {
 				clearChar = 'C';
 			}
 
-			void AddRuneAt (int col, int row, Rune ch)
+			void AddRuneAt(int col, int row, Rune ch)
 			{
-				Move (col, row);
-				AddRune (ch);
+				Move(col, row);
+				AddRune(ch);
 			}
 
 			// fwidth is count of hLine chars
@@ -1037,32 +1074,32 @@ namespace Terminal.Gui {
 			if (paddingTop > 1) {
 				for (int r = region.Y; r < ftop; r++) {
 					for (int c = region.X; c < region.X + region.Width; c++) {
-						AddRuneAt (c, r, topChar);
+						AddRuneAt(c, r, topChar);
 					}
 				}
 			}
 
 			// Outside top-left
 			for (int c = region.X; c < fleft; c++) {
-				AddRuneAt (c, ftop, leftChar);
+				AddRuneAt(c, ftop, leftChar);
 			}
 
 			// Frame top-left corner
-			AddRuneAt (fleft, ftop, paddingTop >= 0 ? (paddingLeft >= 0 ? uLCorner : hLine) : leftChar);
+			AddRuneAt(fleft, ftop, paddingTop >= 0 ? (paddingLeft >= 0 ? uLCorner : hLine) : leftChar);
 
 			// Frame top
 			for (int c = fleft + 1; c < fleft + 1 + fwidth; c++) {
-				AddRuneAt (c, ftop, paddingTop > 0 ? hLine : topChar);
+				AddRuneAt(c, ftop, paddingTop > 0 ? hLine : topChar);
 			}
 
 			// Frame top-right corner
 			if (fright > fleft) {
-				AddRuneAt (fright, ftop, paddingTop >= 0 ? (paddingRight >= 0 ? uRCorner : hLine) : rightChar);
+				AddRuneAt(fright, ftop, paddingTop >= 0 ? (paddingRight >= 0 ? uRCorner : hLine) : rightChar);
 			}
 
 			// Outside top-right corner
 			for (int c = fright + 1; c < fright + paddingRight; c++) {
-				AddRuneAt (c, ftop, rightChar);
+				AddRuneAt(c, ftop, rightChar);
 			}
 
 			// Left, Fill, Right
@@ -1070,16 +1107,16 @@ namespace Terminal.Gui {
 				for (int r = ftop + 1; r < fbottom; r++) {
 					// Outside left
 					for (int c = region.X; c < fleft; c++) {
-						AddRuneAt (c, r, leftChar);
+						AddRuneAt(c, r, leftChar);
 					}
 
 					// Frame left
-					AddRuneAt (fleft, r, paddingLeft > 0 ? vLine : leftChar);
+					AddRuneAt(fleft, r, paddingLeft > 0 ? vLine : leftChar);
 
 					// Fill
 					if (fill) {
 						for (int x = fleft + 1; x < fright; x++) {
-							AddRuneAt (x, r, clearChar);
+							AddRuneAt(x, r, clearChar);
 						}
 					}
 
@@ -1089,22 +1126,22 @@ namespace Terminal.Gui {
 						if ((Diagnostics & DiagnosticFlags.FrameRuler) == DiagnosticFlags.FrameRuler) {
 							v = (char)(((int)'0') + ((r - ftop) % 10)); // vLine;
 						}
-						AddRuneAt (fright, r, paddingRight > 0 ? v : rightChar);
+						AddRuneAt(fright, r, paddingRight > 0 ? v : rightChar);
 					}
 
 					// Outside right
 					for (int c = fright + 1; c < fright + paddingRight; c++) {
-						AddRuneAt (c, r, rightChar);
+						AddRuneAt(c, r, rightChar);
 					}
 				}
 
 				// Outside Bottom
 				for (int c = region.X; c < region.X + region.Width; c++) {
-					AddRuneAt (c, fbottom, leftChar);
+					AddRuneAt(c, fbottom, leftChar);
 				}
 
 				// Frame bottom-left
-				AddRuneAt (fleft, fbottom, paddingLeft > 0 ? lLCorner : leftChar);
+				AddRuneAt(fleft, fbottom, paddingLeft > 0 ? lLCorner : leftChar);
 
 				if (fright > fleft) {
 					// Frame bottom
@@ -1113,16 +1150,16 @@ namespace Terminal.Gui {
 						if ((Diagnostics & DiagnosticFlags.FrameRuler) == DiagnosticFlags.FrameRuler) {
 							h = (char)(((int)'0') + ((c - fleft) % 10)); // hLine;
 						}
-						AddRuneAt (c, fbottom, paddingBottom > 0 ? h : bottomChar);
+						AddRuneAt(c, fbottom, paddingBottom > 0 ? h : bottomChar);
 					}
 
 					// Frame bottom-right
-					AddRuneAt (fright, fbottom, paddingRight > 0 ? (paddingBottom > 0 ? lRCorner : hLine) : rightChar);
+					AddRuneAt(fright, fbottom, paddingRight > 0 ? (paddingBottom > 0 ? lRCorner : hLine) : rightChar);
 				}
 
 				// Outside right
 				for (int c = fright + 1; c < fright + paddingRight; c++) {
-					AddRuneAt (c, fbottom, rightChar);
+					AddRuneAt(c, fbottom, rightChar);
 				}
 			}
 
@@ -1130,7 +1167,7 @@ namespace Terminal.Gui {
 			if (paddingBottom > 0) {
 				for (int r = fbottom + 1; r < fbottom + paddingBottom; r++) {
 					for (int c = region.X; c < region.X + region.Width; c++) {
-						AddRuneAt (c, r, bottomChar);
+						AddRuneAt(c, r, bottomChar);
 					}
 				}
 			}
@@ -1146,11 +1183,11 @@ namespace Terminal.Gui {
 		/// <remarks>This API is equivalent to calling <c>DrawWindowFrame(Rect, p - 1, p - 1, p - 1, p - 1)</c>. In other words,
 		/// A padding value of 0 means there is actually a one cell border.
 		/// </remarks>
-		public virtual void DrawFrame (Rect region, int padding, bool fill)
+		public virtual void DrawFrame(Rect region, int padding, bool fill)
 		{
 			// DrawFrame assumes the border is always at least one row/col thick
 			// DrawWindowFrame assumes a padding of 0 means NO padding and no frame
-			DrawWindowFrame (new Rect (region.X, region.Y, region.Width, region.Height),
+			DrawWindowFrame(new Rect(region.X, region.Y, region.Width, region.Height),
 				padding + 1, padding + 1, padding + 1, padding + 1, border: false, fill: fill);
 		}
 
@@ -1158,7 +1195,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Suspend the application, typically needs to save the state, suspend the app and upon return, reset the console driver.
 		/// </summary>
-		public abstract void Suspend ();
+		public abstract void Suspend();
 
 		Rect clip;
 
@@ -1166,7 +1203,8 @@ namespace Terminal.Gui {
 		/// Controls the current clipping region that AddRune/AddStr is subject to.
 		/// </summary>
 		/// <value>The clip.</value>
-		public Rect Clip {
+		public Rect Clip
+		{
 			get => clip;
 			set => this.clip = value;
 		}
@@ -1174,213 +1212,214 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Start of mouse moves.
 		/// </summary>
-		public abstract void StartReportingMouseMoves ();
+		public abstract void StartReportingMouseMoves();
 
 		/// <summary>
 		/// Stop reporting mouses moves.
 		/// </summary>
-		public abstract void StopReportingMouseMoves ();
+		public abstract void StopReportingMouseMoves();
 
 		/// <summary>
 		/// Disables the cooked event processing from the mouse driver. 
 		/// At startup, it is assumed mouse events are cooked. Not implemented by any driver: See Issue #2300.
 		/// </summary>
-		public abstract void UncookMouse ();
+		public abstract void UncookMouse();
 
 		/// <summary>
 		/// Enables the cooked event processing from the mouse driver. Not implemented by any driver: See Issue #2300.
 		/// </summary>
-		public abstract void CookMouse ();
+		public abstract void CookMouse();
 
 		/// <summary>
 		/// Horizontal line character.
 		/// </summary>
-		public Rune HLine = '\u2500';
+		public char HLine = '\u2500';
 
 		/// <summary>
 		/// Vertical line character.
 		/// </summary>
-		public Rune VLine = '\u2502';
+		public char VLine = '\u2502';
 
 		/// <summary>
 		/// Stipple pattern
 		/// </summary>
-		public Rune Stipple = '\u2591';
+		public char Stipple = '\u2591';
 
 		/// <summary>
 		/// Diamond character
 		/// </summary>
-		public Rune Diamond = '\u25ca';
+		public char Diamond = '\u25ca';
 
 		/// <summary>
 		/// Upper left corner
 		/// </summary>
-		public Rune ULCorner = '\u250C';
+		public char ULCorner = '\u250C';
 
 		/// <summary>
 		/// Lower left corner
 		/// </summary>
-		public Rune LLCorner = '\u2514';
+		public char LLCorner = '\u2514';
 
 		/// <summary>
 		/// Upper right corner
 		/// </summary>
-		public Rune URCorner = '\u2510';
+		public char URCorner = '\u2510';
 
 		/// <summary>
 		/// Lower right corner
 		/// </summary>
-		public Rune LRCorner = '\u2518';
+		public char LRCorner = '\u2518';
 
 		/// <summary>
 		/// Left tee
 		/// </summary>
-		public Rune LeftTee = '\u251c';
+		public char LeftTee = '\u251c';
 
 		/// <summary>
 		/// Right tee
 		/// </summary>
-		public Rune RightTee = '\u2524';
+		public char RightTee = '\u2524';
 
 		/// <summary>
 		/// Top tee
 		/// </summary>
-		public Rune TopTee = '\u252c';
+		public char TopTee = '\u252c';
 
 		/// <summary>
 		/// The bottom tee.
 		/// </summary>
-		public Rune BottomTee = '\u2534';
+		public char BottomTee = '\u2534';
 
 		/// <summary>
 		/// Checkmark.
 		/// </summary>
-		public Rune Checked = '\u221a';
+		public char Checked = '\u221a';
 
 		/// <summary>
 		/// Un-checked checkmark.
 		/// </summary>
-		public Rune UnChecked = '\u2574';
+		public char UnChecked = '\u2574';
 
 		/// <summary>
 		/// Selected mark.
 		/// </summary>
-		public Rune Selected = '\u25cf';
+		public char Selected = '\u25cf';
 
 		/// <summary>
 		/// Un-selected selected mark.
 		/// </summary>
-		public Rune UnSelected = '\u25cc';
+		public char UnSelected = '\u25cc';
 
 		/// <summary>
 		/// Right Arrow.
 		/// </summary>
-		public Rune RightArrow = '\u25ba';
+		public char RightArrow = '\u25ba';
 
 		/// <summary>
 		/// Left Arrow.
 		/// </summary>
-		public Rune LeftArrow = '\u25c4';
+		public char LeftArrow = '\u25c4';
 
 		/// <summary>
 		/// Down Arrow.
 		/// </summary>
-		public Rune DownArrow = '\u25bc';
+		public char DownArrow = '\u25bc';
 
 		/// <summary>
 		/// Up Arrow.
 		/// </summary>
-		public Rune UpArrow = '\u25b2';
+		public char UpArrow = '\u25b2';
 
 		/// <summary>
 		/// Left indicator for default action (e.g. for <see cref="Button"/>).
 		/// </summary>
-		public Rune LeftDefaultIndicator = '\u25e6';
+		public char LeftDefaultIndicator = '\u25e6';
 
 		/// <summary>
 		/// Right indicator for default action (e.g. for <see cref="Button"/>).
 		/// </summary>
-		public Rune RightDefaultIndicator = '\u25e6';
+		public char RightDefaultIndicator = '\u25e6';
 
 		/// <summary>
 		/// Left frame/bracket (e.g. '[' for <see cref="Button"/>).
 		/// </summary>
-		public Rune LeftBracket = '[';
+		public char LeftBracket = '[';
 
 		/// <summary>
 		/// Right frame/bracket (e.g. ']' for <see cref="Button"/>).
 		/// </summary>
-		public Rune RightBracket = ']';
+		public char RightBracket = ']';
 
 		/// <summary>
 		/// Blocks Segment indicator for meter views (e.g. <see cref="ProgressBar"/>.
 		/// </summary>
-		public Rune BlocksMeterSegment = '\u258c';
+		public char BlocksMeterSegment = '\u258c';
 
 		/// <summary>
 		/// Continuous Segment indicator for meter views (e.g. <see cref="ProgressBar"/>.
 		/// </summary>
-		public Rune ContinuousMeterSegment = '\u2588';
+		public char ContinuousMeterSegment = '\u2588';
 
 		/// <summary>
 		/// Horizontal double line character.
 		/// </summary>
-		public Rune HDLine = '\u2550';
+		public char HDLine = '\u2550';
 
 		/// <summary>
 		/// Vertical double line character.
 		/// </summary>
-		public Rune VDLine = '\u2551';
+		public char VDLine = '\u2551';
 
 		/// <summary>
 		/// Upper left double corner
 		/// </summary>
-		public Rune ULDCorner = '\u2554';
+		public char ULDCorner = '\u2554';
 
 		/// <summary>
 		/// Lower left double corner
 		/// </summary>
-		public Rune LLDCorner = '\u255a';
+		public char LLDCorner = '\u255a';
 
 		/// <summary>
 		/// Upper right double corner
 		/// </summary>
-		public Rune URDCorner = '\u2557';
+		public char URDCorner = '\u2557';
 
 		/// <summary>
 		/// Lower right double corner
 		/// </summary>
-		public Rune LRDCorner = '\u255d';
+		public char LRDCorner = '\u255d';
 
 		/// <summary>
 		/// Horizontal line character for rounded corners.
 		/// </summary>
-		public Rune HRLine = '\u2500';
+		public char HRLine = '\u2500';
 
 		/// <summary>
 		/// Vertical line character for rounded corners.
 		/// </summary>
-		public Rune VRLine = '\u2502';
+		public char VRLine = '\u2502';
 
 		/// <summary>
 		/// Upper left rounded corner
 		/// </summary>
-		public Rune ULRCorner = '\u256d';
+		public char ULRCorner = '\u256d';
 
 		/// <summary>
 		/// Lower left rounded corner
 		/// </summary>
-		public Rune LLRCorner = '\u2570';
+		public char LLRCorner = '\u2570';
 
 		/// <summary>
 		/// Upper right rounded corner
 		/// </summary>
-		public Rune URRCorner = '\u256e';
+		public char URRCorner = '\u256e';
 
 		/// <summary>
 		/// Lower right rounded corner
 		/// </summary>
-		public Rune LRRCorner = '\u256f';
+		public char LRRCorner = '\u256f';
+
 		private Attribute currentAttribute;
 
 		/// <summary>
@@ -1389,13 +1428,13 @@ namespace Terminal.Gui {
 		/// <param name="fore">Foreground.</param>
 		/// <param name="back">Background.</param>
 		/// <returns></returns>
-		public abstract Attribute MakeAttribute (Color fore, Color back);
+		public abstract Attribute MakeAttribute(Color fore, Color back);
 
 		/// <summary>
 		/// Gets the current <see cref="Attribute"/>.
 		/// </summary>
 		/// <returns>The current attribute.</returns>
-		public Attribute GetAttribute () => CurrentAttribute;
+		public Attribute GetAttribute() => CurrentAttribute;
 
 		/// <summary>
 		/// Make the <see cref="Colors"/> for the <see cref="ColorScheme"/>.
@@ -1403,18 +1442,18 @@ namespace Terminal.Gui {
 		/// <param name="foreground">The foreground color.</param>
 		/// <param name="background">The background color.</param>
 		/// <returns>The attribute for the foreground and background colors.</returns>
-		public abstract Attribute MakeColor (Color foreground, Color background);
+		public abstract Attribute MakeColor(Color foreground, Color background);
 
 		/// <summary>
 		/// Ensures all <see cref="Attribute"/>s in <see cref="Colors.ColorSchemes"/> are correctly 
 		/// initialized by the driver.
 		/// </summary>
 		/// <param name="supportsColors">Flag indicating if colors are supported (not used).</param>
-		public void InitalizeColorSchemes (bool supportsColors = true)
+		public void InitalizeColorSchemes(bool supportsColors = true)
 		{
 			// Ensure all Attributes are initialized by the driver
 			foreach (var s in Colors.ColorSchemes) {
-				s.Value.Initialize ();
+				s.Value.Initialize();
 			}
 
 			if (!supportsColors) {
@@ -1424,35 +1463,35 @@ namespace Terminal.Gui {
 
 			// Define the default color theme only if the user has not defined one.
 
-			Colors.TopLevel.Normal = MakeColor (Color.BrightGreen, Color.Black);
-			Colors.TopLevel.Focus = MakeColor (Color.White, Color.Cyan);
-			Colors.TopLevel.HotNormal = MakeColor (Color.Brown, Color.Black);
-			Colors.TopLevel.HotFocus = MakeColor (Color.Blue, Color.Cyan);
-			Colors.TopLevel.Disabled = MakeColor (Color.DarkGray, Color.Black);
+			Colors.TopLevel.Normal = MakeColor(Color.BrightGreen, Color.Black);
+			Colors.TopLevel.Focus = MakeColor(Color.White, Color.Cyan);
+			Colors.TopLevel.HotNormal = MakeColor(Color.Brown, Color.Black);
+			Colors.TopLevel.HotFocus = MakeColor(Color.Blue, Color.Cyan);
+			Colors.TopLevel.Disabled = MakeColor(Color.DarkGray, Color.Black);
 
-			Colors.Base.Normal = MakeColor (Color.White, Color.Blue);
-			Colors.Base.Focus = MakeColor (Color.Black, Color.Gray);
-			Colors.Base.HotNormal = MakeColor (Color.BrightCyan, Color.Blue);
-			Colors.Base.HotFocus = MakeColor (Color.BrightBlue, Color.Gray);
-			Colors.Base.Disabled = MakeColor (Color.DarkGray, Color.Blue);
+			Colors.Base.Normal = MakeColor(Color.White, Color.Blue);
+			Colors.Base.Focus = MakeColor(Color.Black, Color.Gray);
+			Colors.Base.HotNormal = MakeColor(Color.BrightCyan, Color.Blue);
+			Colors.Base.HotFocus = MakeColor(Color.BrightBlue, Color.Gray);
+			Colors.Base.Disabled = MakeColor(Color.DarkGray, Color.Blue);
 
-			Colors.Dialog.Normal = MakeColor (Color.Black, Color.Gray);
-			Colors.Dialog.Focus = MakeColor (Color.White, Color.DarkGray);
-			Colors.Dialog.HotNormal = MakeColor (Color.Blue, Color.Gray);
-			Colors.Dialog.HotFocus = MakeColor (Color.BrightYellow, Color.DarkGray);
-			Colors.Dialog.Disabled = MakeColor (Color.Gray, Color.DarkGray);
+			Colors.Dialog.Normal = MakeColor(Color.Black, Color.Gray);
+			Colors.Dialog.Focus = MakeColor(Color.White, Color.DarkGray);
+			Colors.Dialog.HotNormal = MakeColor(Color.Blue, Color.Gray);
+			Colors.Dialog.HotFocus = MakeColor(Color.BrightYellow, Color.DarkGray);
+			Colors.Dialog.Disabled = MakeColor(Color.Gray, Color.DarkGray);
 
-			Colors.Menu.Normal = MakeColor (Color.White, Color.DarkGray);
-			Colors.Menu.Focus = MakeColor (Color.White, Color.Black);
-			Colors.Menu.HotNormal = MakeColor (Color.BrightYellow, Color.DarkGray);
-			Colors.Menu.HotFocus = MakeColor (Color.BrightYellow, Color.Black);
-			Colors.Menu.Disabled = MakeColor (Color.Gray, Color.DarkGray);
+			Colors.Menu.Normal = MakeColor(Color.White, Color.DarkGray);
+			Colors.Menu.Focus = MakeColor(Color.White, Color.Black);
+			Colors.Menu.HotNormal = MakeColor(Color.BrightYellow, Color.DarkGray);
+			Colors.Menu.HotFocus = MakeColor(Color.BrightYellow, Color.Black);
+			Colors.Menu.Disabled = MakeColor(Color.Gray, Color.DarkGray);
 
-			Colors.Error.Normal = MakeColor (Color.Red, Color.White);
-			Colors.Error.Focus = MakeColor (Color.Black, Color.BrightRed);
-			Colors.Error.HotNormal = MakeColor (Color.Black, Color.White);
-			Colors.Error.HotFocus = MakeColor (Color.White, Color.BrightRed);
-			Colors.Error.Disabled = MakeColor (Color.DarkGray, Color.White);
+			Colors.Error.Normal = MakeColor(Color.Red, Color.White);
+			Colors.Error.Focus = MakeColor(Color.Black, Color.BrightRed);
+			Colors.Error.HotNormal = MakeColor(Color.Black, Color.White);
+			Colors.Error.HotFocus = MakeColor(Color.White, Color.BrightRed);
+			Colors.Error.Disabled = MakeColor(Color.DarkGray, Color.White);
 		}
 	}
 
@@ -1461,16 +1500,17 @@ namespace Terminal.Gui {
 	/// Used primarily by CursesDriver, but also used in Unit tests which is why it is in
 	/// ConsoleDriver.cs.
 	/// </summary>
-	internal static class ClipboardProcessRunner {
-		public static (int exitCode, string result) Bash (string commandLine, string inputText = "", bool waitForOutput = false)
+	internal static class ClipboardProcessRunner
+	{
+		public static (int exitCode, string result) Bash(string commandLine, string inputText = "", bool waitForOutput = false)
 		{
 			var arguments = $"-c \"{commandLine}\"";
-			var (exitCode, result) = Process ("bash", arguments, inputText, waitForOutput);
+			var (exitCode, result) = Process("bash", arguments, inputText, waitForOutput);
 
-			return (exitCode, result.TrimEnd ());
+			return (exitCode, result.TrimEnd());
 		}
 
-		public static (int exitCode, string result) Process (string cmd, string arguments, string input = null, bool waitForOutput = true)
+		public static (int exitCode, string result) Process(string cmd, string arguments, string input = null, bool waitForOutput = true)
 		{
 			var output = string.Empty;
 
@@ -1485,44 +1525,44 @@ namespace Terminal.Gui {
 					CreateNoWindow = true,
 				}
 			}) {
-				var eventHandled = new TaskCompletionSource<bool> ();
-				process.Start ();
-				if (!string.IsNullOrEmpty (input)) {
-					process.StandardInput.Write (input);
-					process.StandardInput.Close ();
+				var eventHandled = new TaskCompletionSource<bool>();
+				process.Start();
+				if (!string.IsNullOrEmpty(input)) {
+					process.StandardInput.Write(input);
+					process.StandardInput.Close();
 				}
 
-				if (!process.WaitForExit (10000)) {
+				if (!process.WaitForExit(10000)) {
 					var timeoutError = $@"Process timed out. Command line: {process.StartInfo.FileName} {process.StartInfo.Arguments}.";
-					throw new TimeoutException (timeoutError);
+					throw new TimeoutException(timeoutError);
 				}
 
-				if (waitForOutput && process.StandardOutput.Peek () != -1) {
-					output = process.StandardOutput.ReadToEnd ();
+				if (waitForOutput && process.StandardOutput.Peek() != -1) {
+					output = process.StandardOutput.ReadToEnd();
 				}
 
 				if (process.ExitCode > 0) {
 					output = $@"Process failed to run. Command line: {cmd} {arguments}.
 										Output: {output}
-										Error: {process.StandardError.ReadToEnd ()}";
+										Error: {process.StandardError.ReadToEnd()}";
 				}
 
 				return (process.ExitCode, output);
 			}
 		}
 
-		public static bool DoubleWaitForExit (this System.Diagnostics.Process process)
+		public static bool DoubleWaitForExit(this System.Diagnostics.Process process)
 		{
-			var result = process.WaitForExit (500);
+			var result = process.WaitForExit(500);
 			if (result) {
-				process.WaitForExit ();
+				process.WaitForExit();
 			}
 			return result;
 		}
 
-		public static bool FileExists (this string value)
+		public static bool FileExists(this string value)
 		{
-			return !string.IsNullOrEmpty (value) && !value.Contains ("not found");
+			return !string.IsNullOrEmpty(value) && !value.Contains("not found");
 		}
 	}
 }

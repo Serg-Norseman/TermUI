@@ -1,12 +1,14 @@
 ﻿using System;
 using Terminal.Gui.Graphs;
 
-namespace Terminal.Gui {
-	
+namespace Terminal.Gui
+{
+
 	/// <summary>
 	/// A straight line control either horizontal or vertical
 	/// </summary>
-	public class LineView : View {
+	public class LineView : View
+	{
 
 		/// <summary>
 		/// The rune to display at the start of the line (left end of horizontal line or top end of vertical)
@@ -34,7 +36,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Creates a horizontal line
 		/// </summary>
-		public LineView () : this(Orientation.Horizontal)
+		public LineView() : this(Orientation.Horizontal)
 		{
 
 		}
@@ -42,24 +44,24 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Creates a horizontal or vertical line based on <paramref name="orientation"/>
 		/// </summary>
-		public LineView (Orientation orientation)
+		public LineView(Orientation orientation)
 		{
 			CanFocus = false;
 
 			switch (orientation) {
 			case Orientation.Horizontal:
 				Height = 1;
-				Width = Dim.Fill ();
+				Width = Dim.Fill();
 				LineRune = Driver.HLine;
 
 				break;
 			case Orientation.Vertical:
-				Height = Dim.Fill ();
+				Height = Dim.Fill();
 				Width = 1;
 				LineRune = Driver.VLine;
 				break;
 			default:
-				throw new ArgumentException ($"Unknown Orientation {orientation}");
+				throw new ArgumentException($"Unknown Orientation {orientation}");
 			}
 			Orientation = orientation;
 		}
@@ -68,38 +70,37 @@ namespace Terminal.Gui {
 		/// Draws the line including any starting/ending anchors
 		/// </summary>
 		/// <param name="bounds"></param>
-		public override void Redraw (Rect bounds)
+		public override void Redraw(Rect bounds)
 		{
-			base.Redraw (bounds);
+			base.Redraw(bounds);
 
-			Move (0, 0);
-			Driver.SetAttribute (GetNormalColor ());
+			Move(0, 0);
+			Driver.SetAttribute(GetNormalColor());
 
-			var hLineWidth = Math.Max (1, Rune.ColumnWidth (Driver.HLine));
+			var hLineWidth = Math.Max(1, Rune.ColumnWidth(Driver.HLine));
 
 			var dEnd = Orientation == Orientation.Horizontal ?
 				bounds.Width :
 				bounds.Height;
 
 			for (int d = 0; d < dEnd; d += hLineWidth) {
-				
-				if(Orientation == Orientation.Horizontal) {
-					Move (d, 0);
-				}
-				else {
-					Move (0,d);
+
+				if (Orientation == Orientation.Horizontal) {
+					Move(d, 0);
+				} else {
+					Move(0, d);
 				}
 
 				Rune rune = LineRune;
 
-				if(d == 0) {
+				if (d == 0) {
 					rune = StartingAnchor ?? LineRune;
 				} else
 				if (d == dEnd - 1) {
 					rune = EndingAnchor ?? LineRune;
 				}
 
-				Driver.AddRune (rune);
+				Driver.AddRune(rune);
 			}
 		}
 	}

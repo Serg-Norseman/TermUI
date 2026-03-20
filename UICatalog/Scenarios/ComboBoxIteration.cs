@@ -136,7 +136,7 @@ namespace UICatalog.Scenarios {
 			};
 
 			var borderStyleEnum = Enum.GetValues (typeof (BorderStyle)).Cast<BorderStyle> ().ToList ();
-			var rbBorderStyle = new RadioGroup (borderStyleEnum.Select (e => NStack.ustring.Make (e.ToString ())).ToArray ()) {
+			var rbBorderStyle = new RadioGroup (borderStyleEnum.Select (e => e.ToString ()).ToArray ()) {
 				X = Pos.Left (chkReadOnly),
 				Y = Pos.Bottom (btnThree) + 7,
 				SelectedItem = (int)comboBox.DropDownBorderStyle

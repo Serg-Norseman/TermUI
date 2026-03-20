@@ -1,14 +1,10 @@
 ﻿#define DRAW_CONTENT
 //#define BASE_DRAW_CONTENT
 
-using Microsoft.VisualBasic;
-using NStack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Terminal.Gui;
-using Terminal.Gui.Resources;
 using Rune = System.Rune;
 
 namespace UICatalog.Scenarios {
@@ -62,13 +58,13 @@ namespace UICatalog.Scenarios {
 				_charMap.SelectedGlyph = result;
 			};
 
-			var radioItems = new (ustring radioLabel, uint start, uint end) [UnicodeRange.Ranges.Count];
+			var radioItems = new (string radioLabel, uint start, uint end) [UnicodeRange.Ranges.Count];
 
 			for (var i = 0; i < UnicodeRange.Ranges.Count; i++) {
 				var range = UnicodeRange.Ranges [i];
 				radioItems [i] = CreateRadio (range.Category, range.Start, range.End);
 			}
-			(ustring radioLabel, uint start, uint end) CreateRadio (ustring title, uint start, uint end)
+			(string radioLabel, uint start, uint end) CreateRadio (string title, uint start, uint end)
 			{
 				return ($"{title} (U+{start:x5}-{end:x5})", start, end);
 			}
@@ -236,7 +232,7 @@ namespace UICatalog.Scenarios {
 			}
 			Driver.SetAttribute (HasFocus ? ColorScheme.HotFocus : ColorScheme.Focus);
 			Move (0, 0);
-			Driver.AddStr (new string (' ', RowLabelWidth + 1));
+			Driver.AddRepeatedRune (' ', RowLabelWidth + 1);
 			for (int hexDigit = 0; hexDigit < 16; hexDigit++) {
 				var x = ContentOffset.X + RowLabelWidth + (hexDigit * COLUMN_WIDTH);
 				if (x > RowLabelWidth - 2) {
@@ -250,7 +246,7 @@ namespace UICatalog.Scenarios {
 				int val = (row) * 16;
 				Driver.SetAttribute (GetNormalColor ());
 				Move (firstColumnX, y + 1);
-				Driver.AddStr (new string (' ', 16 * COLUMN_WIDTH));
+				Driver.AddRepeatedRune (' ', 16 * COLUMN_WIDTH);
 				if (val <= MaxCodePointVal) {
 					Driver.SetAttribute (GetNormalColor ());
 					for (int col = 0; col < 16; col++) {

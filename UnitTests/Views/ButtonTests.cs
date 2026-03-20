@@ -179,10 +179,10 @@ namespace Terminal.Gui.ViewTests {
 		{
 			View b = new Button () { Text = "heya" };
 			Assert.Equal ("heya", b.Text);
-			Assert.True (b.TextFormatter.Text.Contains ("heya"));
+			Assert.True (b.TextFormatter.Text.Contains("heya"));
 			b.Text = "heyb";
 			Assert.Equal ("heyb", b.Text);
-			Assert.True (b.TextFormatter.Text.Contains ("heyb"));
+			Assert.True(b.TextFormatter.Text.Contains("heyb"));
 
 			// with cast
 			Assert.Equal ("heyb", ((Button)b).Text);
@@ -433,7 +433,7 @@ namespace Terminal.Gui.ViewTests {
 				X = Pos.Right (txtToFind) + 1,
 				Y = Pos.Top (label),
 				Width = 20,
-				Enabled = !txtToFind.Text.IsEmpty,
+				Enabled = !string.IsNullOrEmpty (txtToFind.Text),
 				TextAlignment = TextAlignment.Centered,
 				IsDefault = true,
 				AutoSize = false
@@ -444,7 +444,7 @@ namespace Terminal.Gui.ViewTests {
 				X = Pos.Right (txtToFind) + 1,
 				Y = Pos.Top (btnFindNext) + 1,
 				Width = 20,
-				Enabled = !txtToFind.Text.IsEmpty,
+				Enabled = !string.IsNullOrEmpty(txtToFind.Text),
 				TextAlignment = TextAlignment.Centered,
 				AutoSize = false
 			};

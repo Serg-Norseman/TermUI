@@ -25,6 +25,7 @@ namespace Terminal.Gui.ViewTests {
 		public class TextViewTestsAutoInitShutdown : AutoInitShutdownAttribute {
 
 			public static string txt = "TAB to jump between text fields.";
+
 			public override void Before (MethodInfo methodUnderTest)
 			{
 				base.Before (methodUnderTest);
@@ -37,7 +38,7 @@ namespace Terminal.Gui.ViewTests {
 				}
 				var ms = new System.IO.MemoryStream (buff).ToArray ();
 				_textView = new TextView () { Width = 30, Height = 10 };
-				_textView.Text = ms;
+				_textView.Text = System.Text.Encoding.ASCII.GetString (ms);
 			}
 
 			public override void After (MethodInfo methodUnderTest)
@@ -941,26 +942,26 @@ namespace Terminal.Gui.ViewTests {
 					_textView.ProcessKey (new KeyEvent (Key.K | Key.CtrlMask, new KeyModifiers ()));
 					Assert.Equal (0, _textView.CursorPosition.X);
 					Assert.Equal (0, _textView.CursorPosition.Y);
-					Assert.Equal ($"{Environment.NewLine}This is the second line.", _textView.Text.ToString ());
-					Assert.Equal ("This is the first line.", Clipboard.Contents.ToString ());
+					Assert.Equal ($"{Environment.NewLine}This is the second line.", _textView.Text);
+					Assert.Equal ("This is the first line.", Clipboard.Contents);
 					break;
 				case 1:
 					_textView.ProcessKey (new KeyEvent (Key.DeleteChar | Key.CtrlMask | Key.ShiftMask, new KeyModifiers ()));
 					Assert.Equal (0, _textView.CursorPosition.X);
 					Assert.Equal (0, _textView.CursorPosition.Y);
-					Assert.Equal ("This is the second line.", _textView.Text.ToString ());
-					Assert.Equal ($"This is the first line.{Environment.NewLine}", Clipboard.Contents.ToString ());
+					Assert.Equal ("This is the second line.", _textView.Text);
+					Assert.Equal ($"This is the first line.{Environment.NewLine}", Clipboard.Contents);
 					break;
 				case 2:
 					_textView.ProcessKey (new KeyEvent (Key.K | Key.CtrlMask, new KeyModifiers ()));
 					Assert.Equal (0, _textView.CursorPosition.X);
 					Assert.Equal (0, _textView.CursorPosition.Y);
-					Assert.Equal ("", _textView.Text.ToString ());
-					Assert.Equal ($"This is the first line.{Environment.NewLine}This is the second line.", Clipboard.Contents.ToString ());
+					Assert.Equal ("", _textView.Text);
+					Assert.Equal ($"This is the first line.{Environment.NewLine}This is the second line.", Clipboard.Contents);
 
 					// Paste
 					_textView.ProcessKey (new KeyEvent (Key.Y | Key.CtrlMask, new KeyModifiers ()));
-					Assert.Equal ($"This is the first line.{Environment.NewLine}This is the second line.", _textView.Text.ToString ());
+					Assert.Equal ($"This is the first line.{Environment.NewLine}This is the second line.", _textView.Text);
 					break;
 				default:
 					iterationsFinished = true;
@@ -985,26 +986,26 @@ namespace Terminal.Gui.ViewTests {
 					_textView.ProcessKey (new KeyEvent (Key.K | Key.AltMask, new KeyModifiers ()));
 					Assert.Equal (0, _textView.CursorPosition.X);
 					Assert.Equal (1, _textView.CursorPosition.Y);
-					Assert.Equal ($"This is the first line.{Environment.NewLine}", _textView.Text.ToString ());
-					Assert.Equal ($"This is the second line.", Clipboard.Contents.ToString ());
+					Assert.Equal ($"This is the first line.{Environment.NewLine}", _textView.Text);
+					Assert.Equal ($"This is the second line.", Clipboard.Contents);
 					break;
 				case 1:
 					_textView.ProcessKey (new KeyEvent (Key.Backspace | Key.CtrlMask | Key.ShiftMask, new KeyModifiers ()));
 					Assert.Equal (23, _textView.CursorPosition.X);
 					Assert.Equal (0, _textView.CursorPosition.Y);
-					Assert.Equal ("This is the first line.", _textView.Text.ToString ());
-					Assert.Equal ($"This is the second line.{Environment.NewLine}", Clipboard.Contents.ToString ());
+					Assert.Equal ("This is the first line.", _textView.Text);
+					Assert.Equal ($"This is the second line.{Environment.NewLine}", Clipboard.Contents);
 					break;
 				case 2:
 					_textView.ProcessKey (new KeyEvent (Key.K | Key.AltMask, new KeyModifiers ()));
 					Assert.Equal (0, _textView.CursorPosition.X);
 					Assert.Equal (0, _textView.CursorPosition.Y);
-					Assert.Equal ("", _textView.Text.ToString ());
-					Assert.Equal ($"This is the second line.{Environment.NewLine}This is the first line.", Clipboard.Contents.ToString ());
+					Assert.Equal ("", _textView.Text);
+					Assert.Equal ($"This is the second line.{Environment.NewLine}This is the first line.", Clipboard.Contents);
 
 					// Paste inverted
 					_textView.ProcessKey (new KeyEvent (Key.Y | Key.CtrlMask, new KeyModifiers ()));
-					Assert.Equal ($"This is the second line.{Environment.NewLine}This is the first line.", _textView.Text.ToString ());
+					Assert.Equal ($"This is the second line.{Environment.NewLine}This is the first line.", _textView.Text);
 					break;
 				default:
 					iterationsFinished = true;
@@ -1298,6 +1299,7 @@ namespace Terminal.Gui.ViewTests {
 			_textView.ProcessKey (new KeyEvent (Key.C | Key.CtrlMask, new KeyModifiers ())); // Copy
 			Assert.Equal ("text", _textView.SelectedText);
 			Assert.Equal ("TAB to jump between text fields.", _textView.Text);
+			Assert.Equal ("text", Clipboard.Contents);
 			_textView.ProcessKey (new KeyEvent (Key.Y | Key.CtrlMask, new KeyModifiers ())); // Paste
 			Assert.Equal ("TAB to jump between text fields.", _textView.Text);
 			_textView.SelectionStartColumn = 20;
@@ -1448,14 +1450,14 @@ namespace Terminal.Gui.ViewTests {
 			_textView.CursorPosition = new Point (0, _textView.Lines - 1);
 			_textView.ProcessKey (new KeyEvent (Key.C | Key.CtrlMask, new KeyModifiers ())); // Copy
 			_textView.ProcessKey (new KeyEvent (Key.Y | Key.CtrlMask, new KeyModifiers ())); // Paste
-			Assert.Equal ($"This is the first line.{Environment.NewLine}This is the second line.{Environment.NewLine}{Environment.NewLine}", _textView.Text);
+			Assert.Equal ($"This is the first line.{Environment.NewLine}This is the second line.{Environment.NewLine}", _textView.Text);
 			_textView.CursorPosition = new Point (3, 1);
 			_textView.ProcessKey (new KeyEvent (Key.C | Key.CtrlMask, new KeyModifiers ())); // Copy
 			_textView.ProcessKey (new KeyEvent (Key.Y | Key.CtrlMask, new KeyModifiers ())); // Paste
-			Assert.Equal ($"This is the first line.{Environment.NewLine}This is the second line.{Environment.NewLine}This is the second line.{Environment.NewLine}{Environment.NewLine}", _textView.Text);
+			Assert.Equal ($"This is the first line.{Environment.NewLine}This is the second line.{Environment.NewLine}This is the second line.{Environment.NewLine}", _textView.Text);
 			Assert.Equal (new Point (3, 2), _textView.CursorPosition);
 			_textView.ProcessKey (new KeyEvent (Key.Y | Key.CtrlMask, new KeyModifiers ())); // Paste
-			Assert.Equal ($"This is the first line.{Environment.NewLine}This is the second line.{Environment.NewLine}This is the second line.{Environment.NewLine}This is the second line.{Environment.NewLine}{Environment.NewLine}", _textView.Text);
+			Assert.Equal ($"This is the first line.{Environment.NewLine}This is the second line.{Environment.NewLine}This is the second line.{Environment.NewLine}This is the second line.{Environment.NewLine}", _textView.Text);
 			Assert.Equal (new Point (3, 3), _textView.CursorPosition);
 		}
 
@@ -2148,7 +2150,7 @@ line.
 		public void Internal_Tests ()
 		{
 			var txt = "This is a text.";
-			var txtRunes = TextModel.ToRunes (txt);
+			var txtRunes = txt.ToCharArray ().ToList ();
 			Assert.Equal (txt.Length, txtRunes.Count);
 			Assert.Equal ('T', txtRunes [0]);
 			Assert.Equal ('h', txtRunes [1]);
@@ -2932,12 +2934,12 @@ line.
 
 			foreach (var ls in Enum.GetValues (typeof (HistoryText.LineStatus))) {
 				if ((HistoryText.LineStatus)ls != HistoryText.LineStatus.Original) {
-					Assert.Throws<ArgumentException> (() => ht.Add (new List<List<Rune>> () { new List<Rune> () }, Point.Empty,
+					Assert.Throws<ArgumentException> (() => ht.Add (new List<List<char>> () { new List<char> () }, Point.Empty,
 						(HistoryText.LineStatus)ls));
 				}
 			}
 
-			Assert.Null (Record.Exception (() => ht.Add (new List<List<Rune>> () { new List<Rune> () }, Point.Empty,
+			Assert.Null (Record.Exception (() => ht.Add (new List<List<char>> () { new List<char> () }, Point.Empty,
 				HistoryText.LineStatus.Original)));
 		}
 
@@ -4751,9 +4753,9 @@ line.
 			Assert.Equal (new Point (0, 0), tv.CursorPosition);
 
 			Assert.True (tv.ProcessKey (new KeyEvent (Key.Y | Key.CtrlMask, new KeyModifiers ())));
-			Assert.Equal ($"{Environment.NewLine}{Environment.NewLine}This is the first line.{Environment.NewLine}This is the second line.", tv.Text);
-			Assert.Equal (4, tv.Lines);
-			Assert.Equal (new Point (0, 1), tv.CursorPosition);
+			Assert.Equal ($"{Environment.NewLine}This is the first line.{Environment.NewLine}This is the second line.", tv.Text);
+			Assert.Equal (3, tv.Lines);
+			Assert.Equal (new Point (0, 0), tv.CursorPosition);
 
 			// Undo
 			Assert.True (tv.ProcessKey (new KeyEvent (Key.Z | Key.CtrlMask, new KeyModifiers ())));
@@ -4763,9 +4765,9 @@ line.
 
 			// Redo
 			Assert.True (tv.ProcessKey (new KeyEvent (Key.R | Key.CtrlMask, new KeyModifiers ())));
-			Assert.Equal ($"{Environment.NewLine}{Environment.NewLine}This is the first line.{Environment.NewLine}This is the second line.", tv.Text);
-			Assert.Equal (4, tv.Lines);
-			Assert.Equal (new Point (0, 1), tv.CursorPosition);
+			Assert.Equal ($"{Environment.NewLine}This is the first line.{Environment.NewLine}This is the second line.", tv.Text);
+			Assert.Equal (3, tv.Lines);
+			Assert.Equal (new Point (0, 0), tv.CursorPosition);
 		}
 
 		[Fact]
@@ -6695,7 +6697,7 @@ This is the second line.
 			_textView.Text = TextViewTestsAutoInitShutdown.txt;
 			Assert.Equal (expectedEventCount, eventcount);
 
-			expectedEventCount += 4;
+			expectedEventCount += 3;
 			Copy_Without_Selection ();
 			Assert.Equal (expectedEventCount, eventcount);
 
@@ -6704,7 +6706,7 @@ This is the second line.
 			_textView.Text = TextViewTestsAutoInitShutdown.txt;
 			Assert.Equal (expectedEventCount, eventcount);
 
-			expectedEventCount += 4;
+			expectedEventCount += 3;
 			Copy_Without_Selection ();
 			Assert.Equal (expectedEventCount, eventcount);
 		}
@@ -6850,6 +6852,7 @@ TAB to jump between text field", output);
 			Assert.True (_textView.ProcessKey (new KeyEvent (Key.Enter, new KeyModifiers ()))); // New line
 			Assert.Equal (new Point (0, 1), _textView.CursorPosition);
 			Assert.Equal ("", _textView.SelectedText);
+			Assert.Equal ("TAB to jump between text fields.", Clipboard.Contents);
 			Assert.True (_textView.ProcessKey (new KeyEvent (Key.Y | Key.CtrlMask, new KeyModifiers ()))); // Paste
 			Assert.Equal ($"TAB to jump between text fields.{Environment.NewLine}TAB to jump between text fields.", _textView.Text);
 			win.Redraw (win.Bounds);

@@ -1,5 +1,4 @@
-﻿using NStack;
-using System;
+﻿using System;
 
 namespace Terminal.Gui {
 	/// <summary>
@@ -25,19 +24,18 @@ namespace Terminal.Gui {
 	/// </para>
 	/// </remarks>
 	public static class Clipboard {
-		static ustring contents;
+		static string contents = string.Empty;
 
 		/// <summary>
 		/// Gets (copies from) or sets (pastes to) the contents of the OS clipboard.
 		/// </summary>
-		public static ustring Contents {
+		public static string Contents {
 			get {
 				try {
 					if (IsSupported) {
-						return contents = ustring.Make (Application.Driver.Clipboard.GetClipboardData ());
-					} else {
-						return contents;
+						contents = Application.Driver.Clipboard.GetClipboardData ();
 					}
+					return contents;
 				} catch (Exception) {
 					return contents;
 				}
@@ -48,7 +46,7 @@ namespace Terminal.Gui {
 						if (value == null) {
 							value = string.Empty;
 						}
-						Application.Driver.Clipboard.SetClipboardData (value.ToString ());
+						Application.Driver.Clipboard.SetClipboardData (value);
 					}
 					contents = value;
 				} catch (NotSupportedException) {
@@ -74,9 +72,7 @@ namespace Terminal.Gui {
 		public static bool TryGetClipboardData (out string result)
 		{
 			if (IsSupported && Application.Driver.Clipboard.TryGetClipboardData (out result)) {
-				if (contents != result) {
-					contents = result;
-				}
+				contents = result;
 				return true;
 			}
 			result = string.Empty;

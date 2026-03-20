@@ -26,7 +26,6 @@ namespace Terminal.Gui.TypeTests {
 			action = () => new Size (-3, -4);
 			ex = Assert.Throws<ArgumentException> (action);
 			Assert.Equal ("Either Width and Height must be greater or equal to 0.", ex.Message);
-
 		}
 
 		[Fact]

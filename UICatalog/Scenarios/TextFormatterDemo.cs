@@ -1,6 +1,4 @@
-﻿using NStack;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
 using Terminal.Gui;
@@ -39,7 +37,7 @@ namespace UICatalog.Scenarios {
 			block.AppendLine ("░ ░   ░  ░░░ ░ ░  ▒ ░ ░   ░        ░  ░  ░  ");
 			block.AppendLine ("      ░    ░      ░    ░  ░ ░            ░  ");
 			block.AppendLine ("                       ░  ░                 "); 
-			blockText.Text = ustring.Make (block.ToString ()); // .Replace(" ", "\u00A0"); // \u00A0 is 'non-breaking space
+			blockText.Text = block.ToString (); // .Replace(" ", "\u00A0"); // \u00A0 is 'non-breaking space
 			Win.Add (blockText);
 
 			var unicodeCheckBox = new CheckBox ("Unicode", Application.Top.HotKeySpecifier == (Rune)' ') {

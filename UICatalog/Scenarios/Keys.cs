@@ -1,5 +1,4 @@
-﻿using NStack;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Terminal.Gui;
 
 namespace UICatalog.Scenarios {
@@ -12,19 +11,19 @@ namespace UICatalog.Scenarios {
 			public List<string> _processHotKeyList = new List<string> ();
 			public List<string> _processColdKeyList = new List<string> ();
 
-			public TestWindow (ustring title = null) : base (title)
+			public TestWindow (string title = null) : base (title)
 			{
 			}
 
-			public TestWindow (Rect frame, ustring title = null) : base (frame, title)
+			public TestWindow (Rect frame, string title = null) : base (frame, title)
 			{
 			}
 
-			public TestWindow (ustring title = null, int padding = 0) : base (title, padding)
+			public TestWindow (string title = null, int padding = 0) : base (title, padding)
 			{
 			}
 
-			public TestWindow (Rect frame, ustring title = null, int padding = 0) : base (frame, title, padding)
+			public TestWindow (Rect frame, string title = null, int padding = 0) : base (frame, title, padding)
 			{
 			}
 
