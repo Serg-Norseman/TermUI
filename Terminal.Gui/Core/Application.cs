@@ -21,7 +21,24 @@ using System.Globalization;
 using System.Reflection;
 using System.IO;
 
-namespace Terminal.Gui {
+namespace Terminal.Gui
+{
+	/// <summary>
+	/// 
+	/// </summary>
+	public enum TUIStyle
+	{
+		/// <summary>
+		/// Terminal.Gui
+		/// </summary>
+		Native,
+
+		/// <summary>
+		/// Norton Commander, DOS Navigator and etc
+		/// </summary>
+		Classic
+	}
+
 
 	/// <summary>
 	/// A static, singleton class providing the main application driver for Terminal.Gui apps. 
@@ -56,7 +73,11 @@ namespace Terminal.Gui {
 	///     to the MainLoop, allowing user code to use async/await.
 	///   </para>
 	/// </remarks>
-	public static class Application {
+	public static class Application
+	{
+		public static TUIStyle Style { get; set; } = TUIStyle.Native;
+
+
 		static readonly Stack<Toplevel> toplevels = new Stack<Toplevel> ();
 
 		/// <summary>

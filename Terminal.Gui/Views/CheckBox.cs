@@ -6,12 +6,13 @@
 //
 using System;
 
-namespace Terminal.Gui {
-
+namespace Terminal.Gui
+{
 	/// <summary>
 	/// The <see cref="CheckBox"/> <see cref="View"/> shows an on/off toggle that the user can set
 	/// </summary>
-	public class CheckBox : View {
+	public class CheckBox : View
+	{
 		char charChecked;
 		char charUnChecked;
 		bool @checked;
@@ -96,15 +97,33 @@ namespace Terminal.Gui {
 		protected override void UpdateTextFormatterText ()
 		{
 			switch (TextAlignment) {
-			case TextAlignment.Left:
-			case TextAlignment.Centered:
-			case TextAlignment.Justified:
-				TextFormatter.Text = (Checked ? charChecked : charUnChecked) + " " + GetFormatterText ();
-				break;
-			case TextAlignment.Right:
-				TextFormatter.Text = GetFormatterText () + " " + (Checked ? charChecked : charUnChecked);
-				break;
+				case TextAlignment.Left:
+				case TextAlignment.Centered:
+				case TextAlignment.Justified:
+					TextFormatter.Text = GetState () + " " + GetFormatterText ();
+					break;
+
+				case TextAlignment.Right:
+					TextFormatter.Text = GetFormatterText () + " " + GetState ();
+					break;
 			}
+		}
+
+		private string GetState ()
+		{
+			string result = "";
+
+			switch (Application.Style) {
+				case TUIStyle.Native:
+					result += (Checked ? charChecked : charUnChecked);
+					break;
+
+				case TUIStyle.Classic:
+					result += (Checked ? "[x]" : "[ ]");
+					break;
+			}
+
+			return result;
 		}
 
 		string GetFormatterText ()
@@ -118,7 +137,8 @@ namespace Terminal.Gui {
 		/// <summary>
 		///    The state of the <see cref="CheckBox"/>
 		/// </summary>
-		public bool Checked {
+		public bool Checked
+		{
 			get => @checked;
 			set {
 				@checked = value;
