@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Terminal.Gui.Core;
 
 namespace Terminal.Gui {
 	/// <summary>
@@ -512,7 +513,7 @@ namespace Terminal.Gui {
 				old?.SetNeedsDisplay ();
 				Focused?.SetNeedsDisplay ();
 			} else {
-				FocusNearestView (SuperView?.TabIndexes?.Reverse (), Direction.Backward);
+				FocusNearestView (SuperView?.TabIndexes, Direction.Backward);
 			}
 		}
 
@@ -554,17 +555,21 @@ namespace Terminal.Gui {
 			return view;
 		}
 
-		void FocusNearestView (IEnumerable<View> views, Direction direction)
+		void FocusNearestView (TabIndexList<View> views, Direction direction)
 		{
 			if (views == null) {
 				return;
 			}
 
+			var viewsList = (direction == Direction.Forward) ? views.GetList () : views.GetReversed ();
+
 			bool found = false;
 			bool focusProcessed = false;
 			int idx = 0;
 
-			foreach (var v in views) {
+			for (int i = 0; i < viewsList.Count; i++) {
+				var v = viewsList [i];
+
 				if (v == this) {
 					found = true;
 				}
@@ -578,8 +583,8 @@ namespace Terminal.Gui {
 					if (SuperView.Focused != null && SuperView.Focused != this) {
 						return;
 					}
-				} else if (found && !focusProcessed && idx == views.Count () - 1) {
-					views.ToList () [0].SetFocus ();
+				} else if (found && !focusProcessed && idx == viewsList.Count - 1) {
+					viewsList [0].SetFocus ();
 				}
 				idx++;
 			}

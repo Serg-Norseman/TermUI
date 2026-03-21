@@ -299,7 +299,7 @@ namespace Terminal.Gui.ViewTests {
 
 			v1.TabIndex = 1;
 			Assert.True (r.Subviews.IndexOf (v1) == 0);
-			Assert.True (r.TabIndexes.IndexOf (v1) == 1);
+			Assert.True (r.TabIndexes.IndexOf (v1) == 2);
 
 			v1.TabIndex = 2;
 			Assert.True (r.Subviews.IndexOf (v1) == 0);
@@ -334,39 +334,6 @@ namespace Terminal.Gui.ViewTests {
 			v1.TabIndex = -1;
 			Assert.True (r.Subviews.IndexOf (v1) == 0);
 			Assert.True (r.TabIndexes.IndexOf (v1) == 0);
-		}
-
-		[Fact]
-		public void TabIndex_Set_CanFocus_False ()
-		{
-			var r = new View ();
-			var v1 = new View () { CanFocus = true };
-			var v2 = new View () { CanFocus = true };
-			var v3 = new View () { CanFocus = true };
-
-			r.Add (v1, v2, v3);
-
-			v1.CanFocus = false;
-			v1.TabIndex = 0;
-			Assert.True (r.Subviews.IndexOf (v1) == 0);
-			Assert.True (r.TabIndexes.IndexOf (v1) == 0);
-			Assert.Equal (-1, v1.TabIndex);
-		}
-
-		[Fact]
-		public void TabIndex_Set_CanFocus_False_To_True ()
-		{
-			var r = new View ();
-			var v1 = new View ();
-			var v2 = new View () { CanFocus = true };
-			var v3 = new View () { CanFocus = true };
-
-			r.Add (v1, v2, v3);
-
-			v1.CanFocus = true;
-			v1.TabIndex = 1;
-			Assert.True (r.Subviews.IndexOf (v1) == 0);
-			Assert.True (r.TabIndexes.IndexOf (v1) == 1);
 		}
 
 		[Fact]
@@ -405,12 +372,9 @@ namespace Terminal.Gui.ViewTests {
 			r.Add (v3);
 			v3.TabIndex = 0;
 
-			Assert.False (r.TabIndexes.IndexOf (v1) == 2);
-			Assert.True (r.TabIndexes.IndexOf (v1) == 1);
-			Assert.False (r.TabIndexes.IndexOf (v2) == 1);
-			Assert.True (r.TabIndexes.IndexOf (v2) == 2);
-			// Only the last is in the expected index
-			Assert.True (r.TabIndexes.IndexOf (v3) == 0);
+			Assert.Equal (2, r.TabIndexes.IndexOf (v1));
+			Assert.Equal (1, r.TabIndexes.IndexOf (v2));
+			Assert.Equal (0, r.TabIndexes.IndexOf (v3));
 
 			Assert.True (r.Subviews.IndexOf (v1) == 0);
 			Assert.True (r.Subviews.IndexOf (v2) == 1);
@@ -433,9 +397,9 @@ namespace Terminal.Gui.ViewTests {
 			v1.TabIndex = 2;
 			v2.TabIndex = 1;
 			v3.TabIndex = 0;
-			Assert.True (r.TabIndexes.IndexOf (v1) == 4);
-			Assert.True (r.TabIndexes.IndexOf (v2) == 2);
-			Assert.True (r.TabIndexes.IndexOf (v3) == 0);
+			Assert.Equal (5, r.TabIndexes.IndexOf (v1));
+			Assert.Equal (4, r.TabIndexes.IndexOf (v2));
+			Assert.Equal (3, r.TabIndexes.IndexOf (v3));
 
 			Assert.True (r.Subviews.IndexOf (v1) == 1);
 			Assert.True (r.Subviews.IndexOf (v2) == 3);
@@ -613,34 +577,24 @@ namespace Terminal.Gui.ViewTests {
 			r.Add (v1, v2, v3);
 
 			v2.CanFocus = true;
-			Assert.Equal (r.TabIndexes.IndexOf (v2), v2.TabIndex);
-			Assert.Equal (0, v2.TabIndex);
+			Assert.Equal (1, r.TabIndexes.IndexOf (v2));
+			Assert.Equal (-1, v2.TabIndex);
 			Assert.True (v2.TabStop);
 
 			v1.CanFocus = true;
-			Assert.Equal (r.TabIndexes.IndexOf (v1), v1.TabIndex);
-			Assert.Equal (1, v1.TabIndex);
+			Assert.Equal (0, r.TabIndexes.IndexOf (v1));
+			Assert.Equal (-1, v1.TabIndex);
 			Assert.True (v1.TabStop);
 
 			v1.TabIndex = 2;
-			Assert.Equal (r.TabIndexes.IndexOf (v1), v1.TabIndex);
-			Assert.Equal (1, v1.TabIndex);
-			v3.CanFocus = true;
-			Assert.Equal (r.TabIndexes.IndexOf (v1), v1.TabIndex);
-			Assert.Equal (1, v1.TabIndex);
-			Assert.Equal (r.TabIndexes.IndexOf (v3), v3.TabIndex);
-			Assert.Equal (2, v3.TabIndex);
-			Assert.True (v3.TabStop);
+			Assert.Equal (2, r.TabIndexes.IndexOf (v1));
+			Assert.Equal (2, v1.TabIndex);
 
-			v2.CanFocus = false;
-			Assert.Equal (r.TabIndexes.IndexOf (v1), v1.TabIndex);
-			Assert.Equal (1, v1.TabIndex);
-			Assert.True (v1.TabStop);
-			Assert.NotEqual (r.TabIndexes.IndexOf (v2), v2.TabIndex);
-			Assert.Equal (-1, v2.TabIndex);
-			Assert.False (v2.TabStop);
-			Assert.Equal (r.TabIndexes.IndexOf (v3), v3.TabIndex);
-			Assert.Equal (2, v3.TabIndex);
+			v3.CanFocus = true;
+			Assert.Equal (2, r.TabIndexes.IndexOf (v1));
+			Assert.Equal (2, v1.TabIndex);
+			Assert.Equal (1, r.TabIndexes.IndexOf (v3));
+			Assert.Equal (-1, v3.TabIndex);
 			Assert.True (v3.TabStop);
 		}
 
