@@ -8,13 +8,15 @@
 using System;
 using System.Collections.Generic;
 
-namespace Terminal.Gui {
+namespace Terminal.Gui
+{
 	/// <summary>
 	/// RadioButton with grouping support.
 	/// Only one RadioButton in a group can be selected at a time.
 	/// Group is determined by the Group string property.
 	/// </summary>
-	public class RadioButton : View {
+	public class RadioButton : View
+	{
 		private string _group;
 		private bool _isChanging;
 		private bool _checked;
@@ -22,7 +24,8 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Group name. RadioButtons with the same Group are mutually exclusive.
 		/// </summary>
-		public string Group {
+		public string Group
+		{
 			get => _group;
 			set {
 				if (_group != value) {
@@ -56,9 +59,6 @@ namespace Terminal.Gui {
 			_group = string.Empty;
 			_isChanging = false;
 
-			// Subscribe to base CheckBox state change
-			//Toggled += OnRadioButtonToggled;
-
 			UpdateTextFormatterText ();
 			ProcessResizeView ();
 		}
@@ -66,7 +66,8 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Checked property override for group logic handling
 		/// </summary>
-		public bool Checked {
+		public bool Checked
+		{
 			get => _checked;
 			set {
 				if (_checked != value) {
@@ -187,52 +188,48 @@ namespace Terminal.Gui {
 			return true;
 		}
 
-		///<inheritdoc/>
-		/*public override void Redraw (Rect bounds)
-		{
-			var current = ColorScheme.Focus;
-			Driver.SetAttribute (current);
-			Move (0, 0);
-
-			// Radio button symbol instead of CheckBox square
-			Driver.AddRune ('(');
-			Driver.AddRune (Checked ? (Rune)'\u25CF' : (Rune)' ');
-			Driver.AddStr (") ");
-
-			// the font does not have these symbols when testing (Windows \ Consolas)
-			//Driver.AddRune (Checked ? (Rune)'◉' : (Rune)'○');
-			//Driver.AddRune (Checked ? (Rune)'\u25C9' : (Rune)'\u25EF'); 
-
-			var tf = TextFormatter;
-			tf.Text = Text;
-			tf.Draw (bounds, current, HasFocus ? ColorScheme.HotFocus : ColorScheme.HotNormal);
-		}*/
-
 		/// <inheritdoc/>
 		protected override void UpdateTextFormatterText ()
 		{
+			switch (TextAlignment) {
+				case TextAlignment.Left:
+				case TextAlignment.Centered:
+				case TextAlignment.Justified:
+					TextFormatter.Text = GetState () + " " + Text;
+					break;
+				case TextAlignment.Right:
+					TextFormatter.Text = Text + " " + GetState ();
+					break;
+			}
+		}
+
+		private string GetState ()
+		{
+			string result = "";
+
 			// Windows \ Lucida Console - symbol \u25CF missing
 			// Windows \ Consolas - symbol \a missing
 
-			string radioMark = Checked ? "(\u25CF)" : "( )";
+			switch (Application.Style) {
+				case TUIStyle.Native:
+					// '◉' : '○'
+					result += Checked ? Driver.Selected : Driver.UnSelected;
+					break;
 
-			switch (TextAlignment) {
-			case TextAlignment.Left:
-			case TextAlignment.Centered:
-			case TextAlignment.Justified:
-				TextFormatter.Text = radioMark + " " + Text;
-				break;
-			case TextAlignment.Right:
-				TextFormatter.Text = Text + " " + radioMark;
-				break;
+				case TUIStyle.Classic:
+					result += Checked ? "(\u25CF)" : "( )";
+					break;
 			}
+
+			return result;
 		}
 	}
 
 	/// <summary>
 	/// State change event arguments
 	/// </summary>
-	public class ToggledEventArgs : EventArgs {
+	public class ToggledEventArgs : EventArgs
+	{
 		public bool OldValue { get; set; }
 		public bool NewValue { get; set; }
 	}

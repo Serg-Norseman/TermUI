@@ -37,11 +37,13 @@ using Terminal.Gui;
 ///	See the project README for more details (https://github.com/gui-cs/Terminal.Gui/tree/master/UICatalog/README.md).
 /// </para>	
 /// </remarks>
-namespace UICatalog {
+namespace UICatalog
+{
 	/// <summary>
 	/// UI Catalog is a comprehensive sample app and scenario library for <see cref="Terminal.Gui"/>
 	/// </summary>
-	class UICatalogApp {
+	class UICatalogApp
+	{
 		static void Main (string [] args)
 		{
 			Console.OutputEncoding = Encoding.Default;
@@ -117,7 +119,7 @@ namespace UICatalog {
 			// Run UI Catalog UI. When it exits, if _selectedScenario is != null then
 			// a Scenario was selected. Otherwise, the user wants to exit UI Catalog.
 			Application.Init ();
-			
+
 			Application.Run<UICatalogTopLevel> ();
 			Application.Shutdown ();
 
@@ -146,7 +148,8 @@ namespace UICatalog {
 		/// This is the main UI Catalog app view. It is run fresh when the app loads (if a Scenario has not been passed on 
 		/// the command line) and each time a Scenario ends.
 		/// </summary>
-		class UICatalogTopLevel : Toplevel {
+		class UICatalogTopLevel : Toplevel
+		{
 			public MenuItem miIsMouseDisabled;
 
 			public FrameView LeftPane;
@@ -168,6 +171,7 @@ namespace UICatalog {
 						new MenuItem ("_Quit", "Quit UI Catalog", (sender, e) => RequestStop(), null, null, Key.Q | Key.CtrlMask)
 					}),
 					new MenuBarItem ("_Color Scheme", CreateColorSchemeMenuItems()),
+					new MenuBarItem ("_Style", CreateStyleItems()),
 					new MenuBarItem ("Diag_nostics", CreateDiagnosticMenuItems()),
 					new MenuBarItem ("_Help", new MenuItem [] {
 						new MenuItem ("_gui.cs API Overview", "", (sender, e) => OpenUrl ("https://gui-cs.github.io/Terminal.Gui/articles/overview.html"), null, null, Key.F1),
@@ -402,12 +406,12 @@ namespace UICatalog {
 				string GetDiagnosticsTitle (Enum diag)
 				{
 					switch (Enum.GetName (_diagnosticFlags.GetType (), diag)) {
-					case "Off":
-						return OFF;
-					case "FrameRuler":
-						return FRAME_RULER;
-					case "FramePadding":
-						return FRAME_PADDING;
+						case "Off":
+							return OFF;
+						case "FrameRuler":
+							return FRAME_RULER;
+						case "FramePadding":
+							return FRAME_PADDING;
 					}
 					return "";
 				}
@@ -415,10 +419,10 @@ namespace UICatalog {
 				Enum GetDiagnosticsEnumValue (string title)
 				{
 					switch (title.ToString ()) {
-					case FRAME_RULER:
-						return ConsoleDriver.DiagnosticFlags.FrameRuler;
-					case FRAME_PADDING:
-						return ConsoleDriver.DiagnosticFlags.FramePadding;
+						case FRAME_RULER:
+							return ConsoleDriver.DiagnosticFlags.FrameRuler;
+						case FRAME_PADDING:
+							return ConsoleDriver.DiagnosticFlags.FramePadding;
 					}
 					return null;
 				}
@@ -426,23 +430,23 @@ namespace UICatalog {
 				void SetDiagnosticsFlag (Enum diag, bool add)
 				{
 					switch (diag) {
-					case ConsoleDriver.DiagnosticFlags.FrameRuler:
-						if (add) {
-							_diagnosticFlags |= ConsoleDriver.DiagnosticFlags.FrameRuler;
-						} else {
-							_diagnosticFlags &= ~ConsoleDriver.DiagnosticFlags.FrameRuler;
-						}
-						break;
-					case ConsoleDriver.DiagnosticFlags.FramePadding:
-						if (add) {
-							_diagnosticFlags |= ConsoleDriver.DiagnosticFlags.FramePadding;
-						} else {
-							_diagnosticFlags &= ~ConsoleDriver.DiagnosticFlags.FramePadding;
-						}
-						break;
-					default:
-						_diagnosticFlags = default;
-						break;
+						case ConsoleDriver.DiagnosticFlags.FrameRuler:
+							if (add) {
+								_diagnosticFlags |= ConsoleDriver.DiagnosticFlags.FrameRuler;
+							} else {
+								_diagnosticFlags &= ~ConsoleDriver.DiagnosticFlags.FrameRuler;
+							}
+							break;
+						case ConsoleDriver.DiagnosticFlags.FramePadding:
+							if (add) {
+								_diagnosticFlags |= ConsoleDriver.DiagnosticFlags.FramePadding;
+							} else {
+								_diagnosticFlags &= ~ConsoleDriver.DiagnosticFlags.FramePadding;
+							}
+							break;
+						default:
+							_diagnosticFlags = default;
+							break;
 					}
 				}
 			}
@@ -461,6 +465,29 @@ namespace UICatalog {
 						SetNeedsDisplay ();
 						foreach (var menuItem in menuItems) {
 							menuItem.Checked = menuItem.Title.Equals ($"_{sc.Key}") && sc.Value == _colorScheme;
+						}
+					};
+					menuItems.Add (item);
+				}
+				return menuItems.ToArray ();
+			}
+
+			MenuItem [] CreateStyleItems ()
+			{
+				List<MenuItem> menuItems = new List<MenuItem> ();
+				var styleEnum = Enum.GetValues (typeof (TUIStyle)).Cast<TUIStyle> ().ToList ();
+				foreach (var sc in styleEnum) {
+					var item = new MenuItem ();
+					item.Title = $"_{sc}";
+					item.CheckType |= MenuItemCheckStyle.Radio;
+					item.Checked = sc == Application.Style;
+					item.Tag = sc;
+					item.Action += (sender, e) => {
+						var styleVal = (TUIStyle)(((MenuItem)sender).Tag);
+						Application.Style = styleVal;
+						SetNeedsDisplay ();
+						foreach (var menuItem in menuItems) {
+							menuItem.Checked = (TUIStyle)menuItem.Tag == styleVal;
 						}
 					};
 					menuItems.Add (item);
