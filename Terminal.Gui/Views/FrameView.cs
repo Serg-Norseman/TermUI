@@ -9,6 +9,7 @@
 //  - Does not support IEnumerable
 // Any udpates done here should probably be done in Window as well; TODO: Merge these classes
 
+using System;
 using System.Linq;
 
 namespace Terminal.Gui
@@ -62,7 +63,7 @@ namespace Terminal.Gui
 			}
 		}
 
-		void Border_BorderChanged(object sender, Border border)
+		void Border_BorderChanged(object sender, EventArgs e)
 		{
 			Rect frame;
 			if (contentView != null && (contentView.Width is Dim || contentView.Height is Dim)) {

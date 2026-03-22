@@ -130,7 +130,7 @@ namespace Terminal.Gui
 				}
 			}
 
-			void Border_BorderChanged(object sender, Border border)
+			void Border_BorderChanged(object sender, EventArgs e)
 			{
 				Rect frame;
 				if (Border.Child != null && (Border.Child.Width is Dim || Border.Child.Height is Dim)) {
@@ -322,7 +322,7 @@ namespace Terminal.Gui
 		/// <summary>
 		/// Invoked when any property of Border changes (except <see cref="Child"/>).
 		/// </summary>
-		public event EventHandler<Border> BorderChanged;
+		public event EventHandler BorderChanged;
 
 		private BorderStyle borderStyle;
 		private bool drawMarginFrame;
@@ -1036,11 +1036,10 @@ namespace Terminal.Gui
 				if (view == Child) {
 					scrRect = view.ViewToScreen(new Rect(0, 0, view.Frame.Width + 2, view.Frame.Height + 2));
 					scrRect = new Rect(scrRect.X - 1, scrRect.Y - 1, scrRect.Width, scrRect.Height);
-					driver.DrawWindowTitle(scrRect, Title, 0, 0, 0, 0);
+					DrawWindowTitle(driver, scrRect, Title, 0, 0, 0, 0);
 				} else {
 					scrRect = view.ViewToScreen(new Rect(0, 0, view.Frame.Width, view.Frame.Height));
-					driver.DrawWindowTitle(scrRect, Parent.Border.Title,
-						padding.Left, padding.Top, padding.Right, padding.Bottom);
+					DrawWindowTitle(driver, scrRect, Parent.Border.Title, padding.Left, padding.Top, padding.Right, padding.Bottom);
 				}
 			}
 			driver.SetAttribute(Child.GetNormalColor());
@@ -1070,10 +1069,22 @@ namespace Terminal.Gui
 				SetHotNormalBackground(view, driver);
 				var padding = Parent.Border.GetSumThickness();
 				var scrRect = Parent.ViewToScreen(new Rect(0, 0, rect.Width, rect.Height));
-				driver.DrawWindowTitle(scrRect, view.Text,
-					padding.Left, padding.Top, padding.Right, padding.Bottom);
+				DrawWindowTitle(driver, scrRect, view.Text, padding.Left, padding.Top, padding.Right, padding.Bottom);
 			}
 			driver.SetAttribute(view.GetNormalColor());
+		}
+
+		private void DrawWindowTitle (ConsoleDriver driver, Rect region, string title, int paddingLeft, int paddingTop, int paddingRight, int paddingBottom)
+		{
+			TextAlignment textAlignment;
+
+			if (Parent is Window && Application.Style == TUIStyle.Classic) {
+				textAlignment = TextAlignment.Centered;
+			} else {
+				textAlignment = TextAlignment.Left;
+			}
+
+			driver.DrawWindowTitle (region, title, paddingLeft, paddingTop, paddingRight, paddingBottom, textAlignment);
 		}
 
 		/// <summary>
@@ -1081,7 +1092,7 @@ namespace Terminal.Gui
 		/// </summary>
 		public virtual void OnBorderChanged()
 		{
-			BorderChanged?.Invoke(this, this);
+			BorderChanged?.Invoke(this, EventArgs.Empty);
 		}
 	}
 }

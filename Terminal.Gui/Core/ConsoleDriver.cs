@@ -940,13 +940,28 @@ namespace Terminal.Gui
 		/// <param name="paddingTop">Number of rows to pad on the top (if 0 the border and title will not appear on the top).</param>
 		/// <param name="paddingRight">Number of columns to pad on the right (if 0 the border will not appear on the right).</param>
 		/// <param name="paddingBottom">Number of rows to pad on the bottom (if 0 the border will not appear on the bottom).</param>
-		/// <param name="textAlignment">Not yet implemented.</param>
+		/// <param name="textAlignment">Title alignment.</param>
 		/// <remarks></remarks>
-		public virtual void DrawWindowTitle(Rect region, string title, int paddingLeft, int paddingTop, int paddingRight, int paddingBottom, TextAlignment textAlignment = TextAlignment.Left)
+		public void DrawWindowTitle(Rect region, string title, int paddingLeft, int paddingTop, int paddingRight, int paddingBottom, TextAlignment textAlignment = TextAlignment.Left)
 		{
 			var width = region.Width - (paddingLeft + 2) * 2;
 			if (!string.IsNullOrEmpty(title) && width > 4 && region.Y + paddingTop <= region.Y + paddingBottom) {
-				Move(region.X + 1 + paddingLeft, region.Y + paddingTop);
+				switch (textAlignment) {
+					case TextAlignment.Left:
+						Move (region.X + paddingLeft + 1, region.Y + paddingTop);
+						break;
+
+					case TextAlignment.Right:
+						Move (region.Right - paddingRight - 3 - title.Length, region.Y + paddingTop);
+						break;
+
+					case TextAlignment.Centered:
+					case TextAlignment.Justified:
+						int offsetX = ((region.Right - region.Left) - 2 - title.Length) / 2;
+						Move (region.X + paddingLeft + offsetX, region.Y + paddingTop);
+						break;
+				}
+
 				AddRune(' ');
 				var str = title.Sum(r => Math.Max(Rune.ColumnWidth(r), 1)) >= width
 					? TextFormatter.Format(title, width - 2, false, false)[0] : title;
@@ -1231,112 +1246,122 @@ namespace Terminal.Gui
 		public abstract void CookMouse();
 
 		/// <summary>
-		/// Horizontal line character.
+		/// Black square (■).
+		/// </summary>
+		public char Square = '\u25a0';
+
+		/// <summary>
+		/// ().
+		/// </summary>
+		public char VResize = '';
+
+		/// <summary>
+		/// Horizontal line character (─).
 		/// </summary>
 		public char HLine = '\u2500';
 
 		/// <summary>
-		/// Vertical line character.
+		/// Vertical line character (│).
 		/// </summary>
 		public char VLine = '\u2502';
 
 		/// <summary>
-		/// Stipple pattern
+		/// Stipple pattern (░).
 		/// </summary>
 		public char Stipple = '\u2591';
 
 		/// <summary>
-		/// Diamond character
+		/// Diamond character (◊).
 		/// </summary>
 		public char Diamond = '\u25ca';
 
 		/// <summary>
-		/// Upper left corner
+		/// Upper left corner (┌).
 		/// </summary>
 		public char ULCorner = '\u250C';
 
 		/// <summary>
-		/// Lower left corner
+		/// Lower left corner (└).
 		/// </summary>
 		public char LLCorner = '\u2514';
 
 		/// <summary>
-		/// Upper right corner
+		/// Upper right corner (┐).
 		/// </summary>
 		public char URCorner = '\u2510';
 
 		/// <summary>
-		/// Lower right corner
+		/// Lower right corner (┘).
 		/// </summary>
 		public char LRCorner = '\u2518';
 
 		/// <summary>
-		/// Left tee
+		/// Left tee (├).
 		/// </summary>
 		public char LeftTee = '\u251c';
 
 		/// <summary>
-		/// Right tee
+		/// Right tee (┤).
 		/// </summary>
 		public char RightTee = '\u2524';
 
 		/// <summary>
-		/// Top tee
+		/// Top tee (┬).
 		/// </summary>
 		public char TopTee = '\u252c';
 
 		/// <summary>
-		/// The bottom tee.
+		/// The bottom tee (┴).
 		/// </summary>
 		public char BottomTee = '\u2534';
 
 		/// <summary>
-		/// Checkmark.
+		/// Checkmark (√).
 		/// </summary>
 		public char Checked = '\u221a';
 
 		/// <summary>
-		/// Un-checked checkmark.
+		/// Un-checked checkmark (╴).
 		/// </summary>
 		public char UnChecked = '\u2574';
 
 		/// <summary>
-		/// Selected mark.
+		/// Selected mark (●).
 		/// </summary>
 		public char Selected = '\u25cf';
 
 		/// <summary>
-		/// Un-selected selected mark.
+		/// Un-selected selected mark (◌).
 		/// </summary>
 		public char UnSelected = '\u25cc';
 
 		/// <summary>
-		/// Right Arrow.
+		/// Right Arrow (►).
 		/// </summary>
 		public char RightArrow = '\u25ba';
 
 		/// <summary>
-		/// Left Arrow.
+		/// Left Arrow (◄).
 		/// </summary>
 		public char LeftArrow = '\u25c4';
 
 		/// <summary>
-		/// Down Arrow.
+		/// Down Arrow (▼).
 		/// </summary>
 		public char DownArrow = '\u25bc';
 
 		/// <summary>
-		/// Up Arrow.
+		/// Up Arrow (▲).
 		/// </summary>
 		public char UpArrow = '\u25b2';
 
 		/// <summary>
-		/// Left indicator for default action (e.g. for <see cref="Button"/>).
+		/// Left indicator for default action (e.g. for <see cref="Button"/>) (◦).
 		/// </summary>
 		public char LeftDefaultIndicator = '\u25e6';
 
 		/// <summary>
-		/// Right indicator for default action (e.g. for <see cref="Button"/>).
+		/// Right indicator for default action (e.g. for <see cref="Button"/>) (◦).
 		/// </summary>
 		public char RightDefaultIndicator = '\u25e6';
 
@@ -1351,72 +1376,72 @@ namespace Terminal.Gui
 		public char RightBracket = ']';
 
 		/// <summary>
-		/// Blocks Segment indicator for meter views (e.g. <see cref="ProgressBar"/>.
+		/// Blocks Segment indicator for meter views (e.g. <see cref="ProgressBar"/>) (▌).
 		/// </summary>
 		public char BlocksMeterSegment = '\u258c';
 
 		/// <summary>
-		/// Continuous Segment indicator for meter views (e.g. <see cref="ProgressBar"/>.
+		/// Continuous Segment indicator for meter views (e.g. <see cref="ProgressBar"/>) (█).
 		/// </summary>
 		public char ContinuousMeterSegment = '\u2588';
 
 		/// <summary>
-		/// Horizontal double line character.
+		/// Horizontal double line character (═).
 		/// </summary>
 		public char HDLine = '\u2550';
 
 		/// <summary>
-		/// Vertical double line character.
+		/// Vertical double line character (║).
 		/// </summary>
 		public char VDLine = '\u2551';
 
 		/// <summary>
-		/// Upper left double corner
+		/// Upper left double corner (╔).
 		/// </summary>
 		public char ULDCorner = '\u2554';
 
 		/// <summary>
-		/// Lower left double corner
+		/// Lower left double corner (╚).
 		/// </summary>
 		public char LLDCorner = '\u255a';
 
 		/// <summary>
-		/// Upper right double corner
+		/// Upper right double corner (╗).
 		/// </summary>
 		public char URDCorner = '\u2557';
 
 		/// <summary>
-		/// Lower right double corner
+		/// Lower right double corner (╝).
 		/// </summary>
 		public char LRDCorner = '\u255d';
 
 		/// <summary>
-		/// Horizontal line character for rounded corners.
+		/// Horizontal line character for rounded corners (─).
 		/// </summary>
 		public char HRLine = '\u2500';
 
 		/// <summary>
-		/// Vertical line character for rounded corners.
+		/// Vertical line character for rounded corners (│).
 		/// </summary>
 		public char VRLine = '\u2502';
 
 		/// <summary>
-		/// Upper left rounded corner
+		/// Upper left rounded corner (╭).
 		/// </summary>
 		public char ULRCorner = '\u256d';
 
 		/// <summary>
-		/// Lower left rounded corner
+		/// Lower left rounded corner (╰).
 		/// </summary>
 		public char LLRCorner = '\u2570';
 
 		/// <summary>
-		/// Upper right rounded corner
+		/// Upper right rounded corner (╮).
 		/// </summary>
 		public char URRCorner = '\u256e';
 
 		/// <summary>
-		/// Lower right rounded corner
+		/// Lower right rounded corner (╯).
 		/// </summary>
 		public char LRRCorner = '\u256f';
 

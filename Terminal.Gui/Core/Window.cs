@@ -66,7 +66,7 @@ namespace Terminal.Gui {
 			}
 		}
 
-		void Border_BorderChanged (object sender, Border border)
+		void Border_BorderChanged (object sender, EventArgs e)
 		{
 			Rect frame;
 			if (contentView != null && (contentView.Width is Dim || contentView.Height is Dim)) {
@@ -187,7 +187,7 @@ namespace Terminal.Gui {
 			Title = title;
 			if (border == null) {
 				Border = new Border () {
-					BorderStyle = BorderStyle.Single,
+					BorderStyle = (Application.Style == TUIStyle.Native) ? BorderStyle.Single : BorderStyle.Double,
 					Padding = new Thickness (padding),
 					Title = title
 				};
@@ -239,15 +239,6 @@ namespace Terminal.Gui {
 			Border.Child = contentView;
 		}
 
-		///// <summary>
-		///// Enumerates the various <see cref="View"/>s in the embedded <see cref="ContentView"/>.
-		///// </summary>
-		///// <returns>The enumerator.</returns>
-		//public new IEnumerator GetEnumerator ()
-		//{
-		//	return contentView.GetEnumerator ();
-		//}
-
 		/// <inheritdoc/>
 		public override void Add (View view)
 		{
@@ -290,8 +281,10 @@ namespace Terminal.Gui {
 		///<inheritdoc/>
 		public override void Redraw (Rect bounds)
 		{
+			var driver = Application.Driver;
+
 			if (!NeedDisplay.IsEmpty || ChildNeedsDisplay || LayoutNeeded) {
-				Driver.SetAttribute (GetNormalColor ());
+				driver.SetAttribute (GetNormalColor ());
 				Clear ();
 				var savedFrame = Frame;
 				PositionToplevels ();
@@ -320,16 +313,32 @@ namespace Terminal.Gui {
 
 			// If this is located after the content output, as in the original,
 			// then when the overlapping (Popover) is output, the border is output on top
-			Driver.SetAttribute (GetNormalColor ());
-			Border.DrawContent (this, false);
+			DrawBorderAndTitle (driver);
 
 			var savedClip = contentView.ClipToBounds ();
 			// Redraw our contentView
 			contentView.Redraw (!NeedDisplay.IsEmpty || ChildNeedsDisplay || LayoutNeeded ? contentView.Bounds : bounds);
-			Driver.Clip = savedClip;
+			driver.Clip = savedClip;
 
 			ClearLayoutNeeded ();
 			ClearNeedsDisplay ();
+		}
+
+		private void DrawBorderAndTitle (ConsoleDriver driver)
+		{
+			driver.SetAttribute (GetNormalColor ());
+			Border.DrawContent (this, false);
+
+			if (Application.Style == TUIStyle.Classic) {
+				var region = Bounds;
+
+				Move (region.X + 2, region.Y);
+				driver.AddStr ("[■]");
+
+				// missing
+				/*Move (region.Right - 5, region.Y);
+				driver.AddStr ("[]");*/
+			}
 		}
 
 		/// <inheritdoc/>

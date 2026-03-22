@@ -142,14 +142,6 @@ namespace Terminal.Gui {
 			contentBottomRightCorner.Enabled = Enabled;
 		}
 
-		//private void Host_CanFocusChanged ()
-		//{
-		//	CanFocus = Host.CanFocus;
-		//	if (otherScrollBarView != null) {
-		//		otherScrollBarView.CanFocus = CanFocus;
-		//	}
-		//}
-
 		void ContentBottomRightCorner_MouseClick (object sender, MouseEventArgs me)
 		{
 			if (me.MouseEvent.Flags == MouseFlags.WheeledDown || me.MouseEvent.Flags == MouseFlags.WheeledUp

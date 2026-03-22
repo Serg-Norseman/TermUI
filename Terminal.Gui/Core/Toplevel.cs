@@ -861,6 +861,11 @@ namespace Terminal.Gui {
 
 				// Only start grabbing if the user clicks on the title bar.
 				if (mouseEvent.Y == 0 && mouseEvent.Flags == MouseFlags.Button1Pressed) {
+					if (this is Window && Application.Style == TUIStyle.Classic && mouseEvent.X == 3) {
+						Application.RequestStop (this);
+						return true;
+					}
+
 					start = new Point (mouseEvent.X, mouseEvent.Y);
 					Application.GrabMouse (this);
 					nx = mouseEvent.X - mouseEvent.OfX;
