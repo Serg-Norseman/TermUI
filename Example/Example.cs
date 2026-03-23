@@ -61,7 +61,7 @@ public class ExampleWindow : Window {
 		btnLogin.Clicked += (sender, e) => {
 			if (usernameText.Text == "admin" && passwordText.Text == "password") {
 				MessageBox.Query ("Logging In", "Login Successful", "Ok");
-				Username = usernameText.Text.ToString ();
+				Username = usernameText.Text;
 				Application.RequestStop ();
 			} else {
 				MessageBox.ErrorQuery ("Logging In", "Incorrect username or password", "Ok");

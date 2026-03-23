@@ -1009,10 +1009,10 @@ namespace Terminal.Gui
 				} else if (Top != null && toplevel != Top && toplevels.Contains (Top)) {
 					Top.OnLeave (toplevel);
 				}
-				if (string.IsNullOrEmpty (toplevel.Id.ToString ())) {
+				if (string.IsNullOrEmpty (toplevel.Id)) {
 					var count = 1;
 					var id = (toplevels.Count + count).ToString ();
-					while (toplevels.Count > 0 && toplevels.FirstOrDefault (x => x.Id.ToString () == id) != null) {
+					while (toplevels.Count > 0 && toplevels.FirstOrDefault (x => x.Id == id) != null) {
 						count++;
 						id = (toplevels.Count + count).ToString ();
 					}
@@ -1020,7 +1020,7 @@ namespace Terminal.Gui
 
 					toplevels.Push (toplevel);
 				} else {
-					var dup = toplevels.FirstOrDefault (x => x.Id.ToString () == toplevel.Id);
+					var dup = toplevels.FirstOrDefault (x => x.Id == toplevel.Id);
 					if (dup == null) {
 						toplevels.Push (toplevel);
 					}

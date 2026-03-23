@@ -168,7 +168,7 @@ namespace UICatalog.Scenarios {
 			systemTimerDemo.Speed.Text = $"{_systemTimerTick}";
 			systemTimerDemo.Speed.TextChanged += (s, a) => {
 				uint result;
-				if (uint.TryParse (systemTimerDemo.Speed.Text.ToString(), out result)) {
+				if (uint.TryParse (systemTimerDemo.Speed.Text, out result)) {
 					_systemTimerTick = result;
 					System.Diagnostics.Debug.WriteLine ($"{_systemTimerTick}");
 					if (systemTimerDemo.Started) {

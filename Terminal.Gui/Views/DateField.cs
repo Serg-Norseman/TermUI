@@ -110,7 +110,7 @@ namespace Terminal.Gui
 		void DateField_Changed(object sender, string e)
 		{
 			try {
-				if (!DateTime.TryParseExact(GetDate(Text).ToString(), GetInvarianteFormat(), CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime result))
+				if (!DateTime.TryParseExact(GetDate(Text), GetInvarianteFormat(), CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime result))
 					Text = e;
 			} catch (Exception) {
 				Text = e;
@@ -215,31 +215,31 @@ namespace Terminal.Gui
 			string[] frm = format.Split(sepChar);
 			bool isValidDate = true;
 			int idx = GetFormatIndex(frm, "y");
-			int year = Int32.Parse(vals[idx].ToString());
+			int year = Int32.Parse(vals[idx]);
 			int month;
 			int day;
 			idx = GetFormatIndex(frm, "M");
-			if (Int32.Parse(vals[idx].ToString()) < 1) {
+			if (Int32.Parse(vals[idx]) < 1) {
 				isValidDate = false;
 				month = 1;
 				vals[idx] = "1";
-			} else if (Int32.Parse(vals[idx].ToString()) > 12) {
+			} else if (Int32.Parse(vals[idx]) > 12) {
 				isValidDate = false;
 				month = 12;
 				vals[idx] = "12";
 			} else
-				month = Int32.Parse(vals[idx].ToString());
+				month = Int32.Parse(vals[idx]);
 			idx = GetFormatIndex(frm, "d");
-			if (Int32.Parse(vals[idx].ToString()) < 1) {
+			if (Int32.Parse(vals[idx]) < 1) {
 				isValidDate = false;
 				day = 1;
 				vals[idx] = "1";
-			} else if (Int32.Parse(vals[idx].ToString()) > 31) {
+			} else if (Int32.Parse(vals[idx]) > 31) {
 				isValidDate = false;
 				day = DateTime.DaysInMonth(year, month);
 				vals[idx] = day.ToString();
 			} else
-				day = Int32.Parse(vals[idx].ToString());
+				day = Int32.Parse(vals[idx]);
 			string d = GetDate(month, day, year, frm);
 
 			if (!DateTime.TryParseExact(d, format, CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime result) ||
@@ -288,7 +288,7 @@ namespace Terminal.Gui
 					var year = vals[i].Trim();
 					if (year.Length == 2) {
 						var y = DateTime.Now.Year.ToString();
-						date[2] = y.Substring(0, 2) + year.ToString();
+						date[2] = y.Substring(0, 2) + year;
 					} else {
 						date[2] = vals[i].Trim();
 					}

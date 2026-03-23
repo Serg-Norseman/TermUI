@@ -101,7 +101,7 @@ namespace UICatalog.Scenarios {
 			var filter = new TreeViewTextFilter<object>(treeView);
 			treeView.Filter = filter;
 			tfSearch.TextChanged += (s, e)=>{
-				filter.Text = tfSearch.Text.ToString();
+				filter.Text = tfSearch.Text;
 				if(treeView.SelectedObject != null)
 				{
 					treeView.EnsureVisible(treeView.SelectedObject);

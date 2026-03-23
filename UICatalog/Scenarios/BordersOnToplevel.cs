@@ -225,7 +225,7 @@ namespace UICatalog.Scenarios {
 				try {
 					smartView.Border.BorderThickness = new Thickness (smartView.Border.BorderThickness.Left,
 						smartView.Border.BorderThickness.Top, smartView.Border.BorderThickness.Right,
-						int.Parse (e.NewText.ToString ()));
+						int.Parse (e.NewText));
 				} catch {
 					if (!string.IsNullOrEmpty (e.NewText)) {
 						e.Cancel = true;
@@ -306,7 +306,7 @@ namespace UICatalog.Scenarios {
 			};
 			effect3DOffsetX.TextChanging += (s, e) => {
 				try {
-					smartView.Border.Effect3DOffset = new Point (int.Parse (e.NewText.ToString ()),
+					smartView.Border.Effect3DOffset = new Point (int.Parse (e.NewText),
 						smartView.Border.Effect3DOffset.Y);
 				} catch {
 					if (!string.IsNullOrEmpty (e.NewText) && e.NewText != CultureInfo.CurrentCulture.NumberFormat.NegativeSign) {
@@ -330,7 +330,7 @@ namespace UICatalog.Scenarios {
 			effect3DOffsetY.TextChanging += (s, e) => {
 				try {
 					smartView.Border.Effect3DOffset = new Point (smartView.Border.Effect3DOffset.X,
-						int.Parse (e.NewText.ToString ()));
+						int.Parse (e.NewText));
 				} catch {
 					if (!string.IsNullOrEmpty(e.NewText) && e.NewText != CultureInfo.CurrentCulture.NumberFormat.NegativeSign) {
 						e.Cancel = true;

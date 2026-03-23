@@ -80,7 +80,7 @@ namespace UICatalog.Scenarios {
 					X = Pos.Center (),
 					Width = 2,
 				};
-				_txtDelimiter.TextChanged += (s, _) => StatusBar.ShortcutDelimiter = _txtDelimiter.Text.ToString();
+				_txtDelimiter.TextChanged += (s, _) => StatusBar.ShortcutDelimiter = _txtDelimiter.Text;
 				_frmDelimiter.Add (_txtDelimiter);
 
 				Add (_frmDelimiter);
@@ -202,9 +202,9 @@ namespace UICatalog.Scenarios {
 					} else if (_currentEditStatusItem != null) {
 						_frmStatusBarDetails._txtTitle.Text = SetTitleText (
 							_frmStatusBarDetails._txtTitle.Text, _frmStatusBarDetails._txtShortcut.Text);
-						var statusItem = new DynamicStatusItem (_frmStatusBarDetails._txtTitle.Text.ToString(),
-							_frmStatusBarDetails._txtAction.Text.ToString(),
-							_frmStatusBarDetails._txtShortcut.Text.ToString());
+						var statusItem = new DynamicStatusItem (_frmStatusBarDetails._txtTitle.Text,
+							_frmStatusBarDetails._txtAction.Text,
+							_frmStatusBarDetails._txtShortcut.Text);
 						UpdateStatusItem (_currentEditStatusItem, statusItem, _lstItems.SelectedItem);
 					}
 				};
@@ -436,7 +436,7 @@ namespace UICatalog.Scenarios {
 					}
 					if (!pre) {
 						if (!ShortcutHelper.PostShortcutValidation (ShortcutHelper.GetShortcutFromTag (
-							_txtShortcut.Text.ToString(), StatusBar.ShortcutDelimiter))) {
+							_txtShortcut.Text, StatusBar.ShortcutDelimiter))) {
 							_txtShortcut.Text = "";
 							return false;
 						}
@@ -508,7 +508,7 @@ namespace UICatalog.Scenarios {
 				Application.Run (_dialog);
 
 				if (valid) {
-					return new DynamicStatusItem (_txtTitle.Text.ToString(), _txtAction.Text.ToString(), _txtShortcut.Text.ToString());
+					return new DynamicStatusItem (_txtTitle.Text, _txtAction.Text, _txtShortcut.Text);
 				} else {
 					return null;
 				}

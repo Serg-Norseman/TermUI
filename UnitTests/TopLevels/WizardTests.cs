@@ -329,7 +329,7 @@ namespace Terminal.Gui.TopLevelTests {
 			wizard.AddStep (step1);
 
 			// If no current step, should be first step
-			Assert.Equal (step1.Title.ToString (), wizard.GetNextStep ().Title.ToString ());
+			Assert.Equal (step1.Title, wizard.GetNextStep ().Title);
 
 			wizard.CurrentStep = step1;
 			// If there is 1 step it's current step should be null
@@ -342,7 +342,7 @@ namespace Terminal.Gui.TopLevelTests {
 			// If two steps and at 1 and step 2 is `Enabled = true`should be step 2
 			var step2 = new Wizard.WizardStep ("step2");
 			wizard.AddStep (step2);
-			Assert.Equal (step2.Title.ToString (), wizard.GetNextStep ().Title.ToString ());
+			Assert.Equal (step2.Title, wizard.GetNextStep ().Title);
 
 			// If two steps and at 1 and step 2 is `Enabled = false` should be null
 			step1.Enabled = true;

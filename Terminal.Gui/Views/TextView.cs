@@ -365,7 +365,7 @@ namespace Terminal.Gui
 			for (int i = 0; i < lines.Count; i++) {
 				var x = lines[i];
 				var txt = GetText(x);
-				var matchText = !matchCase ? text.ToUpper().ToString() : text.ToString();
+				var matchText = !matchCase ? text.ToUpper() : text;
 				var col = txt.IndexOf(matchText);
 				while (col > -1) {
 					if (matchWholeWord && !MatchWholeWord(txt, matchText, col)) {
@@ -412,7 +412,7 @@ namespace Terminal.Gui
 			(var _, var len3) = TextModel.DisplaySize(source, col + matchText.Length, origTxt.Length, false);
 
 			return origTxt.GetRangeEx(0, len) +
-				textToReplace.ToString() +
+				textToReplace +
 				origTxt.GetRangeEx(len + len2, len + len2 + len3);
 		}
 
@@ -469,7 +469,7 @@ namespace Terminal.Gui
 				if (start.Y != i) {
 					start.X = Math.Max(x.Count - 1, 0);
 				}
-				var matchText = !matchCase ? text.ToUpper().ToString() : text.ToString();
+				var matchText = !matchCase ? text.ToUpper() : text;
 				var col = txt.LastIndexOf(matchText, toFind.found ? start.X - 1 : start.X);
 				if (col > -1 && matchWholeWord && !MatchWholeWord(txt, matchText, col)) {
 					continue;
@@ -3955,7 +3955,7 @@ namespace Terminal.Gui
 		{
 			SetWrapModel();
 			if (selecting) {
-				SetClipboard(GetRegion().ToString());
+				SetClipboard(GetRegion());
 				copyWithoutSelection = false;
 			} else {
 				var currentLine = GetCurrentLine();
@@ -3972,7 +3972,7 @@ namespace Terminal.Gui
 		public void Cut()
 		{
 			SetWrapModel();
-			SetClipboard(GetRegion().ToString());
+			SetClipboard(GetRegion());
 			if (!isReadOnly) {
 				ClearRegion();
 

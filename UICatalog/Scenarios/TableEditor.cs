@@ -313,9 +313,8 @@ namespace UICatalog.Scenarios {
 			Application.Run (d);
 
 			if (accepted) {
-
 				try {
-					setter (style, int.Parse (tf.Text.ToString()));
+					setter (style, int.Parse (tf.Text));
 				} catch (Exception ex) {
 					MessageBox.ErrorQuery (60, 20, "Failed to set", ex.Message, "Ok");
 				}
@@ -801,7 +800,7 @@ namespace UICatalog.Scenarios {
 			if(okPressed) {
 
 				try {
-					e.Table.Rows[e.Row][e.Col] = string.IsNullOrWhiteSpace(tf.Text.ToString()) ? DBNull.Value : (object)tf.Text;
+					e.Table.Rows[e.Row][e.Col] = string.IsNullOrWhiteSpace(tf.Text) ? DBNull.Value : (object)tf.Text;
 				}
 				catch(Exception ex) {
 					MessageBox.ErrorQuery(60,20,"Failed to set text", ex.Message,"Ok");

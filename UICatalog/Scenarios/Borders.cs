@@ -102,11 +102,11 @@ namespace UICatalog.Scenarios {
 			paddingTopEdit.TextChanging += (s, e) => {
 				try {
 					smartPanel.Child.Border.Padding = new Thickness (smartPanel.Child.Border.Padding.Left,
-						int.Parse (e.NewText.ToString ()), smartPanel.Child.Border.Padding.Right,
+						int.Parse (e.NewText), smartPanel.Child.Border.Padding.Right,
 						smartPanel.Child.Border.Padding.Bottom);
 
 					smartView.Border.Padding = new Thickness (smartView.Border.Padding.Left,
-						int.Parse (e.NewText.ToString ()), smartView.Border.Padding.Right,
+						int.Parse (e.NewText), smartView.Border.Padding.Right,
 						smartView.Border.Padding.Bottom);
 				} catch {
 					if (!string.IsNullOrEmpty(e.NewText)) {
@@ -173,11 +173,11 @@ namespace UICatalog.Scenarios {
 				try {
 					smartPanel.Child.Border.Padding = new Thickness (smartPanel.Child.Border.Padding.Left,
 						smartPanel.Child.Border.Padding.Top, smartPanel.Child.Border.Padding.Right,
-						int.Parse (e.NewText.ToString ()));
+						int.Parse (e.NewText));
 
 					smartView.Border.Padding = new Thickness (smartView.Border.Padding.Left,
 						smartView.Border.Padding.Top, smartView.Border.Padding.Right,
-						int.Parse (e.NewText.ToString ()));
+						int.Parse (e.NewText));
 				} catch {
 					if (!string.IsNullOrEmpty(e.NewText)) {
 						e.Cancel = true;
@@ -221,11 +221,11 @@ namespace UICatalog.Scenarios {
 			borderTopEdit.TextChanging += (s, e) => {
 				try {
 					smartPanel.Child.Border.BorderThickness = new Thickness (smartPanel.Child.Border.BorderThickness.Left,
-						int.Parse (e.NewText.ToString ()), smartPanel.Child.Border.BorderThickness.Right,
+						int.Parse (e.NewText), smartPanel.Child.Border.BorderThickness.Right,
 						smartPanel.Child.Border.BorderThickness.Bottom);
 
 					smartView.Border.BorderThickness = new Thickness (smartView.Border.BorderThickness.Left,
-						int.Parse (e.NewText.ToString ()), smartView.Border.BorderThickness.Right,
+						int.Parse (e.NewText), smartView.Border.BorderThickness.Right,
 						smartView.Border.BorderThickness.Bottom);
 				} catch {
 					if (!string.IsNullOrEmpty(e.NewText)) {
@@ -244,11 +244,11 @@ namespace UICatalog.Scenarios {
 			};
 			borderLeftEdit.TextChanging += (s, e) => {
 				try {
-					smartPanel.Child.Border.BorderThickness = new Thickness (int.Parse (e.NewText.ToString ()),
+					smartPanel.Child.Border.BorderThickness = new Thickness (int.Parse (e.NewText),
 						smartPanel.Child.Border.BorderThickness.Top, smartPanel.Child.Border.BorderThickness.Right,
 						smartPanel.Child.Border.BorderThickness.Bottom);
 
-					smartView.Border.BorderThickness = new Thickness (int.Parse (e.NewText.ToString ()),
+					smartView.Border.BorderThickness = new Thickness (int.Parse (e.NewText),
 						smartView.Border.BorderThickness.Top, smartView.Border.BorderThickness.Right,
 						smartView.Border.BorderThickness.Bottom);
 				} catch {
@@ -292,11 +292,11 @@ namespace UICatalog.Scenarios {
 				try {
 					smartPanel.Child.Border.BorderThickness = new Thickness (smartPanel.Child.Border.BorderThickness.Left,
 						smartPanel.Child.Border.BorderThickness.Top, smartPanel.Child.Border.BorderThickness.Right,
-						int.Parse (e.NewText.ToString ()));
+						int.Parse (e.NewText));
 
 					smartView.Border.BorderThickness = new Thickness (smartView.Border.BorderThickness.Left,
 						smartView.Border.BorderThickness.Top, smartView.Border.BorderThickness.Right,
-						int.Parse (e.NewText.ToString ()));
+						int.Parse (e.NewText));
 				} catch {
 					if (!string.IsNullOrEmpty(e.NewText)) {
 						e.Cancel = true;

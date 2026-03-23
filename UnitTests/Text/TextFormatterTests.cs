@@ -1219,30 +1219,30 @@ namespace Terminal.Gui.TextTests
 			justifiedText = text;
 
 			width = text.Length;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 1;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 2;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 10;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 11;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 
 			// Odd # of chars
 			text = "word.";
 			justifiedText = text;
 
 			width = text.Length;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 1;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 2;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 10;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 11;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 
 
 			// Unicode (even #)
@@ -1250,30 +1250,30 @@ namespace Terminal.Gui.TextTests
 			justifiedText = text;
 
 			width = text.Length;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 1;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 2;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 10;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 11;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 
 			// Unicode (odd # of chars)
 			text = "Ð¿ÑÐ¸Ð²ÐµÑ.";
 			justifiedText = text;
 
 			width = text.Length;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 1;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 2;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 10;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 			width = text.Length + 11;
-			Assert.Equal(justifiedText.ToString(), TextFormatter.Justify(text, width, fillChar).ToString());
+			Assert.Equal(justifiedText, TextFormatter.Justify(text, width, fillChar));
 		}
 
 

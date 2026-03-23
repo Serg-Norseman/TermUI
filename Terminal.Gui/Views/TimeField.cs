@@ -111,7 +111,7 @@ namespace Terminal.Gui
 		void TextField_TextChanged(object sender, string e)
 		{
 			try {
-				if (!TimeSpan.TryParseExact(Text.ToString().Trim(), format.Trim(), CultureInfo.CurrentCulture, TimeSpanStyles.None, out TimeSpan result))
+				if (!TimeSpan.TryParseExact(Text.Trim(), format.Trim(), CultureInfo.CurrentCulture, TimeSpanStyles.None, out TimeSpan result))
 					Text = e;
 			} catch (Exception) {
 				Text = e;
@@ -190,9 +190,9 @@ namespace Terminal.Gui
 
 			string[] vals = text.Split(sepChar);
 			bool isValidTime = true;
-			int hour = Int32.Parse(vals[0].ToString());
-			int minute = Int32.Parse(vals[1].ToString());
-			int second = isShort ? 0 : vals.Length > 2 ? Int32.Parse(vals[2].ToString()) : 0;
+			int hour = Int32.Parse(vals[0]);
+			int minute = Int32.Parse(vals[1]);
+			int second = isShort ? 0 : vals.Length > 2 ? Int32.Parse(vals[2]) : 0;
 			if (hour < 0) {
 				isValidTime = false;
 				hour = 0;

@@ -176,7 +176,7 @@ namespace Terminal.Gui {
 			var scheme = GetNormalColor ();
 			Driver.SetAttribute (scheme);
 			for (int i = 0; i < Items.Length; i++) {
-				var title = Items [i].Title.ToString ();
+				var title = Items [i].Title;
 				var hotTextSpecifier = Items [i].HotTextSpecifier;
 				Driver.SetAttribute (DetermineColorSchemeFor (Items [i]));
 				for (int n = 0; n < Items [i].Title.Length; n++) {

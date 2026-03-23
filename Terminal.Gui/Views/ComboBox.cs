@@ -379,7 +379,7 @@ namespace Terminal.Gui {
 			Added += (object sender, View v) => {
 				SetNeedsLayout ();
 				SetNeedsDisplay ();
-				Search_Changed (this, Text.ToString ());
+				Search_Changed (this, Text);
 			};
 
 			// Things this view knows how to do
@@ -781,7 +781,7 @@ namespace Terminal.Gui {
 			search.CursorPosition = 0;
 			search.TextChanged += Search_Changed;
 			if (!isFromSelectedItem) {
-				selectedIndex = GetSelectedItemFromSource (search.Text.ToString ());
+				selectedIndex = GetSelectedItemFromSource (search.Text);
 				OnSelectedChanged ();
 			}
 		}
@@ -797,7 +797,7 @@ namespace Terminal.Gui {
 
 			SetValue (searchset [listview.SelectedItem]);
 			search.CursorPosition = search.Text.Length;
-			Search_Changed (this, search.Text.ToString ());
+			Search_Changed (this, search.Text);
 			OnOpenSelectedItem ();
 			Reset (keepSearchText: true);
 
@@ -851,7 +851,7 @@ namespace Terminal.Gui {
 					searchset.Add (item);
 				}
 			} else {
-				string searchVal = search.Text.ToString ();
+				string searchVal = search.Text;
 
 				foreach (var item in itemsList) {
 					if (item.ToString ().StartsWith (searchVal, StringComparison.CurrentCultureIgnoreCase)) {

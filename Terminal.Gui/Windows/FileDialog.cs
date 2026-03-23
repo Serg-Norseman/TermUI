@@ -51,7 +51,7 @@ namespace Terminal.Gui
 		{
 			bool valid = false;
 			try {
-				dirInfo = new DirectoryInfo(value == null ? directory.ToString() : value.ToString());
+				dirInfo = new DirectoryInfo(value == null ? directory : value);
 
 				// Dispose of the old watcher
 				watcher?.Dispose();
@@ -490,7 +490,7 @@ namespace Terminal.Gui
 			var isDir = infos[selected].Item2;
 
 			if (isDir) {
-				Directory = Path.GetFullPath(Path.Combine(Path.GetFullPath(Directory.ToString()), infos[selected].Item1));
+				Directory = Path.GetFullPath(Path.Combine(Path.GetFullPath(Directory), infos[selected].Item1));
 				DirectoryChanged?.Invoke(Directory);
 				if (canChooseDirectories && !navigateFolder) {
 					return true;
@@ -538,7 +538,7 @@ namespace Terminal.Gui
 
 		public string MakePath(string relativePath)
 		{
-			var dir = Directory.ToString();
+			var dir = Directory;
 			return string.IsNullOrEmpty(dir) ? "" : Path.GetFullPath(Path.Combine(dir, relativePath));
 		}
 
@@ -683,7 +683,7 @@ namespace Terminal.Gui
 			};
 			cmbAllowedTypes.SetSource(allowedTypes ?? new List<string>());
 			cmbAllowedTypes.OpenSelectedItem += (sender, e) => {
-				dirListView.AllowedFileTypes = cmbAllowedTypes.Text.ToString().Split(';');
+				dirListView.AllowedFileTypes = cmbAllowedTypes.Text.Split(';');
 				dirListView.Reload();
 			};
 			Add(cmbAllowedTypes);
@@ -713,7 +713,7 @@ namespace Terminal.Gui
 			};
 			this.prompt.Clicked += (sender, e) => {
 				if (this is OpenDialog) {
-					if (!dirListView.GetValidFilesName(nameEntry.Text.ToString(), out string res)) {
+					if (!dirListView.GetValidFilesName(nameEntry.Text, out string res)) {
 						nameEntry.Text = res;
 						dirListView.SetNeedsDisplay();
 						return;
@@ -722,13 +722,13 @@ namespace Terminal.Gui
 						return;
 					}
 				} else if (this is SaveDialog) {
-					var name = nameEntry.Text.ToString();
+					var name = nameEntry.Text;
 					if (string.IsNullOrEmpty(FilePath) || name.Split(',').Length > 1) {
 						return;
 					}
-					var ext = name.EndsWith(cmbAllowedTypes.Text.ToString())
-						? "" : cmbAllowedTypes.Text.ToString();
-					FilePath = Path.Combine(FilePath.ToString(), $"{name}{ext}");
+					var ext = name.EndsWith(cmbAllowedTypes.Text)
+						? "" : cmbAllowedTypes.Text;
+					FilePath = Path.Combine(FilePath, $"{name}{ext}");
 				}
 				canceled = false;
 				Application.RequestStop();

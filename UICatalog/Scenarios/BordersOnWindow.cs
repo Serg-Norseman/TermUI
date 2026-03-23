@@ -72,7 +72,7 @@ namespace UICatalog.Scenarios {
 			paddingTopEdit.TextChanging += (s, e) => {
 				try {
 					smartView.Border.Padding = new Thickness (smartView.Border.Padding.Left,
-						int.Parse (e.NewText.ToString ()), smartView.Border.Padding.Right,
+						int.Parse (e.NewText), smartView.Border.Padding.Right,
 						smartView.Border.Padding.Bottom);
 				} catch {
 					if (!string.IsNullOrEmpty(e.NewText)) {
@@ -91,7 +91,7 @@ namespace UICatalog.Scenarios {
 			};
 			paddingLeftEdit.TextChanging += (s, e) => {
 				try {
-					smartView.Border.Padding = new Thickness (int.Parse (e.NewText.ToString ()),
+					smartView.Border.Padding = new Thickness (int.Parse (e.NewText),
 						smartView.Border.Padding.Top, smartView.Border.Padding.Right,
 						smartView.Border.Padding.Bottom);
 				} catch {
@@ -131,7 +131,7 @@ namespace UICatalog.Scenarios {
 				try {
 					smartView.Border.Padding = new Thickness (smartView.Border.Padding.Left,
 						smartView.Border.Padding.Top, smartView.Border.Padding.Right,
-						int.Parse (e.NewText.ToString ()));
+						int.Parse (e.NewText));
 				} catch {
 					if (!string.IsNullOrEmpty(e.NewText)) {
 						e.Cancel = true;

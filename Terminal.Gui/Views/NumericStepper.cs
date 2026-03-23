@@ -55,7 +55,7 @@ namespace Terminal.Gui {
 				TextAlignment = TextAlignment.Right
 			};
 			_textField.Leave += (s, e) => {
-				if (int.TryParse (_textField.Text.ToString (), out var v)) {
+				if (int.TryParse (_textField.Text, out var v)) {
 					Value = v;
 				} else {
 					_textField.Text = Value.ToString ();

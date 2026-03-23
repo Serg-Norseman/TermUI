@@ -173,7 +173,7 @@ namespace Terminal.Gui {
 				} else if (k == "Alt") {
 					key |= Key.AltMask;
 				} else if (k.StartsWith ("F") && k.Length > 1) {
-					int.TryParse (k.Substring (1).ToString (), out int n);
+					int.TryParse (k.Substring (1), out int n);
 					for (uint j = (uint)Key.F1; j <= (uint)Key.F12; j++) {
 						int.TryParse (((Key)j).ToString ().Substring (1), out int f);
 						if (f == n) {
@@ -181,7 +181,7 @@ namespace Terminal.Gui {
 						}
 					}
 				} else {
-					key |= (Key)Enum.Parse (typeof (Key), k.ToString ());
+					key |= (Key)Enum.Parse (typeof (Key), k);
 				}
 			}
 

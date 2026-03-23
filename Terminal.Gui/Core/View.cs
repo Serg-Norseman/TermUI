@@ -2456,7 +2456,7 @@ namespace Terminal.Gui
 
 			foreach (var v in ordered) {
 				if (v.LayoutStyle == LayoutStyle.Computed) {
-					v.SetRelativeLayout(v?.SuperView.Frame ?? Frame);
+					v.SetRelativeLayout(v?.SuperView?.Frame ?? Frame);
 				}
 
 				v.LayoutSubviews();
@@ -2495,7 +2495,7 @@ namespace Terminal.Gui
 		/// </remarks>
 		public virtual string Text
 		{
-			get => text.ToString();
+			get => text;
 			set {
 				text = value;
 				SetHotKey();

@@ -16,17 +16,18 @@ namespace Terminal.Gui {
 		public string Text { get => text ?? "Unamed"; set => text = value; }
 
 		/// <summary>
-		/// The control to display when the tab is selected
+		/// The control to display when the tab is selected.
+		/// Added the addition of a default view container for use immediately after adding a TabPage.
 		/// </summary>
 		/// <value></value>
 		public View View { get; set; }
 
 		/// <summary>
-		/// Creates a new unamed tab with no controls inside
+		/// Creates a new unamed tab with no controls inside.
 		/// </summary>
 		public TabPage ()
 		{
-
+			View = new View ();
 		}
 
 		/// <summary>
@@ -157,7 +158,7 @@ namespace Terminal.Gui {
 		/// All tabs currently hosted by the control
 		/// </summary>
 		/// <value></value>
-		public IReadOnlyList<TabPage> Tabs { get => tabs.AsReadOnly (); }
+		public IReadOnlyList<TabPage> Tabs { get => tabs; }
 
 		/// <summary>
 		/// When there are too many tabs to render, this indicates the first
@@ -183,6 +184,14 @@ namespace Terminal.Gui {
 		/// show context menu (e.g. on right click) etc.
 		/// </summary>
 		public event EventHandler<TabMouseEventArgs> TabClicked;
+
+
+		public int SelectedIndex
+		{
+			get {
+				return tabs.IndexOf (selectedTab);
+			}
+		}
 
 
 		/// <summary>
@@ -477,7 +486,7 @@ namespace Terminal.Gui {
 				// while there is space for the tab
 				var tabTextWidth = tab.Text.Sum (c => Rune.ColumnWidth (c));
 
-				string text = tab.Text.ToString ();
+				string text = tab.Text;
 
 				// The maximum number of characters to use for the tab name as specified
 				// by the user (MaxTabTextWidth).  But not more than the width of the view
@@ -491,7 +500,7 @@ namespace Terminal.Gui {
 				}
 
 				if (tabTextWidth > maxWidth) {
-					text = tab.Text.ToString ().Substring (0, (int)maxWidth);
+					text = tab.Text.Substring (0, (int)maxWidth);
 					tabTextWidth = (int)maxWidth;
 				}
 

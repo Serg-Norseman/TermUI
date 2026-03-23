@@ -305,7 +305,7 @@ namespace Terminal.Gui
 						, HistoryText.LineStatus.Replaced);
 				}
 
-				TextChanged?.Invoke(this, oldText.ToString());
+				TextChanged?.Invoke(this, oldText);
 
 				if (point > text.Count) {
 					point = Math.Max(TextModel.DisplaySize(text, 0).size - 1, 0);
