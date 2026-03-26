@@ -60,6 +60,12 @@ namespace UICatalog.Scenarios {
 			};
 			Win.Add (continuousPB);
 
+			if (Application.Style == TUIStyle.Classic) {
+				continuousPB.ColorScheme = new ColorScheme () {
+					Normal = new Terminal.Gui.Attribute (Color.Black, Color.Gray)
+				};
+			}
+
 			var button = new Button ("Start timer") {
 				X = Pos.Center (),
 				Y = Pos.Bottom (continuousPB) + 1

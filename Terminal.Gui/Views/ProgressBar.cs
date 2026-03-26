@@ -23,7 +23,6 @@ namespace Terminal.Gui
 		/// Indicates progress by continuously scrolling a block across a <see cref="ProgressBar"/> in a marquee fashion.
 		/// </summary>
 		MarqueeContinuous
-
 	}
 
 	/// <summary>
@@ -69,37 +68,21 @@ namespace Terminal.Gui
 	public class ProgressBar : View
 	{
 		bool isActivity;
-		int[] activityPos;
+		int [] activityPos;
 		int delta, padding;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ProgressBar"/> class, starts in percentage mode with an absolute position and size.
-		/// </summary>
-		/// <param name="rect">Rect.</param>
-		public ProgressBar(Rect rect) : base(rect)
-		{
-			Initialize(rect);
-		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ProgressBar"/> class, starts in percentage mode and uses relative layout.
 		/// </summary>
-		public ProgressBar() : base()
-		{
-			Initialize(Rect.Empty);
-		}
-
-		void Initialize(Rect rect)
+		public ProgressBar () : base ()
 		{
 			CanFocus = false;
 			fraction = 0;
-			ColorScheme = new ColorScheme() {
-				Normal = Application.Driver.MakeAttribute(Color.BrightGreen, Color.Gray),
+			ColorScheme = new ColorScheme () {
+				Normal = Application.Driver.MakeAttribute (Color.BrightGreen, Color.Gray),
 				HotNormal = Colors.Base.Normal
 			};
-			if (rect.IsEmpty) {
-				Height = 1;
-			}
+			Height = 1;
 		}
 
 		float fraction;
@@ -112,9 +95,9 @@ namespace Terminal.Gui
 		{
 			get => fraction;
 			set {
-				fraction = Math.Min(value, 1);
+				fraction = Math.Min (value, 1);
 				isActivity = false;
-				SetNeedsDisplay();
+				SetNeedsDisplay ();
 			}
 		}
 
@@ -129,20 +112,20 @@ namespace Terminal.Gui
 			set {
 				progressBarStyle = value;
 				switch (value) {
-				case ProgressBarStyle.Blocks:
-					SegmentCharacter = Driver.BlocksMeterSegment;
-					break;
-				case ProgressBarStyle.Continuous:
-					SegmentCharacter = Driver.ContinuousMeterSegment;
-					break;
-				case ProgressBarStyle.MarqueeBlocks:
-					SegmentCharacter = Driver.BlocksMeterSegment;
-					break;
-				case ProgressBarStyle.MarqueeContinuous:
-					SegmentCharacter = Driver.ContinuousMeterSegment;
-					break;
+					case ProgressBarStyle.Blocks:
+						SegmentCharacter = Driver.BlocksMeterSegment;
+						break;
+					case ProgressBarStyle.Continuous:
+						SegmentCharacter = Driver.ContinuousMeterSegment;
+						break;
+					case ProgressBarStyle.MarqueeBlocks:
+						SegmentCharacter = Driver.BlocksMeterSegment;
+						break;
+					case ProgressBarStyle.MarqueeContinuous:
+						SegmentCharacter = Driver.ContinuousMeterSegment;
+						break;
 				}
-				SetNeedsDisplay();
+				SetNeedsDisplay ();
 			}
 		}
 
@@ -157,23 +140,23 @@ namespace Terminal.Gui
 			set {
 				progressBarFormat = value;
 				switch (progressBarFormat) {
-				case ProgressBarFormat.Simple:
-					Height = 1;
-					break;
-				case ProgressBarFormat.SimplePlusPercentage:
-					Height = 2;
-					break;
-				case ProgressBarFormat.Framed:
-					Height = 3;
-					break;
-				case ProgressBarFormat.FramedPlusPercentage:
-					Height = 4;
-					break;
-				case ProgressBarFormat.FramedProgressPadded:
-					Height = 6;
-					break;
+					case ProgressBarFormat.Simple:
+						Height = 1;
+						break;
+					case ProgressBarFormat.SimplePlusPercentage:
+						Height = 2;
+						break;
+					case ProgressBarFormat.Framed:
+						Height = 3;
+						break;
+					case ProgressBarFormat.FramedPlusPercentage:
+						Height = 4;
+						break;
+					case ProgressBarFormat.FramedProgressPadded:
+						Height = 6;
+						break;
 				}
-				SetNeedsDisplay();
+				SetNeedsDisplay ();
 			}
 		}
 
@@ -187,16 +170,16 @@ namespace Terminal.Gui
 			get => segmentCharacter;
 			set {
 				segmentCharacter = value;
-				SetNeedsDisplay();
+				SetNeedsDisplay ();
 			}
 		}
 
 		///<inheritdoc/>
 		public override string Text
 		{
-			get => GetPercentageText();
+			get => GetPercentageText ();
 			set {
-				base.Text = SetPercentageText(value);
+				base.Text = SetPercentageText (value);
 			}
 		}
 
@@ -212,33 +195,33 @@ namespace Terminal.Gui
 			get => bidirectionalMarquee;
 			set {
 				bidirectionalMarquee = value;
-				SetNeedsDisplay();
+				SetNeedsDisplay ();
 			}
 		}
 
-		string GetPercentageText()
+		string GetPercentageText ()
 		{
 			switch (progressBarStyle) {
-			case ProgressBarStyle.Blocks:
-			case ProgressBarStyle.Continuous:
-				return $"{fraction * 100:F0}%";
-			case ProgressBarStyle.MarqueeBlocks:
-			case ProgressBarStyle.MarqueeContinuous:
-				break;
+				case ProgressBarStyle.Blocks:
+				case ProgressBarStyle.Continuous:
+					return $"{fraction * 100:F0}%";
+				case ProgressBarStyle.MarqueeBlocks:
+				case ProgressBarStyle.MarqueeContinuous:
+					break;
 			}
 
 			return base.Text;
 		}
 
-		string SetPercentageText(string value)
+		string SetPercentageText (string value)
 		{
 			switch (progressBarStyle) {
-			case ProgressBarStyle.Blocks:
-			case ProgressBarStyle.Continuous:
-				return $"{fraction * 100:F0}%";
-			case ProgressBarStyle.MarqueeBlocks:
-			case ProgressBarStyle.MarqueeContinuous:
-				break;
+				case ProgressBarStyle.Blocks:
+				case ProgressBarStyle.Continuous:
+					return $"{fraction * 100:F0}%";
+				case ProgressBarStyle.MarqueeBlocks:
+				case ProgressBarStyle.MarqueeContinuous:
+					break;
 			}
 
 			return value;
@@ -251,140 +234,142 @@ namespace Terminal.Gui
 		/// If the <see cref="ProgressBar"/> is percentage mode, it switches to activity
 		/// mode. If is in activity mode, the marker is moved.
 		/// </remarks>
-		public void Pulse()
+		public void Pulse ()
 		{
 			if (activityPos == null) {
-				PopulateActivityPos();
+				PopulateActivityPos ();
 			}
 			if (!isActivity) {
 				isActivity = true;
 				delta = 1;
 			} else {
 				for (int i = 0; i < activityPos.Length; i++) {
-					activityPos[i] += delta;
+					activityPos [i] += delta;
 				}
-				int fWidth = GetFrameWidth();
-				if (activityPos[activityPos.Length - 1] < 0) {
+				int fWidth = GetFrameWidth ();
+				if (activityPos [activityPos.Length - 1] < 0) {
 					for (int i = 0; i < activityPos.Length; i++) {
-						activityPos[i] = i - activityPos.Length + 2;
+						activityPos [i] = i - activityPos.Length + 2;
 					}
 					delta = 1;
-				} else if (activityPos[0] >= fWidth) {
+				} else if (activityPos [0] >= fWidth) {
 					if (bidirectionalMarquee) {
 						for (int i = 0; i < activityPos.Length; i++) {
-							activityPos[i] = fWidth + i - 2;
+							activityPos [i] = fWidth + i - 2;
 						}
 						delta = -1;
 					} else {
-						PopulateActivityPos();
+						PopulateActivityPos ();
 					}
 				}
 			}
 
-			SetNeedsDisplay();
+			SetNeedsDisplay ();
 		}
 
 		///<inheritdoc/>
-		public override void Redraw(Rect region)
+		public override void Redraw (Rect region)
 		{
-			DrawFrame();
+			DrawFrame ();
 
-			Driver.SetAttribute(GetNormalColor());
+			Driver.SetAttribute (GetNormalColor ());
 
-			int fWidth = GetFrameWidth();
+			char emptySpace = (Application.Style == TUIStyle.Native ? ' ' : ConsoleDriver.Stipple);
+
+			int fWidth = GetFrameWidth ();
 			if (isActivity) {
-				Move(padding, padding);
+				Move (padding, padding);
 				for (int i = 0; i < fWidth; i++)
-					if (Array.IndexOf(activityPos, i) != -1)
-						Driver.AddRune(SegmentCharacter);
+					if (Array.IndexOf (activityPos, i) != -1)
+						Driver.AddRune (SegmentCharacter);
 					else
-						Driver.AddRune(' ');
+						Driver.AddRune (emptySpace);
 			} else {
-				Move(padding, padding);
+				Move (padding, padding);
 				int mid = (int)(fraction * fWidth);
 				int i;
 				for (i = 0; i < mid & i < fWidth; i++)
-					Driver.AddRune(SegmentCharacter);
+					Driver.AddRune (SegmentCharacter);
 				for (; i < fWidth; i++)
-					Driver.AddRune(' ');
+					Driver.AddRune (emptySpace);
 			}
 
-			DrawText(fWidth);
+			DrawText (fWidth);
 		}
 
-		int GetFrameWidth()
+		int GetFrameWidth ()
 		{
 			switch (progressBarFormat) {
-			case ProgressBarFormat.Simple:
-			case ProgressBarFormat.SimplePlusPercentage:
-				break;
-			case ProgressBarFormat.Framed:
-			case ProgressBarFormat.FramedPlusPercentage:
-				return Frame.Width - 2;
-			case ProgressBarFormat.FramedProgressPadded:
-				return Frame.Width - 2 - padding;
+				case ProgressBarFormat.Simple:
+				case ProgressBarFormat.SimplePlusPercentage:
+					break;
+				case ProgressBarFormat.Framed:
+				case ProgressBarFormat.FramedPlusPercentage:
+					return Frame.Width - 2;
+				case ProgressBarFormat.FramedProgressPadded:
+					return Frame.Width - 2 - padding;
 			}
 
 			return Frame.Width;
 		}
 
-		void DrawText(int fWidth)
+		void DrawText (int fWidth)
 		{
 			switch (progressBarFormat) {
-			case ProgressBarFormat.Simple:
-			case ProgressBarFormat.Framed:
-				break;
-			case ProgressBarFormat.SimplePlusPercentage:
-			case ProgressBarFormat.FramedPlusPercentage:
-			case ProgressBarFormat.FramedProgressPadded:
-				var tf = new TextFormatter() {
-					Alignment = TextAlignment.Centered,
-					Text = Text
-				};
-				var row = padding + (progressBarFormat == ProgressBarFormat.FramedProgressPadded
-					? 2 : 1);
-				Move(padding, row);
-				var rect = new Rect(padding, row, fWidth, Frame.Height);
-				tf?.Draw(ViewToScreen(rect), ColorScheme.HotNormal, ColorScheme.HotNormal,
-					SuperView == null ? default : SuperView.ViewToScreen(SuperView.Bounds));
-				break;
+				case ProgressBarFormat.Simple:
+				case ProgressBarFormat.Framed:
+					break;
+				case ProgressBarFormat.SimplePlusPercentage:
+				case ProgressBarFormat.FramedPlusPercentage:
+				case ProgressBarFormat.FramedProgressPadded:
+					var tf = new TextFormatter () {
+						Alignment = TextAlignment.Centered,
+						Text = Text
+					};
+					var row = padding + (progressBarFormat == ProgressBarFormat.FramedProgressPadded
+						? 2 : 1);
+					Move (padding, row);
+					var rect = new Rect (padding, row, fWidth, Frame.Height);
+					tf?.Draw (ViewToScreen (rect), ColorScheme.HotNormal, ColorScheme.HotNormal,
+						SuperView == null ? default : SuperView.ViewToScreen (SuperView.Bounds));
+					break;
 			}
 		}
 
-		void DrawFrame()
+		void DrawFrame ()
 		{
 			switch (progressBarFormat) {
-			case ProgressBarFormat.Simple:
-			case ProgressBarFormat.SimplePlusPercentage:
-				padding = 0;
-				break;
-			case ProgressBarFormat.Framed:
-			case ProgressBarFormat.FramedPlusPercentage:
-				padding = 1;
-				Application.Driver.DrawWindowFrame(ViewToScreen(Bounds), padding, padding, padding, padding, true);
-				break;
-			case ProgressBarFormat.FramedProgressPadded:
-				padding = 2;
-				Application.Driver.DrawWindowFrame(ViewToScreen(Bounds), padding, padding, padding, padding + 1, true);
-				Application.Driver.DrawWindowFrame(ViewToScreen(Bounds), padding - 1, padding - 1, padding - 1, padding - 1, true);
-				break;
+				case ProgressBarFormat.Simple:
+				case ProgressBarFormat.SimplePlusPercentage:
+					padding = 0;
+					break;
+				case ProgressBarFormat.Framed:
+				case ProgressBarFormat.FramedPlusPercentage:
+					padding = 1;
+					Application.Driver.DrawWindowFrame (ViewToScreen (Bounds), padding, padding, padding, padding, true);
+					break;
+				case ProgressBarFormat.FramedProgressPadded:
+					padding = 2;
+					Application.Driver.DrawWindowFrame (ViewToScreen (Bounds), padding, padding, padding, padding + 1, true);
+					Application.Driver.DrawWindowFrame (ViewToScreen (Bounds), padding - 1, padding - 1, padding - 1, padding - 1, true);
+					break;
 			}
 		}
 
-		void PopulateActivityPos()
+		void PopulateActivityPos ()
 		{
-			activityPos = new int[Math.Min(Frame.Width / 3, 5)];
+			activityPos = new int [Math.Min (Frame.Width / 3, 5)];
 			for (int i = 0; i < activityPos.Length; i++) {
-				activityPos[i] = i - activityPos.Length + 1;
+				activityPos [i] = i - activityPos.Length + 1;
 			}
 		}
 
 		///<inheritdoc/>
-		public override bool OnEnter(View view)
+		public override bool OnEnter (View view)
 		{
-			Application.Driver.SetCursorVisibility(CursorVisibility.Invisible);
+			Application.Driver.SetCursorVisibility (CursorVisibility.Invisible);
 
-			return base.OnEnter(view);
+			return base.OnEnter (view);
 		}
 	}
 }
