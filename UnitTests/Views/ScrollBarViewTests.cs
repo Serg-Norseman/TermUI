@@ -155,7 +155,7 @@ namespace Terminal.Gui.ViewTests {
 		[ScrollBarAutoInitShutdown]
 		public void Scrolling_With_Default_Constructor_Do_Not_Scroll ()
 		{
-			var sbv = new ScrollBarView {
+			var sbv = new ScrollBarView (0, 0, false) {
 				Position = 1
 			};
 			Assert.NotEqual (1, sbv.Position);
@@ -331,28 +331,6 @@ namespace Terminal.Gui.ViewTests {
 
 		[Fact]
 		[ScrollBarAutoInitShutdown]
-		public void KeepContentAlwaysInViewport_False ()
-		{
-			Hosting_A_View_To_A_ScrollBarView ();
-
-			AddHandlers ();
-
-			_scrollBar.KeepContentAlwaysInViewport = false;
-			_scrollBar.Position = 50;
-			Assert.Equal (_scrollBar.Position, _scrollBar.Size - 1);
-			Assert.Equal (_scrollBar.Position, _hostView.Top);
-			Assert.Equal (29, _scrollBar.Position);
-			Assert.Equal (29, _hostView.Top);
-
-			_scrollBar.OtherScrollBarView.Position = 150;
-			Assert.Equal (_scrollBar.OtherScrollBarView.Position, _scrollBar.OtherScrollBarView.Size - 1);
-			Assert.Equal (_scrollBar.OtherScrollBarView.Position, _hostView.Left);
-			Assert.Equal (99, _scrollBar.OtherScrollBarView.Position);
-			Assert.Equal (99, _hostView.Left);
-		}
-
-		[Fact]
-		[ScrollBarAutoInitShutdown]
 		public void AutoHideScrollBars_Check ()
 		{
 			Hosting_A_View_To_A_ScrollBarView ();
@@ -474,7 +452,6 @@ namespace Terminal.Gui.ViewTests {
 				win.Add (listView);
 
 				var newScrollBarView = new ScrollBarView (listView, true, false) {
-					KeepContentAlwaysInViewport = true
 				};
 				win.Add (newScrollBarView);
 
@@ -549,7 +526,6 @@ namespace Terminal.Gui.ViewTests {
 				win.Add (listView);
 
 				var newScrollBarView = new ScrollBarView (listView, false, false) {
-					KeepContentAlwaysInViewport = true
 				};
 				win.Add (newScrollBarView);
 
@@ -605,33 +581,26 @@ namespace Terminal.Gui.ViewTests {
 			sbv.OtherScrollBarView.Size = 100;
 			sbv.OtherScrollBarView.Position = 0;
 			// Host bounds is empty.
-			Assert.False (sbv.CanScroll (10, out int max, sbv.IsVertical));
-			Assert.Equal (0, max);
-			Assert.False (sbv.OtherScrollBarView.CanScroll (10, out max, sbv.OtherScrollBarView.IsVertical));
-			Assert.Equal (0, max);
+			Assert.False (sbv.TryScroll (10));
+			Assert.False (sbv.OtherScrollBarView.TryScroll (10));
 			// They aren't visible so they aren't drawn.
 			Assert.False (sbv.Visible);
 			Assert.False (sbv.OtherScrollBarView.Visible);
 			top.LayoutSubviews ();
 			// Now the host bounds is not empty.
-			Assert.True (sbv.CanScroll (10, out max, sbv.IsVertical));
-			Assert.Equal (10, max);
-			Assert.True (sbv.OtherScrollBarView.CanScroll (10, out max, sbv.OtherScrollBarView.IsVertical));
-			Assert.Equal (10, max);
-			Assert.True (sbv.CanScroll (50, out max, sbv.IsVertical));
+			Assert.True (sbv.TryScroll (10));
+			Assert.True (sbv.OtherScrollBarView.TryScroll (10));
+			Assert.True (sbv.TryScroll (50));
 			Assert.Equal (40, sbv.Size);
-			Assert.Equal (15, max); // 15+25=40
-			Assert.True (sbv.OtherScrollBarView.CanScroll (150, out max, sbv.OtherScrollBarView.IsVertical));
+			Assert.True (sbv.OtherScrollBarView.TryScroll (150));
 			Assert.Equal (100, sbv.OtherScrollBarView.Size);
-			Assert.Equal (20, max); // 20+80=100
 			Assert.False (sbv.Visible);
 			Assert.False (sbv.OtherScrollBarView.Visible);
-			sbv.KeepContentAlwaysInViewport = false;
-			sbv.OtherScrollBarView.KeepContentAlwaysInViewport = false;
-			Assert.True (sbv.CanScroll (50, out max, sbv.IsVertical));
-			Assert.Equal (39, max);
-			Assert.True (sbv.OtherScrollBarView.CanScroll (150, out max, sbv.OtherScrollBarView.IsVertical));
-			Assert.Equal (99, max);
+
+			//sbv.KeepContentAlwaysInViewport = false;
+			//sbv.OtherScrollBarView.KeepContentAlwaysInViewport = false;
+			Assert.True (sbv.TryScroll (50));
+			Assert.True (sbv.OtherScrollBarView.TryScroll (150));
 			Assert.True (sbv.Visible);
 			Assert.True (sbv.OtherScrollBarView.Visible);
 		}
@@ -854,7 +823,7 @@ This is a tes┬
 This is a tes┴
 This is a tes░
 This is a tes▼
-◄├─┤░░░░░░░░► 
+◄├┤░░░░░░░░░► 
 ", output);
 
 			sbv.Size = 0;
@@ -890,7 +859,7 @@ This is a tes┬
 This is a tes┴
 This is a tes░
 This is a tes▼
-◄├──┤░░░░░░░► 
+◄├─┤░░░░░░░░► 
 ", output);
 
 		}
@@ -1236,7 +1205,7 @@ This is a test
 ││0    │││
 ││23456┴││
 ││     ▼││
-││◄├─┤► ││
+││◄├┤░► ││
 │└──────┘│
 │┌──────┐│
 ││4    ▲││
@@ -1288,7 +1257,7 @@ This is a test
 ││     │││
 ││34567┴││
 ││     ▼││
-││◄├─┤► ││
+││◄├┤░► ││
 │└──────┘│
 │┌──────┐│
 ││5    ▲││
@@ -1340,7 +1309,7 @@ This is a test
 ││     │││
 ││45678┴││
 ││     ▼││
-││◄├─┤► ││
+││◄░├┤► ││
 │└──────┘│
 │┌──────┐│
 ││6    ▲││
@@ -1448,7 +1417,7 @@ This is a test
 │└──────┘│
 │┌──────┐│
 ││9    ▲││
-││10   ◊││
+││10   ■││
 ││12345▼││
 ││◄├┤░► ││
 │└──────┘│
@@ -1500,7 +1469,7 @@ This is a test
 │└──────┘│
 │┌──────┐│
 ││10   ▲││
-││12345◊││
+││12345■││
 ││     ▼││
 ││◄├┤░► ││
 │└──────┘│
@@ -1552,9 +1521,9 @@ This is a test
 │└──────┘│
 │┌──────┐│
 ││0    ▲││
-││23456◊││
+││23456■││
 ││     ▼││
-││◄├─┤► ││
+││◄├┤░► ││
 │└──────┘│
 └────────┘", output);
 
@@ -1604,9 +1573,9 @@ This is a test
 │└──────┘│
 │┌──────┐│
 ││     ▲││
-││34567◊││
+││34567■││
 ││     ▼││
-││◄├─┤► ││
+││◄├┤░► ││
 │└──────┘│
 └────────┘", output);
 		}

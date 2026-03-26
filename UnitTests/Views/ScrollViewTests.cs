@@ -25,7 +25,6 @@ namespace Terminal.Gui.ViewTests {
 			Assert.Equal (Point.Empty, sv.ContentOffset);
 			Assert.Equal (Size.Empty, sv.ContentSize);
 			Assert.True (sv.AutoHideScrollBars);
-			Assert.True (sv.KeepContentAlwaysInViewport);
 
 			sv = new ScrollView (new Rect (1, 2, 20, 10));
 			Assert.Equal (LayoutStyle.Absolute, sv.LayoutStyle);
@@ -38,7 +37,6 @@ namespace Terminal.Gui.ViewTests {
 			Assert.Equal (Point.Empty, sv.ContentOffset);
 			Assert.Equal (Size.Empty, sv.ContentSize);
 			Assert.True (sv.AutoHideScrollBars);
-			Assert.True (sv.KeepContentAlwaysInViewport);
 		}
 
 		[Fact]
@@ -63,7 +61,7 @@ namespace Terminal.Gui.ViewTests {
 			sv.Add (new View () { Width = 20, Height = 5 },
 				new View () { X = 22, Y = 7, Width = 10, Height = 5 });
 
-			Assert.True (sv.KeepContentAlwaysInViewport);
+			//Assert.True (sv.KeepContentAlwaysInViewport);
 			Assert.True (sv.AutoHideScrollBars);
 			Assert.Equal (new Point (0, 0), sv.ContentOffset);
 			Assert.False (sv.ProcessKey (new KeyEvent (Key.CursorUp, new KeyModifiers ())));
@@ -117,8 +115,7 @@ namespace Terminal.Gui.ViewTests {
 			Assert.True (sv.ProcessKey (new KeyEvent (Key.Home | Key.CtrlMask, new KeyModifiers ())));
 			Assert.Equal (new Point (0, 0), sv.ContentOffset);
 
-			sv.KeepContentAlwaysInViewport = false;
-			Assert.False (sv.KeepContentAlwaysInViewport);
+			//sv.KeepContentAlwaysInViewport = false;
 			Assert.True (sv.AutoHideScrollBars);
 			Assert.Equal (new Point (0, 0), sv.ContentOffset);
 			Assert.False (sv.ProcessKey (new KeyEvent (Key.CursorUp, new KeyModifiers ())));
@@ -268,11 +265,11 @@ namespace Terminal.Gui.ViewTests {
          ░
          ░
          ┬
-         │
          ┴
          ░
+         ░
          ▼
-◄░░░├─┤░► 
+◄░░░├┤░░► 
 ", output);
 		}
 
@@ -309,14 +306,14 @@ namespace Terminal.Gui.ViewTests {
 			TestHelpers.AssertDriverContentsWithFrameAre (@"
    ─────────▲
    ─────────┬
-    Button 2│
-   ─────────┴
+    Button 2┴
+   ─────────░
    ─────────░
     Button 3░
    ─────────░
    ─────────░
     Button 4▼
-   ◄├─┤░░░░► ", output);
+   ◄├┤░░░░░► ", output);
 		}
 
 		private class CustomButton : FrameView {
@@ -373,7 +370,7 @@ namespace Terminal.Gui.ViewTests {
 				Width = 10,
 				Height = 10,
 				ContentSize = new Size (23, 23),
-				KeepContentAlwaysInViewport = false
+				//KeepContentAlwaysInViewport = false
 			};
 			var bottomLabel = new Label ("At 15,15") { X = 15, Y = 15 };
 			Application.Top.Add (topLabel, sv, bottomLabel);
@@ -385,14 +382,14 @@ namespace Terminal.Gui.ViewTests {
                        
             ▲          
             ┬          
+            │          
             ┴          
             ░          
             ░          
             ░          
             ░          
-            ░          
             ▼          
-   ◄├┤░░░░░►           
+   ◄├─┤░░░░►           
                        
                        
                At 15,15", output);
@@ -429,14 +426,14 @@ namespace Terminal.Gui.ViewTests {
                        
             ▲          
             ┬          
-            ┴          
-      ┌ 1 ──░          
+            │          
+      ┌ 1 ──┴          
       │     ░          
       │     ░          
       │     ░          
       │     ░          
       │     ▼          
-   ◄├┤░░░░░►           
+   ◄├─┤░░░░►           
                        
                        
                At 15,15", output);
@@ -470,8 +467,8 @@ namespace Terminal.Gui.ViewTests {
    ──┘      ░          
             ░          
             ░          
+            ░         
             ┬          
-            │          
             ┴          
             ▼          
    ◄░░░░├─┤►           

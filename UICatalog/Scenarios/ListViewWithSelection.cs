@@ -84,14 +84,6 @@ namespace UICatalog.Scenarios {
 			};
 
 			_listView.SetSource (_scenarios);
-
-			var k = "Keep Content Always In Viewport";
-			var keepCheckBox = new CheckBox (k, _scrollBar.AutoHideScrollBars) {
-				X = Pos.AnchorEnd (k.Length + 3),
-				Y = 0,
-			};
-			keepCheckBox.CheckedChanged += (s, _) => _scrollBar.KeepContentAlwaysInViewport = keepCheckBox.Checked;
-			Win.Add (keepCheckBox);
 		}
 
 		private void ListView_RowRender (object sender, ListViewRowEventArgs obj)

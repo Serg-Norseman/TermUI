@@ -126,11 +126,16 @@ namespace Terminal.Gui {
 			AddKeyBinding (Key.End | Key.CtrlMask, Command.RightEnd);
 		}
 
+		///<inheritdoc/>
+		internal override void OnLayoutComplete (LayoutEventArgs args)
+		{
+			base.OnLayoutComplete (args);
+		}
+
 		Size contentSize;
 		Point contentOffset;
 		bool showHorizontalScrollIndicator;
 		bool showVerticalScrollIndicator;
-		bool keepContentAlwaysInViewport = true;
 		bool autoHideScrollBars = true;
 
 		/// <summary>
@@ -193,34 +198,6 @@ namespace Terminal.Gui {
 						horizontal.AutoHideScrollBars = value;
 					}
 					SetNeedsDisplay ();
-				}
-			}
-		}
-
-		/// <summary>
-		/// Get or sets if the view-port is kept always visible in the area of this <see cref="ScrollView"/>
-		/// </summary>
-		public bool KeepContentAlwaysInViewport {
-			get { return keepContentAlwaysInViewport; }
-			set {
-				if (keepContentAlwaysInViewport != value) {
-					keepContentAlwaysInViewport = value;
-					vertical.OtherScrollBarView.KeepContentAlwaysInViewport = value;
-					horizontal.OtherScrollBarView.KeepContentAlwaysInViewport = value;
-					Point p = default;
-					if (value && -contentOffset.X + Bounds.Width > contentSize.Width) {
-						p = new Point (contentSize.Width - Bounds.Width + (showVerticalScrollIndicator ? 1 : 0), -contentOffset.Y);
-					}
-					if (value && -contentOffset.Y + Bounds.Height > contentSize.Height) {
-						if (p == default) {
-							p = new Point (-contentOffset.X, contentSize.Height - Bounds.Height + (showHorizontalScrollIndicator ? 1 : 0));
-						} else {
-							p.Y = contentSize.Height - Bounds.Height + (showHorizontalScrollIndicator ? 1 : 0);
-						}
-					}
-					if (p != default) {
-						ContentOffset = p;
-					}
 				}
 			}
 		}
@@ -494,7 +471,7 @@ namespace Terminal.Gui {
 		/// <param name="lines">Number of lines to scroll.</param>
 		public bool ScrollDown (int lines)
 		{
-			if (vertical.CanScroll (lines, out _, true)) {
+			if (vertical.CanScroll (vertical.Position + lines)) {
 				ContentOffset = new Point (contentOffset.X, contentOffset.Y - lines);
 				return true;
 			}
@@ -508,7 +485,7 @@ namespace Terminal.Gui {
 		/// <param name="cols">Number of columns to scroll by.</param>
 		public bool ScrollRight (int cols)
 		{
-			if (horizontal.CanScroll (cols, out _)) {
+			if (horizontal.CanScroll (horizontal.Position + cols)) {
 				ContentOffset = new Point (contentOffset.X - cols, contentOffset.Y);
 				return true;
 			}

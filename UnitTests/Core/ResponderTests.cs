@@ -73,7 +73,7 @@ namespace Terminal.Gui.CoreTests {
 		public void IsOverridden_True_IfOverridden ()
 		{
 			// MouseEvent is defined on Responder IS overriden on ScrollBarView (but not View)
-			Assert.True (Responder.IsOverridden (new ScrollBarView () { Text = "ScrollBarView overrides MouseEvent" }, "MouseEvent"));
+			Assert.True (Responder.IsOverridden (new ScrollBar (0, 0, false) { Text = "ScrollBar overrides MouseEvent" }, "MouseEvent"));
 
 			// OnKeyDown is defined on View
 			Assert.True (Responder.IsOverridden (new View () { Text = "View overrides OnKeyDown" }, "OnKeyDown"));
@@ -82,8 +82,8 @@ namespace Terminal.Gui.CoreTests {
 			Assert.True (Responder.IsOverridden (new DerivedView () { Text = "DerivedView overrides OnKeyDown" }, "OnKeyDown"));
 			
 			// ScrollBarView overrides both MouseEvent (from Responder) and Redraw (from View)
-			Assert.True (Responder.IsOverridden (new ScrollBarView () { Text = "ScrollBarView overrides MouseEvent" }, "MouseEvent"));
-			Assert.True (Responder.IsOverridden (new ScrollBarView () { Text = "ScrollBarView overrides Redraw" }, "Redraw"));
+			Assert.True (Responder.IsOverridden (new ScrollBar (0, 0, false) { Text = "ScrollBar overrides MouseEvent" }, "MouseEvent"));
+			Assert.True (Responder.IsOverridden (new ScrollBar (0, 0, false) { Text = "ScrollBar overrides Redraw" }, "Redraw"));
 
 			Assert.True (Responder.IsOverridden (new Button () { Text = "Button overrides MouseEvent" }, "MouseEvent"));
 		}

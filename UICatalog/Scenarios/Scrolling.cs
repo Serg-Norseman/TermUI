@@ -1,13 +1,15 @@
 ﻿using System;
 using Terminal.Gui;
 
-namespace UICatalog.Scenarios {
+namespace UICatalog.Scenarios
+{
 	[ScenarioMetadata (Name: "Scrolling", Description: "Demonstrates ScrollView etc...")]
 	[ScenarioCategory ("Controls")]
 	[ScenarioCategory ("ScrollView")]
-	public class Scrolling : Scenario {
-
-		class Box10x : View {
+	public class Scrolling : Scenario
+	{
+		class Box10x : View
+		{
 			int w = 40;
 			int h = 50;
 
@@ -24,28 +26,25 @@ namespace UICatalog.Scenarios {
 
 			public void SetCursorPosition (Point pos)
 			{
-				throw new NotImplementedException ();
 			}
 
 			public override void Redraw (Rect bounds)
 			{
-				//Point pos = new Point (region.X, region.Y);
 				Driver.SetAttribute (ColorScheme.Focus);
 
 				for (int y = 0; y < h; y++) {
 					Move (0, y);
 					Driver.AddStr (y.ToString ());
 					for (int x = 0; x < w - y.ToString ().Length; x++) {
-						//Driver.AddRune ((Rune)('0' + (x + y) % 10));
 						if (y.ToString ().Length < w)
 							Driver.AddStr (" ");
 					}
 				}
-				//Move (pos.X, pos.Y);
 			}
 		}
 
-		class Filler : View {
+		class Filler : View
+		{
 			int w = 40;
 			int h = 50;
 
@@ -73,27 +72,28 @@ namespace UICatalog.Scenarios {
 					for (int x = 0; x < f.Height; x++) {
 						Rune r;
 						switch (x % 3) {
-						case 0:
-							var er = y.ToString ().ToCharArray (0, 1) [0];
-							nw += er.ToString ().Length;
-							Driver.AddRune (er);
-							if (y > 9) {
-								er = y.ToString ().ToCharArray (1, 1) [0];
+							case 0:
+								var er = y.ToString ().ToCharArray (0, 1) [0];
 								nw += er.ToString ().Length;
 								Driver.AddRune (er);
-							}
-							r = '.';
-							break;
-						case 1:
-							r = 'o';
-							break;
-						default:
-							r = 'O';
-							break;
+								if (y > 9) {
+									er = y.ToString ().ToCharArray (1, 1) [0];
+									nw += er.ToString ().Length;
+									Driver.AddRune (er);
+								}
+								r = '.';
+								break;
+							case 1:
+								r = 'o';
+								break;
+							default:
+								r = 'O';
+								break;
 						}
 						Driver.AddRune (r);
 						nw += Rune.RuneLen (r);
 					}
+					Driver.AddRune ('X');
 					if (nw > w)
 						w = nw;
 					h = y + 1;
@@ -231,11 +231,7 @@ namespace UICatalog.Scenarios {
 				X = Pos.Left (scrollView) + (scrollView.Bounds.Width / 2) - (t.Length / 2),
 				Y = Pos.Bottom (scrollView) + 3,
 			};
-			var k = "Keep Content Always In Viewport";
-			var keepCheckBox = new CheckBox (k, scrollView.AutoHideScrollBars) {
-				X = Pos.Left (scrollView) + (scrollView.Bounds.Width / 2) - (k.Length / 2),
-				Y = Pos.Bottom (scrollView) + 4,
-			};
+
 			hCheckBox.CheckedChanged += (s, _) => {
 				if (!ahCheckBox.Checked) {
 					scrollView.ShowHorizontalScrollIndicator = hCheckBox.Checked;
@@ -259,9 +255,6 @@ namespace UICatalog.Scenarios {
 			};
 			Win.Add (ahCheckBox);
 
-			keepCheckBox.CheckedChanged += (s, _) => scrollView.KeepContentAlwaysInViewport = keepCheckBox.Checked;
-			Win.Add (keepCheckBox);
-
 			var scrollView2 = new ScrollView (new Rect (55, 2, 20, 8)) {
 				ContentSize = new Size (20, 50),
 				//ContentOffset = new Point (0, 0),
@@ -274,6 +267,20 @@ namespace UICatalog.Scenarios {
 				scrollView2.ContentSize = filler.GetContentSize ();
 			};
 			Win.Add (scrollView2);
+
+			var sv2size = new NumericStepper () {
+				X = Pos.Right (scrollView) + 40,
+				Y = Pos.Bottom (scrollView),
+				Width = 10,
+				Height = 1,
+				Minimum = 5,
+				Maximum = 80,
+				Value = 20
+			};
+			sv2size.ValueChanged += (_, _) => {
+				scrollView2.Width = sv2size.Value;
+			};
+			Win.Add (sv2size);
 
 			// This is just to debug the visuals of the scrollview when small
 			var scrollView3 = new ScrollView (new Rect (55, 15, 3, 3)) {
@@ -294,28 +301,6 @@ namespace UICatalog.Scenarios {
 			Application.RootMouseEvent += delegate (MouseEvent me) {
 				mousePos.Text = $"Mouse: ({me.X},{me.Y}) - {me.Flags} {count++}";
 			};
-
-			var progress = new ProgressBar {
-				X = Pos.Right (scrollView) + 1,
-				Y = Pos.AnchorEnd (2),
-				Width = 50
-			};
-			Win.Add (progress);
-
-			bool pulsing = true;
-			bool timer (MainLoop caller)
-			{
-				progress.Pulse ();
-				return pulsing;
-			}
-			Application.MainLoop.AddTimeout (TimeSpan.FromMilliseconds (300), timer);
-
-			void Top_Unloaded (object sender, EventArgs e)
-			{
-				pulsing = false;
-				Application.Top.Unloaded -= Top_Unloaded;
-			}
-			Application.Top.Unloaded += Top_Unloaded;
 		}
 	}
 }

@@ -1246,6 +1246,11 @@ namespace Terminal.Gui
 		public abstract void CookMouse();
 
 		/// <summary>
+		/// Full block (█).
+		/// </summary>
+		public char FullBlock = '█';
+
+		/// <summary>
 		/// Black square (■).
 		/// </summary>
 		public char Square = '\u25a0';
@@ -1268,7 +1273,7 @@ namespace Terminal.Gui
 		/// <summary>
 		/// Stipple pattern (░).
 		/// </summary>
-		public char Stipple = '\u2591';
+		public const char Stipple = '\u2591';
 
 		/// <summary>
 		/// Diamond character (◊).

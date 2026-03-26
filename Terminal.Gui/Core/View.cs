@@ -177,6 +177,12 @@ namespace Terminal.Gui
 		/// </summary>
 		public event EventHandler<Key> HotKeyChanged;
 
+		/// <summary>
+		/// Event invoked when the size is changed.
+		/// </summary>
+		public event EventHandler Resized;
+
+
 		Key hotKey = Key.Null;
 
 		/// <summary>
@@ -806,9 +812,16 @@ namespace Terminal.Gui
 			TextFormatter.Size = GetBoundsTextFormatterSize();
 			SetNeedsLayout();
 			SetNeedsDisplay();
+
+			OnResize ();
 		}
 
-		void TextFormatter_HotKeyChanged(object sender, Key obj)
+		protected virtual void OnResize ()
+		{
+			Resized?.Invoke (this, EventArgs.Empty);
+		}
+
+		void TextFormatter_HotKeyChanged (object sender, Key obj)
 		{
 			HotKeyChanged?.Invoke(this, obj);
 		}
@@ -1523,8 +1536,7 @@ namespace Terminal.Gui
 				foreach (var view in subviews) {
 					if (!view.NeedDisplay.IsEmpty || view.ChildNeedsDisplay || view.LayoutNeeded) {
 						if (view.Frame.IntersectsWith(clipRect) && (view.Frame.IntersectsWith(bounds) || bounds.X < 0 || bounds.Y < 0)) {
-							if (view.LayoutNeeded)
-								view.LayoutSubviews();
+							view.LayoutSubviews();
 
 							// Draw the subview
 							// Use the view's bounds (view-relative; Location will always be (0,0)
@@ -2390,7 +2402,6 @@ namespace Terminal.Gui
 			OnLayoutStarted(new LayoutEventArgs() { OldBounds = oldBounds });
 
 			TextFormatter.Size = GetBoundsTextFormatterSize();
-
 
 			// Sort out the dependencies of the X, Y, Width, Height properties
 			var nodes = new HashSet<View>();

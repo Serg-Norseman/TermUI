@@ -86,7 +86,6 @@ namespace UICatalog.Scenarios {
 					null,
 					new MenuItem ("_Select All", "", (sender, e) => SelectAll(),null,null, Key.CtrlMask | Key.T)
 				}),
-				new MenuBarItem ("_ScrollBarView", CreateKeepChecked ()),
 				new MenuBarItem ("_Cursor", CreateCursorRadio ()),
 				new MenuBarItem ("Forma_t", new MenuItem [] {
 					CreateWrapChecked (),
@@ -509,17 +508,6 @@ namespace UICatalog.Scenarios {
 					}
 				};
 			}
-		}
-
-		private MenuItem [] CreateKeepChecked ()
-		{
-			var item = new MenuItem ();
-			item.Title = "Keep Content Always In Viewport";
-			item.CheckType |= MenuItemCheckStyle.Checked;
-			item.Checked = true;
-			item.Action += (sender, e) => _scrollBar.KeepContentAlwaysInViewport = item.Checked = !item.Checked;
-
-			return new MenuItem [] { item };
 		}
 
 		private MenuItem CreateWrapChecked ()
