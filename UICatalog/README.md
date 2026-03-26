@@ -7,7 +7,7 @@ UI Catalog is a comprehensive sample library for Terminal.Gui. It attempts to sa
 said concepts & features.
 3. Make it easy for contributors to add additional samples in a structured way.
 
-![screenshot](screenshot.png)
+![screenshot](../docfx/images/sample.gif)
 
 ## Motivation
 
