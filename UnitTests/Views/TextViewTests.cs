@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Terminal.Gui.Core;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -1849,7 +1850,7 @@ namespace Terminal.Gui.ViewTests {
 
 			for (int i = lCount; i >= 0; i--) {
 				var r = line [i];
-				sumLength += Rune.ColumnWidth (r);
+				sumLength += Rn.ColumnWidth (r);
 				if (r == '\t') {
 					sumLength += tabWidth + 1;
 				}

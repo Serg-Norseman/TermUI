@@ -39,7 +39,7 @@ namespace Terminal.Gui
 			return true;
 		}
 
-		// Turns the ustring into runes, this does not split the 
+		// Turns the string into runes, this does not split the 
 		// contents on a newline if it is present.
 		internal static List<char> ToRunes(string str)
 		{
@@ -233,7 +233,7 @@ namespace Terminal.Gui
 			var pX = x + start;
 			for (int i = start; i < t.Count; i++) {
 				var r = t[i];
-				size += Rune.ColumnWidth(r);
+				size += Rn.ColumnWidth(r);
 				if (r == '\t') {
 					size += tabWidth + 1;
 				}
@@ -257,8 +257,8 @@ namespace Terminal.Gui
 			int i = start == -1 ? 0 : start;
 			for (; i < tcount; i++) {
 				var rune = t[i];
-				size += Rune.ColumnWidth(rune);
-				len += Rune.RuneLen(rune);
+				size += Rn.ColumnWidth(rune);
+				len += Rn.RuneLen(rune);
 				if (rune == '\t') {
 					size += tabWidth + 1;
 					len += tabWidth - 1;
@@ -272,8 +272,8 @@ namespace Terminal.Gui
 
 			bool IsWideRune(Rune r, int tWidth, out int s, out int l)
 			{
-				s = Rune.ColumnWidth(r);
-				l = Rune.RuneLen(r);
+				s = Rn.ColumnWidth(r);
+				l = Rn.RuneLen(r);
 				if (r == '\t') {
 					s += tWidth + 1;
 					l += tWidth - 1;
@@ -297,7 +297,7 @@ namespace Terminal.Gui
 
 			for (int i = tcount; i >= 0; i--) {
 				var rune = t[i];
-				size += Rune.ColumnWidth(rune);
+				size += Rn.ColumnWidth(rune);
 				if (rune == '\t') {
 					size += tabWidth + 1;
 				}
@@ -494,8 +494,8 @@ namespace Terminal.Gui
 			var start = index > 0 ? index - 1 : 0;
 			var end = index + txt.Length;
 
-			if ((start == 0 || Rune.IsWhiteSpace(source[start]))
-				&& (end == source.Length || Rune.IsWhiteSpace(source[end]))) {
+			if ((start == 0 || char.IsWhiteSpace(source[start]))
+				&& (end == source.Length || char.IsWhiteSpace(source[end]))) {
 				return true;
 			}
 
@@ -1914,7 +1914,7 @@ namespace Terminal.Gui
 				for (int idx = leftColumn; idx < line.Count; idx++) {
 					if (idx >= currentColumn)
 						break;
-					var cols = Rune.ColumnWidth(line[idx]);
+					var cols = Rn.ColumnWidth(line[idx]);
 					if (line[idx] == '\t') {
 						cols += TabWidth + 1;
 					}
@@ -2092,10 +2092,9 @@ namespace Terminal.Gui
 			return q >= start && q <= end - 1;
 		}
 
-		//
-		// Returns a ustring with the text in the selected 
-		// region.
-		//
+		/// <summary>
+		/// Returns a string with the text in the selected region.
+		/// </summary>
 		string GetRegion(int? sRow = null, int? sCol = null, int? cRow = null, int? cCol = null, TextModel model = null)
 		{
 			long start, end;
@@ -2421,7 +2420,7 @@ namespace Terminal.Gui
 				Move(0, row);
 				for (int idxCol = leftColumn; idxCol < lineRuneCount; idxCol++) {
 					var rune = idxCol >= lineRuneCount ? ' ' : line[idxCol];
-					var cols = Rune.ColumnWidth(rune);
+					var cols = Rn.ColumnWidth(rune);
 					if (idxCol < line.Count && selecting && PointInSelection(idxCol, idxRow)) {
 						SetSelectionColor(line, idxCol);
 					} else if (idxCol == currentColumn && idxRow == currentRow && !selecting && !Used
@@ -2449,7 +2448,7 @@ namespace Terminal.Gui
 					if (!TextModel.SetCol(ref col, bounds.Right, cols)) {
 						break;
 					}
-					if (idxCol + 1 < lineRuneCount && col + Rune.ColumnWidth(line[idxCol + 1]) > right) {
+					if (idxCol + 1 < lineRuneCount && col + Rn.ColumnWidth(line[idxCol + 1]) > right) {
 						break;
 					}
 				}
@@ -4167,8 +4166,8 @@ namespace Terminal.Gui
 			if (col + 1 < line.Count) {
 				col++;
 				rune = line[col];
-				if (col + 1 == line.Count && !Rune.IsLetterOrDigit(rune)
-					&& !Rune.IsWhiteSpace(line[col - 1])) {
+				if (col + 1 == line.Count && !char.IsLetterOrDigit(rune)
+					&& !char.IsWhiteSpace(line[col - 1])) {
 					col++;
 				}
 				return true;
@@ -4223,16 +4222,16 @@ namespace Terminal.Gui
 
 				void ProcMoveNext(ref int nCol, ref int nRow, char nRune)
 				{
-					if (Rune.IsSymbol(nRune) || Rune.IsWhiteSpace(nRune)) {
+					if (char.IsSymbol(nRune) || char.IsWhiteSpace(nRune)) {
 						while (MoveNext(ref nCol, ref nRow, out nRune)) {
-							if (Rune.IsLetterOrDigit(nRune) || Rune.IsPunctuation(nRune))
+							if (char.IsLetterOrDigit(nRune) || char.IsPunctuation(nRune))
 								return;
 						}
-						if (nRow != fromRow && (Rune.IsLetterOrDigit(nRune) || Rune.IsPunctuation(nRune))) {
+						if (nRow != fromRow && (char.IsLetterOrDigit(nRune) || char.IsPunctuation(nRune))) {
 							return;
 						}
 						while (MoveNext(ref nCol, ref nRow, out nRune)) {
-							if (!Rune.IsLetterOrDigit(nRune) && !Rune.IsPunctuation(nRune))
+							if (!char.IsLetterOrDigit(nRune) && !char.IsPunctuation(nRune))
 								break;
 						}
 					} else {
@@ -4248,7 +4247,7 @@ namespace Terminal.Gui
 							return;
 						} else if (nRow != fromRow && fromCol == line.Count) {
 							line = model.GetLine(nRow);
-							if (Rune.IsLetterOrDigit(line[nCol]) || Rune.IsPunctuation(line[nCol])) {
+							if (char.IsLetterOrDigit(line[nCol]) || char.IsPunctuation(line[nCol])) {
 								return;
 							}
 						}
@@ -4275,25 +4274,25 @@ namespace Terminal.Gui
 			var row = fromRow;
 			try {
 				var rune = RuneAt(col, row);
-				int lastValidCol = Rune.IsLetterOrDigit(rune) || Rune.IsPunctuation(rune) ? col : -1;
+				int lastValidCol = char.IsLetterOrDigit(rune) || char.IsPunctuation(rune) ? col : -1;
 
 				void ProcMovePrev(ref int nCol, ref int nRow, char nRune)
 				{
-					if (Rune.IsSymbol(nRune) || Rune.IsWhiteSpace(nRune)) {
+					if (char.IsSymbol(nRune) || char.IsWhiteSpace(nRune)) {
 						while (MovePrev(ref nCol, ref nRow, out nRune)) {
-							if (Rune.IsLetterOrDigit(nRune) || Rune.IsPunctuation(nRune)) {
+							if (char.IsLetterOrDigit(nRune) || char.IsPunctuation(nRune)) {
 								lastValidCol = nCol;
 								break;
 							}
 						}
-						if (nRow != fromRow && (Rune.IsLetterOrDigit(nRune) || Rune.IsPunctuation(nRune))) {
+						if (nRow != fromRow && (char.IsLetterOrDigit(nRune) || char.IsPunctuation(nRune))) {
 							if (lastValidCol > -1) {
 								nCol = lastValidCol;
 							}
 							return;
 						}
 						while (MovePrev(ref nCol, ref nRow, out nRune)) {
-							if (!Rune.IsLetterOrDigit(nRune) && !Rune.IsPunctuation(nRune))
+							if (!char.IsLetterOrDigit(nRune) && !char.IsPunctuation(nRune))
 								break;
 							if (nRow != fromRow) {
 								break;
@@ -4310,11 +4309,11 @@ namespace Terminal.Gui
 						}
 
 						var line = model.GetLine(nRow);
-						if (nCol == 0 && nRow == fromRow && (Rune.IsLetterOrDigit(line[0]) || Rune.IsPunctuation(line[0]))) {
+						if (nCol == 0 && nRow == fromRow && (char.IsLetterOrDigit(line[0]) || char.IsPunctuation(line[0]))) {
 							return;
 						}
-						lastValidCol = Rune.IsLetterOrDigit(nRune) || Rune.IsPunctuation(nRune) ? nCol : lastValidCol;
-						if (lastValidCol > -1 && (Rune.IsSymbol(nRune) || Rune.IsWhiteSpace(nRune))) {
+						lastValidCol = char.IsLetterOrDigit(nRune) || char.IsPunctuation(nRune) ? nCol : lastValidCol;
+						if (lastValidCol > -1 && (char.IsSymbol(nRune) || char.IsWhiteSpace(nRune))) {
 							nCol = lastValidCol;
 							return;
 						}

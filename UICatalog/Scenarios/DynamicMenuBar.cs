@@ -498,11 +498,11 @@ namespace UICatalog.Scenarios {
 				SetFrameDetails ();
 
 
-				IValueConverter ustringConverter = null;
+				IValueConverter ustrConverter = null;
 				var listWrapperConverter = new ListWrapperConverter ();
 
-				var lblMenuBar = new Binding (this, "MenuBar", _lblMenuBar, "Text", ustringConverter);
-				var lblParent = new Binding (this, "Parent", _lblParent, "Text", ustringConverter);
+				var lblMenuBar = new Binding (this, "MenuBar", _lblMenuBar, "Text", ustrConverter);
+				var lblParent = new Binding (this, "Parent", _lblParent, "Text", ustrConverter);
 				var lstMenus = new Binding (this, "Menus", _lstMenus, "Source", listWrapperConverter);
 
 

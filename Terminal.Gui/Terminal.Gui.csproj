@@ -22,7 +22,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="NStack.Core" Version="1.1.1" />
-		<PackageReference Include="System.Management" Version="10.0.5" />
 		<InternalsVisibleTo Include="UnitTests" />
 	</ItemGroup>
 

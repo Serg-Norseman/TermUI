@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Terminal.Gui.Core;
 
 namespace Terminal.Gui {
 	/// <summary>
@@ -484,7 +485,7 @@ namespace Terminal.Gui {
 			foreach (var tab in Tabs.Skip (TabScrollOffset)) {
 
 				// while there is space for the tab
-				var tabTextWidth = tab.Text.Sum (c => Rune.ColumnWidth (c));
+				var tabTextWidth = Rn.StrWidth (tab.Text);
 
 				string text = tab.Text;
 
@@ -635,8 +636,6 @@ namespace Terminal.Gui {
 
 				RenderUnderline (tabLocations, width);
 				Driver.SetAttribute (GetNormalColor ());
-
-
 			}
 
 			/// <summary>
@@ -661,12 +660,10 @@ namespace Terminal.Gui {
 					return;
 				}
 
-
 				Move (selected.X - 1, y);
 				Driver.AddRune (host.Style.TabsOnBottom ? Driver.LLCorner : Driver.ULCorner);
 
 				for (int i = 0; i < selected.Width; i++) {
-
 					if (selected.X + i > width) {
 						// we ran out of space horizontally
 						return;
@@ -677,7 +674,6 @@ namespace Terminal.Gui {
 
 				// Add the end of the selected tab
 				Driver.AddRune (host.Style.TabsOnBottom ? Driver.LRCorner : Driver.URCorner);
-
 			}
 
 			/// <summary>
@@ -690,20 +686,16 @@ namespace Terminal.Gui {
 				int y;
 
 				if (host.Style.TabsOnBottom) {
-
 					y = 1;
 				} else {
 					y = host.Style.ShowTopLine ? 1 : 0;
 				}
-
-
 
 				// clear any old text
 				Move (0, y);
 				Driver.AddRepeatedRune (' ', width);
 
 				foreach (var toRender in tabLocations) {
-
 					if (toRender.IsSelected) {
 						Move (toRender.X - 1, y);
 						Driver.AddRune (Driver.VLine);
@@ -713,24 +705,21 @@ namespace Terminal.Gui {
 
 					// if tab is the selected one and focus is inside this control
 					if (toRender.IsSelected && host.HasFocus) {
-
 						if (host.Focused == this) {
-
 							// if focus is the tab bar ourself then show that they can switch tabs
 							Driver.SetAttribute (ColorScheme.HotFocus);
-
 						} else {
-
 							// Focus is inside the tab
 							Driver.SetAttribute (ColorScheme.HotNormal);
 						}
 					}
 
-
 					Driver.AddStr (toRender.TextToRender);
 					Driver.SetAttribute (GetNormalColor ());
 
 					if (toRender.IsSelected) {
+						var strWidth = Rn.StrWidth(toRender.TextToRender);
+						Move (toRender.X + strWidth, y);
 						Driver.AddRune (Driver.VLine);
 					}
 				}
@@ -749,12 +738,9 @@ namespace Terminal.Gui {
 
 				// If host has no border then we need to draw the solid line first (then we draw gaps over the top)
 				if (!host.Style.ShowBorder) {
-
 					for (int x = 0; x < width; x++) {
 						Driver.AddRune (Driver.HLine);
 					}
-
-
 				}
 				var selected = tabLocations.FirstOrDefault (t => t.IsSelected);
 
@@ -764,16 +750,11 @@ namespace Terminal.Gui {
 
 				Move (selected.X - 1, y);
 
-				Driver.AddRune (selected.X == 1 ? Driver.VLine :
-			(host.Style.TabsOnBottom ? Driver.URCorner : Driver.LRCorner));
+				Driver.AddRune (selected.X == 1 ? Driver.VLine : (host.Style.TabsOnBottom ? Driver.URCorner : Driver.LRCorner));
 
 				Driver.AddRepeatedRune (' ', selected.Width);
 
-
-				Driver.AddRune (selected.X + selected.Width == width - 1 ?
-		     Driver.VLine :
-				(host.Style.TabsOnBottom ? Driver.ULCorner : Driver.LLCorner));
-
+				Driver.AddRune (selected.X + selected.Width == width - 1 ? Driver.VLine : (host.Style.TabsOnBottom ? Driver.ULCorner : Driver.LLCorner));
 
 				// draw scroll indicators
 
@@ -802,10 +783,8 @@ namespace Terminal.Gui {
 			private int GetUnderlineYPosition ()
 			{
 				if (host.Style.TabsOnBottom) {
-
 					return 0;
 				} else {
-
 					return host.Style.ShowTopLine ? 2 : 1;
 				}
 			}

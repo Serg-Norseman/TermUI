@@ -199,6 +199,13 @@ namespace Terminal.Gui
 			RecalcVars ();
 		}
 
+		///<inheritdoc/>
+		protected internal override void OnLayoutComplete (LayoutEventArgs args)
+		{
+			base.OnLayoutComplete (args);
+			RecalcVars ();
+		}
+
 		protected override void OnResize ()
 		{
 			base.OnResize ();
@@ -405,10 +412,12 @@ namespace Terminal.Gui
 
 		internal bool TryScroll (int n)
 		{
-			var newPos = Math.Max (Math.Min (positionMax, position + n), 0);
-			if (newPos >= 0 && newPos <= positionMax) {
-				Position = newPos;
-				return true;
+			if (!Bounds.IsEmpty && positionMax != 0) {
+				var newPos = Math.Max (Math.Min (positionMax, position + n), 0);
+				if (newPos >= 0 && newPos <= positionMax) {
+					Position = newPos;
+					return true;
+				}
 			}
 			return false;
 		}
@@ -435,17 +444,22 @@ namespace Terminal.Gui
 
 			pageSize = vertical ? Bounds.Height : Bounds.Width;
 			trackSize = pageSize - 2;
-			positionMax = contentSize - pageSize;
+			positionMax = (contentSize < pageSize) ? 0 : contentSize - pageSize;
 			float posRatio = position / (float)positionMax;
 
 			//bool fixedThumb = (Application.Style == TUIStyle.Classic);
 			if (contentSize != 0) {
 				if (!fixedThumb) {
-					float pageRatio = pageSize / (float)contentSize;
-					thumbSize = Math.Max (1, (int)(trackSize * pageRatio));
-					thumb1 = 1 + (int)((trackSize - thumbSize) * posRatio);
-					thumb2 = Math.Min (trackSize, thumb1 + thumbSize);
-					if (thumb2 - thumb1 < thumbSize) thumb1 = thumb2 - thumbSize;
+					if (positionMax == 0) {
+						thumb1 = 1;
+						thumb2 = trackSize;
+					} else {
+						float pageRatio = pageSize / (float)contentSize;
+						thumbSize = Math.Max (1, Math.Min (trackSize, (int)(trackSize * pageRatio)));
+						thumb1 = 1 + (int)((trackSize - thumbSize) * posRatio);
+						thumb2 = Math.Min (trackSize, thumb1 + thumbSize);
+						if (thumb2 - thumb1 < thumbSize) thumb1 = thumb2 - thumbSize;
+					}
 				} else {
 					thumbSize = 1;
 					thumb1 = 1 + (int)Math.Round ((trackSize - thumbSize) * posRatio);

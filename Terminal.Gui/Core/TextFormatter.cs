@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Terminal.Gui.Core;
 
 namespace Terminal.Gui
 {
@@ -482,16 +483,16 @@ namespace Terminal.Gui
 				return text;
 
 			// if value is not wide enough
-			if (text.Sum(c => Rune.ColumnWidth(c)) < width) {
+			if (text.Sum(c => Rn.ColumnWidth(c)) < width) {
 
 				// pad it out with spaces to the given alignment
-				int toPad = width - (text.Sum(c => Rune.ColumnWidth(c)));
+				int toPad = width - (text.Sum(c => Rn.ColumnWidth(c)));
 
 				return text + new string(' ', toPad);
 			}
 
 			// value is too wide
-			return new string(text.TakeWhile(c => (width -= Rune.ColumnWidth(c)) >= 0).ToArray());
+			return new string(text.TakeWhile(c => (width -= Rn.ColumnWidth(c)) >= 0).ToArray());
 		}
 
 		/// <summary>
@@ -579,7 +580,7 @@ namespace Terminal.Gui
 				while (length < cWidth && to < runes.Length) {
 					var rune = runes[to];
 					if (IsHorizontalDirection(textDirection)) {
-						length += Rune.ColumnWidth(rune);
+						length += Rn.ColumnWidth(rune);
 					} else {
 						length++;
 					}
@@ -666,7 +667,7 @@ namespace Terminal.Gui
 			} else {
 				if (justify) {
 					return Justify(text, width, ' ', textDirection);
-				} else if (IsHorizontalDirection(textDirection) && GetTextWidth(text) > width) {
+				} else if (IsHorizontalDirection(textDirection) && Rn.StrWidth (text) > width) {
 					return runes.Substring(0, GetMaxLengthForWidth(text, width));
 				}
 				return text;
@@ -694,7 +695,7 @@ namespace Terminal.Gui
 			var words = text.Split(' ');
 			int textCount;
 			if (IsHorizontalDirection(textDirection)) {
-				textCount = words.Sum(arg => GetTextWidth(arg));
+				textCount = words.Sum(arg => Rn.StrWidth (arg));
 			} else {
 				textCount = words.Sum(arg => arg.Length);
 			}
@@ -839,7 +840,7 @@ namespace Terminal.Gui
 			var max = 0;
 			result.ForEach(s => {
 				var m = 0;
-				s.ToCharArray().ToList().ForEach(r => m += Math.Max(Rune.ColumnWidth(r), 1));
+				s.ToCharArray().ToList().ForEach(r => m += Math.Max(Rn.ColumnWidth(r), 1));
 				if (m > max) {
 					max = m;
 				}
@@ -860,16 +861,6 @@ namespace Terminal.Gui
 		}
 
 		/// <summary>
-		/// Gets the total width of the passed text.
-		/// </summary>
-		/// <param name="text"></param>
-		/// <returns>The text width.</returns>
-		public static int GetTextWidth(string text)
-		{
-			return text.ToCharArray().Sum(r => Math.Max(Rune.ColumnWidth(r), 1));
-		}
-
-		/// <summary>
 		/// Gets the maximum characters width from the list based on the <paramref name="startIndex"/>
 		/// and the <paramref name="length"/>.
 		/// </summary>
@@ -883,7 +874,7 @@ namespace Terminal.Gui
 			for (int i = (startIndex == -1 ? 0 : startIndex); i < (length == -1 ? lines.Count : startIndex + length); i++) {
 				var runes = lines[i];
 				if (runes.Length > 0)
-					max += runes.Max(r => Math.Max(Rune.ColumnWidth(r), 1));
+					max += runes.Max(r => Math.Max(Rn.ColumnWidth(r), 1));
 			}
 			return max;
 		}
@@ -901,7 +892,7 @@ namespace Terminal.Gui
 			var max = 0;
 			var runes = text.ToCharArray();
 			for (int i = (startIndex == -1 ? 0 : startIndex); i < (length == -1 ? runes.Length : startIndex + length); i++) {
-				max += Math.Max(Rune.ColumnWidth(runes[i]), 1);
+				max += Math.Max(Rn.ColumnWidth(runes[i]), 1);
 			}
 			return max;
 		}
@@ -918,7 +909,7 @@ namespace Terminal.Gui
 			var runesLength = 0;
 			var runeIdx = 0;
 			for (; runeIdx < runes.Length; runeIdx++) {
-				var runeWidth = Math.Max(Rune.ColumnWidth(runes[runeIdx]), 1);
+				var runeWidth = Math.Max(Rn.ColumnWidth(runes[runeIdx]), 1);
 				if (runesLength + runeWidth > width) {
 					break;
 				}
@@ -938,7 +929,7 @@ namespace Terminal.Gui
 			var runesLength = 0;
 			var runeIdx = 0;
 			for (; runeIdx < runes.Count; runeIdx++) {
-				var runeWidth = Math.Max(Rune.ColumnWidth(runes[runeIdx]), 1);
+				var runeWidth = Math.Max(Rn.ColumnWidth(runes[runeIdx]), 1);
 				if (runesLength + runeWidth > width) {
 					break;
 				}
@@ -959,7 +950,7 @@ namespace Terminal.Gui
 			var lineIdx = 0;
 			for (; lineIdx < lines.Count; lineIdx++) {
 				var runes = lines[lineIdx].ToCharArray();
-				var maxRruneWidth = runes.Length > 0 ? runes.Max(r => Math.Max(Rune.ColumnWidth(r), 1)) : 1;
+				var maxRruneWidth = runes.Length > 0 ? runes.Max(r => Math.Max(Rn.ColumnWidth(r), 1)) : 1;
 				if (runesLength + maxRruneWidth > width) {
 					break;
 				}
@@ -998,7 +989,7 @@ namespace Terminal.Gui
 						cols = 0;
 					} else if (rune != '\r') {
 						cols++;
-						var rw = Rune.ColumnWidth(rune);
+						var rw = Rn.ColumnWidth(rune);
 						if (rw > 0) {
 							rw--;
 						}
@@ -1025,7 +1016,7 @@ namespace Terminal.Gui
 						cw = 1;
 					} else if (rune != '\r') {
 						rows++;
-						var rw = Rune.ColumnWidth(rune);
+						var rw = Rn.ColumnWidth(rune);
 						if (cw < rw) {
 							cw = rw;
 							vw++;
@@ -1237,7 +1228,7 @@ namespace Terminal.Gui
 						x = bounds.Right - runesWidth;
 						CursorPosition = bounds.Width - runesWidth + (hotKeyPos > -1 ? hotKeyPos : 0);
 					} else {
-						var runesWidth = GetTextWidth(new string(runes));
+						var runesWidth = Rn.StrWidth (runes);
 						x = bounds.Right - runesWidth;
 						CursorPosition = bounds.Width - runesWidth + (hotKeyPos > -1 ? hotKeyPos : 0);
 					}
@@ -1255,7 +1246,7 @@ namespace Terminal.Gui
 						x = bounds.Left + line + ((bounds.Width - runesWidth) / 2);
 						CursorPosition = (bounds.Width - runesWidth) / 2 + (hotKeyPos > -1 ? hotKeyPos : 0);
 					} else {
-						var runesWidth = GetTextWidth(new string(runes));
+						var runesWidth = Rn.StrWidth (runes);
 						x = bounds.Left + (bounds.Width - runesWidth) / 2;
 						CursorPosition = (bounds.Width - runesWidth) / 2 + (hotKeyPos > -1 ? hotKeyPos : 0);
 					}
@@ -1326,13 +1317,13 @@ namespace Terminal.Gui
 					} else {
 						Application.Driver?.AddRune(rune);
 					}
-					var runeWidth = Math.Max(Rune.ColumnWidth(rune), 1);
+					var runeWidth = Math.Max(Rn.ColumnWidth(rune), 1);
 					if (isVertical) {
 						current++;
 					} else {
 						current += runeWidth;
 					}
-					var nextRuneWidth = idx + 1 > -1 && idx + 1 < runes.Length ? Rune.ColumnWidth(runes[idx + 1]) : 0;
+					var nextRuneWidth = idx + 1 > -1 && idx + 1 < runes.Length ? Rn.ColumnWidth(runes[idx + 1]) : 0;
 					if (!isVertical && idx + 1 < runes.Length && current + nextRuneWidth > start + size) {
 						break;
 					}

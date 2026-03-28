@@ -1,4 +1,5 @@
 ﻿using System;
+using Terminal.Gui.Core;
 
 namespace Terminal.Gui
 {
@@ -1012,7 +1013,7 @@ namespace Terminal.Gui
 		private void AddRuneAt(ConsoleDriver driver, int col, int row, Rune ch)
 		{
 			if (col < driver.Cols && row < driver.Rows && col > 0 && driver.Contents[row, col, 2] == 0
-				&& Rune.ColumnWidth((char)driver.Contents[row, col - 1, 0]) > 1) {
+				&& Rn.ColumnWidth(driver.Contents[row, col - 1, 0]) > 1) {
 
 				driver.Contents[row, col, 1] = driver.GetAttribute();
 				return;

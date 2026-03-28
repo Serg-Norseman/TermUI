@@ -718,9 +718,9 @@ namespace Terminal.Gui.ViewTests {
 			tv.Redraw (tv.Bounds);
 
 			TestHelpers.AssertDriverContentsWithFrameAre (@"
-┌──────────────┐    
-│Les Misérables│    
-◄              └───┐
+┌───────────────┐   
+│Les Misérables │   
+◄               └──┐
 │hi2               │
 └──────────────────┘", output);
 		}
@@ -755,9 +755,9 @@ namespace Terminal.Gui.ViewTests {
 			TestHelpers.AssertDriverContentsWithFrameAre (@"
 ┌──────────────────┐
 │hi2               │
-◄              ┌───┘
-│Les Misérables│    
-└──────────────┘    ", output);
+◄               ┌──┘
+│Les Misérables │   
+└───────────────┘   ", output);
 		}
 
 		[Fact, AutoInitShutdown]

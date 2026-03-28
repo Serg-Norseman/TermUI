@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Terminal.Gui.Core;
 
 namespace Terminal.Gui
 {
@@ -963,8 +964,7 @@ namespace Terminal.Gui
 				}
 
 				AddRune(' ');
-				var str = title.Sum(r => Math.Max(Rune.ColumnWidth(r), 1)) >= width
-					? TextFormatter.Format(title, width - 2, false, false)[0] : title;
+				var str = Rn.StrWidth(title) >= width ? TextFormatter.Format(title, width - 2, false, false)[0] : title;
 				AddStr(str);
 				AddRune(' ');
 			}

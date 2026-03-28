@@ -10,8 +10,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using Terminal.Gui.Core;
 using Terminal.Gui.Resources;
-using Rune = System.Rune;
 
 namespace Terminal.Gui
 {
@@ -52,7 +52,7 @@ namespace Terminal.Gui
 		///   This event is raised when the <see cref="Text"/> changes. 
 		/// </remarks>
 		/// <remarks>
-		///   The passed <see cref="EventArgs"/> is a <see cref="ustring"/> containing the old value. 
+		///   The passed <see cref="EventArgs"/> is a <see cref="string"/> containing the old value. 
 		/// </remarks>
 		public event EventHandler<string> TextChanged;
 
@@ -373,7 +373,7 @@ namespace Terminal.Gui
 			for (int idx = first < 0 ? 0 : first; idx < text.Count; idx++) {
 				if (idx == point)
 					break;
-				var cols = Rune.ColumnWidth(text[idx]);
+				var cols = Rn.ColumnWidth(text[idx]);
 				TextModel.SetCol(ref col, Frame.Width - 1, cols);
 			}
 			var pos = point - first + Math.Min(Frame.X, 0);
@@ -426,7 +426,7 @@ namespace Terminal.Gui
 			var roc = GetReadOnlyColor();
 			for (int idx = p; idx < tcount; idx++) {
 				var rune = text[idx];
-				var cols = Rune.ColumnWidth(rune);
+				var cols = Rn.ColumnWidth(rune);
 				if (idx == point && HasFocus && !Used && length == 0 && !ReadOnly) {
 					Driver.SetAttribute(selColor);
 				} else if (ReadOnly) {
@@ -439,12 +439,12 @@ namespace Terminal.Gui
 					Driver.SetAttribute(idx >= start && length > 0 && idx < start + length ? selColor : ColorScheme.Focus);
 				}
 				if (col + cols <= width) {
-					Driver.AddRune((Rune)(Secret ? '*' : rune));
+					Driver.AddRune(Secret ? '*' : rune);
 				}
 				if (!TextModel.SetCol(ref col, width, cols)) {
 					break;
 				}
-				if (idx + 1 < tcount && col + Rune.ColumnWidth(text[idx + 1]) > width) {
+				if (idx + 1 < tcount && col + Rn.ColumnWidth(text[idx + 1]) > width) {
 					break;
 				}
 			}
@@ -668,21 +668,6 @@ namespace Terminal.Gui
 				return;
 
 			historyText.Redo();
-
-			//if (ustring.IsNullOrEmpty (Clipboard.Contents))
-			//	return true;
-			//var clip = TextModel.ToRunes (Clipboard.Contents);
-			//if (clip == null)
-			//	return true;
-
-			//if (point == text.Count) {
-			//	point = text.Count;
-			//	SetText(text.Concat(clip).ToList());
-			//} else {
-			//	point += clip.Count;
-			//	SetText(text.GetRange(0, oldCursorPos).Concat(clip).Concat(text.GetRange(oldCursorPos, text.Count - oldCursorPos)));
-			//}
-			//Adjust ();
 		}
 
 		void UndoChanges()
@@ -872,22 +857,22 @@ namespace Terminal.Gui
 				return text.Count;
 
 			var ti = text[i];
-			if (Rune.IsLetterOrDigit(ti) && Rune.IsWhiteSpace(text[p]))
+			if (char.IsLetterOrDigit(ti) && char.IsWhiteSpace(text[p]))
 				return i;
 
-			if (Rune.IsPunctuation(ti) || Rune.IsSymbol(ti) || Rune.IsWhiteSpace(ti)) {
+			if (char.IsPunctuation(ti) || char.IsSymbol(ti) || char.IsWhiteSpace(ti)) {
 				for (; i < text.Count; i++) {
-					if (Rune.IsLetterOrDigit(text[i]))
+					if (char.IsLetterOrDigit(text[i]))
 						return i;
 				}
 			} else {
 				for (; i < text.Count; i++) {
-					if (!Rune.IsLetterOrDigit(text[i]))
+					if (!char.IsLetterOrDigit(text[i]))
 						break;
 				}
 				for (; i < text.Count; i++) {
-					if (Rune.IsLetterOrDigit(text[i]) ||
-						(Rune.IsPunctuation(text[i]) && Rune.IsWhiteSpace(text[i - 1])))
+					if (char.IsLetterOrDigit(text[i]) ||
+						(char.IsPunctuation(text[i]) && char.IsWhiteSpace(text[i - 1])))
 						break;
 				}
 			}
@@ -909,18 +894,18 @@ namespace Terminal.Gui
 
 			var ti = text[i];
 			var lastValidCol = -1;
-			if (Rune.IsPunctuation(ti) || Rune.IsSymbol(ti) || Rune.IsWhiteSpace(ti)) {
+			if (char.IsPunctuation(ti) || char.IsSymbol(ti) || char.IsWhiteSpace(ti)) {
 				for (; i >= 0; i--) {
-					if (Rune.IsLetterOrDigit(text[i])) {
+					if (char.IsLetterOrDigit(text[i])) {
 						lastValidCol = i;
 						break;
 					}
-					if (i - 1 > 0 && !Rune.IsWhiteSpace(text[i]) && Rune.IsWhiteSpace(text[i - 1])) {
+					if (i - 1 > 0 && !char.IsWhiteSpace(text[i]) && char.IsWhiteSpace(text[i - 1])) {
 						return i;
 					}
 				}
 				for (; i >= 0; i--) {
-					if (!Rune.IsLetterOrDigit(text[i]))
+					if (!char.IsLetterOrDigit(text[i]))
 						break;
 					lastValidCol = i;
 				}
@@ -929,7 +914,7 @@ namespace Terminal.Gui
 				}
 			} else {
 				for (; i >= 0; i--) {
-					if (!Rune.IsLetterOrDigit(text[i]))
+					if (!char.IsLetterOrDigit(text[i]))
 						break;
 					lastValidCol = i;
 				}

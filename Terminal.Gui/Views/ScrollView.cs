@@ -127,7 +127,7 @@ namespace Terminal.Gui {
 		}
 
 		///<inheritdoc/>
-		internal override void OnLayoutComplete (LayoutEventArgs args)
+		protected internal override void OnLayoutComplete (LayoutEventArgs args)
 		{
 			base.OnLayoutComplete (args);
 		}

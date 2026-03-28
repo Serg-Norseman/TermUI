@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Terminal.Gui.Core;
 
 namespace Terminal.Gui
 {
@@ -629,7 +630,7 @@ namespace Terminal.Gui
 
 		/// <summary>
 		/// Override to provide custom multi colouring to cells.  Use <see cref="View.Driver"/> to
-		/// with <see cref="ConsoleDriver.AddStr(ustring)"/>.  The driver will already be
+		/// with <see cref="ConsoleDriver.AddStr(string)"/>.  The driver will already be
 		/// in the correct place when rendering and you must render the full <paramref name="render"/>
 		/// or the view will not look right.  For simpler provision of color use <see cref="ColumnStyle.ColorGetter"/>
 		/// For changing the content that is rendered use <see cref="ColumnStyle.RepresentationGetter"/>
@@ -691,10 +692,10 @@ namespace Terminal.Gui
 				return representation;
 
 			// if value is not wide enough
-			if (representation.Sum(c => Rune.ColumnWidth(c)) < availableHorizontalSpace) {
+			if (Rn.StrWidth(representation) < availableHorizontalSpace) {
 
 				// pad it out with spaces to the given alignment
-				int toPad = availableHorizontalSpace - (representation.Sum(c => Rune.ColumnWidth(c)) + 1 /*leave 1 space for cell boundary*/);
+				int toPad = availableHorizontalSpace - (Rn.StrWidth (representation) + 1 /*leave 1 space for cell boundary*/);
 
 				switch (colStyle?.GetAlignment(originalCellValue) ?? TextAlignment.Left) {
 
@@ -714,7 +715,7 @@ namespace Terminal.Gui
 			}
 
 			// value is too wide
-			return new string(representation.TakeWhile(c => (availableHorizontalSpace -= Rune.ColumnWidth(c)) > 0).ToArray());
+			return new string(representation.TakeWhile(c => (availableHorizontalSpace -= Rn.ColumnWidth(c)) > 0).ToArray());
 		}
 
 		/// <inheritdoc/>
@@ -1557,7 +1558,7 @@ namespace Terminal.Gui
 		/// <returns></returns>
 		private int CalculateMaxCellWidth(DataColumn col, int rowsToRender, ColumnStyle colStyle)
 		{
-			int spaceRequired = col.ColumnName.Sum(c => Rune.ColumnWidth(c));
+			int spaceRequired = Rn.StrWidth (col.ColumnName);
 
 			// if table has no rows
 			if (RowOffset < 0)
@@ -1566,7 +1567,7 @@ namespace Terminal.Gui
 			for (int i = RowOffset; i < RowOffset + rowsToRender && i < Table.Rows.Count; i++) {
 
 				//expand required space if cell is bigger than the last biggest cell or header
-				spaceRequired = Math.Max(spaceRequired, GetRepresentation(Table.Rows[i][col], colStyle).Sum(c => Rune.ColumnWidth(c)));
+				spaceRequired = Math.Max(spaceRequired, GetRepresentation(Table.Rows[i][col], colStyle).Sum(c => Rn.ColumnWidth(c)));
 			}
 
 			// Don't require more space than the style allows

@@ -1,4 +1,5 @@
 ﻿using System;
+using Terminal.Gui.Core;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -368,7 +369,7 @@ namespace Terminal.Gui.ViewTests {
 				Text = "Say Hello 你",
 				AutoSize = true
 			};
-			btn.X = Pos.AnchorEnd () - Pos.Function (() => TextFormatter.GetTextWidth (btn.TextFormatter.Text));
+			btn.X = Pos.AnchorEnd () - Pos.Function (() => Rn.StrWidth (btn.TextFormatter.Text));
 
 			var win = new Window () {
 				Width = Dim.Fill (),

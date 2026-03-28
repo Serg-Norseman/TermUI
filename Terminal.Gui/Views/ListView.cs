@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Terminal.Gui.Core;
 
 namespace Terminal.Gui {
 	/// <summary>
@@ -263,7 +264,7 @@ namespace Terminal.Gui {
 		/// contents of the object implementing the <see cref="IList"/> interface, 
 		/// with relative positioning.
 		/// </summary>
-		/// <param name="source">An <see cref="IList"/> data source, if the elements are strings or ustrings, 
+		/// <param name="source">An <see cref="IList"/> data source, if the elements are strings, 
 		/// the string is rendered, otherwise the ToString() method is invoked on the result.</param>
 		public ListView (IList source) : this (MakeWrapper (source))
 		{
@@ -293,7 +294,7 @@ namespace Terminal.Gui {
 		/// Initializes a new instance of <see cref="ListView"/> that will display the contents of the object implementing the <see cref="IList"/> interface with an absolute position.
 		/// </summary>
 		/// <param name="rect">Frame for the listview.</param>
-		/// <param name="source">An IList data source, if the elements of the IList are strings or ustrings, 
+		/// <param name="source">An IList data source, if the elements of the IList are strings, 
 		/// the string is rendered, otherwise the ToString() method is invoked on the result.</param>
 		public ListView (Rect rect, IList source) : this (rect, MakeWrapper (source))
 		{
@@ -892,7 +893,7 @@ namespace Terminal.Gui {
 			string str = string.IsNullOrEmpty (strItem) || start > strItem.Length ? string.Empty : strItem.Substring (Math.Min (start, strItem.Length - 1));
 			string u = TextFormatter.ClipAndJustify (str, width, TextAlignment.Left);
 			driver.AddStr (u);
-			width -= TextFormatter.GetTextWidth (u);
+			width -= Rn.StrWidth (u);
 			driver.AddRepeatedRune (' ', width);
 
 			driver.Clip = savedClip;

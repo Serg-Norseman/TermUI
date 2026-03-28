@@ -295,17 +295,17 @@ namespace Terminal.Gui
 		public override bool ProcessColdKey(KeyEvent kb)
 		{
 			var key = kb.KeyValue;
-			if (key < Char.MaxValue && Char.IsLetterOrDigit((char)key)) {
+			if (key < char.MaxValue && char.IsLetterOrDigit((char)key)) {
 				int i = 0;
-				key = Char.ToUpper((char)key);
+				key = char.ToUpper((char)key);
 				foreach (var l in radioLabels) {
 					bool nextIsHot = false;
 					TextFormatter.FindHotKey(l, HotKeySpecifier, true, out _, out Key hotKey);
-					foreach (Rune c in l) {
+					foreach (char c in l) {
 						if (c == HotKeySpecifier) {
 							nextIsHot = true;
 						} else {
-							if ((nextIsHot && Rune.ToUpper(c) == key) || (key == (uint)hotKey)) {
+							if ((nextIsHot && char.ToUpper(c) == key) || (key == (uint)hotKey)) {
 								SelectedItem = i;
 								cursor = i;
 								if (!HasFocus)

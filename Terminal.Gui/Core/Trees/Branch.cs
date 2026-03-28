@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Terminal.Gui.Core;
 
 namespace Terminal.Gui.Trees
 {
@@ -82,8 +83,8 @@ namespace Terminal.Gui.Trees
 		public virtual int GetWidth(ConsoleDriver driver)
 		{
 			return
-				GetLinePrefix(driver).Sum(Rune.ColumnWidth) +
-				Rune.ColumnWidth(GetExpandableSymbol(driver)) +
+				Rn.StrWidth(GetLinePrefix (driver)) +
+				Rn.ColumnWidth(GetExpandableSymbol(driver)) +
 				(tree.AspectGetter(Model) ?? "").Length;
 		}
 
@@ -115,12 +116,11 @@ namespace Terminal.Gui.Trees
 			driver.SetAttribute(symbolColor);
 			// Draw the line prefix (all parallel lanes or whitespace and an expand/collapse/leaf symbol)
 			foreach (Rune r in prefix) {
-
 				if (toSkip > 0) {
 					toSkip--;
 				} else {
 					driver.AddRune(r);
-					availableWidth -= Rune.ColumnWidth(r);
+					availableWidth -= Rn.ColumnWidth(r);
 				}
 			}
 
@@ -149,7 +149,7 @@ namespace Terminal.Gui.Trees
 				toSkip--;
 			} else {
 				driver.AddRune(expansion);
-				availableWidth -= Rune.ColumnWidth(expansion);
+				availableWidth -= Rn.ColumnWidth(expansion);
 			}
 
 			// horizontal scrolling has already skipped the prefix but now must also skip some of the line body
@@ -162,9 +162,9 @@ namespace Terminal.Gui.Trees
 			}
 
 			// If body of line is too long
-			if (lineBody.Sum(l => Rune.ColumnWidth(l)) > availableWidth) {
+			if (Rn.StrWidth(lineBody) > availableWidth) {
 				// remaining space is zero and truncate the line
-				lineBody = new string(lineBody.TakeWhile(c => (availableWidth -= Rune.ColumnWidth(c)) >= 0).ToArray());
+				lineBody = new string(lineBody.TakeWhile(c => (availableWidth -= Rn.ColumnWidth(c)) >= 0).ToArray());
 				availableWidth = 0;
 			} else {
 

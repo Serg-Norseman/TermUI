@@ -308,7 +308,7 @@ namespace Terminal.Gui.ViewTests {
 			Assert.True (_scrollBar.Visible);
 			Assert.True (_scrollBar.OtherScrollBarView.Visible);
 
-			_scrollBar.Position = 50;
+			_scrollBar.TryScroll(50);
 			Assert.Equal (_scrollBar.Position, _scrollBar.Size - _scrollBar.Bounds.Height);
 			Assert.Equal (_scrollBar.Position, _hostView.Top);
 			Assert.Equal (6, _scrollBar.Position);
@@ -318,7 +318,7 @@ namespace Terminal.Gui.ViewTests {
 			Assert.True (_scrollBar.Visible);
 			Assert.True (_scrollBar.OtherScrollBarView.Visible);
 
-			_scrollBar.OtherScrollBarView.Position = 150;
+			_scrollBar.OtherScrollBarView.TryScroll (150);
 			Assert.Equal (_scrollBar.OtherScrollBarView.Position, _scrollBar.OtherScrollBarView.Size - _scrollBar.OtherScrollBarView.Bounds.Width);
 			Assert.Equal (_scrollBar.OtherScrollBarView.Position, _hostView.Left);
 			Assert.Equal (21, _scrollBar.OtherScrollBarView.Position);
@@ -596,13 +596,6 @@ namespace Terminal.Gui.ViewTests {
 			Assert.Equal (100, sbv.OtherScrollBarView.Size);
 			Assert.False (sbv.Visible);
 			Assert.False (sbv.OtherScrollBarView.Visible);
-
-			//sbv.KeepContentAlwaysInViewport = false;
-			//sbv.OtherScrollBarView.KeepContentAlwaysInViewport = false;
-			Assert.True (sbv.TryScroll (50));
-			Assert.True (sbv.OtherScrollBarView.TryScroll (150));
-			Assert.True (sbv.Visible);
-			Assert.True (sbv.OtherScrollBarView.Visible);
 		}
 
 		private class TextViewScrollBarView : ScrollBarView {

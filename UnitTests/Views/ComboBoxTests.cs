@@ -771,7 +771,7 @@ Three ", output);
 			TestHelpers.AssertDriverColorsAre (@"
 000000
 222222
-000002
+000000
 222222", attributes);
 
 			Assert.True (cb.Subviews [1].ProcessKey (new KeyEvent (Key.CursorDown, new KeyModifiers ())));
@@ -784,7 +784,7 @@ Three ", output);
 000000
 222222
 222222
-000002", attributes);
+000000", attributes);
 
 			Assert.True (cb.Subviews [1].ProcessKey (new KeyEvent (Key.Enter, new KeyModifiers ())));
 			Assert.Equal ("Three", selected);
@@ -802,7 +802,7 @@ Three ", output);
 000000
 222222
 222222
-000002", attributes);
+222222", attributes);
 
 			Assert.True (cb.Subviews [1].ProcessKey (new KeyEvent (Key.CursorUp, new KeyModifiers ())));
 			Assert.Equal ("Three", selected);
@@ -813,8 +813,8 @@ Three ", output);
 			TestHelpers.AssertDriverColorsAre (@"
 000000
 222222
-000002
-111112", attributes);
+222222
+222222", attributes);
 
 			Assert.True (cb.Subviews [1].ProcessKey (new KeyEvent (Key.CursorUp, new KeyModifiers ())));
 			Assert.Equal ("Three", selected);
@@ -824,9 +824,9 @@ Three ", output);
 			cb.Redraw (cb.Bounds);
 			TestHelpers.AssertDriverColorsAre (@"
 000000
-000002
 222222
-111112", attributes);
+222222
+222222", attributes);
 
 			Assert.True (cb.ProcessKey (new KeyEvent (Key.F4, new KeyModifiers ())));
 			Assert.Equal ("Three", selected);

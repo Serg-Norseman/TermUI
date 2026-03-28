@@ -2380,7 +2380,7 @@ namespace Terminal.Gui
 		/// <summary>
 		/// Raises the <see cref="LayoutComplete"/> event. Called from  <see cref="LayoutSubviews"/> before all sub-views have been laid out.
 		/// </summary>
-		internal virtual void OnLayoutComplete(LayoutEventArgs args)
+		protected internal virtual void OnLayoutComplete(LayoutEventArgs args)
 		{
 			LayoutComplete?.Invoke(this, args);
 		}
@@ -2814,11 +2814,11 @@ namespace Terminal.Gui
 			if (isWidth) {
 				return TextFormatter.IsHorizontalDirection(TextDirection) &&
 				    TextFormatter.Text?.Contains(HotKeySpecifier) == true
-				    ? Math.Max(Rune.ColumnWidth(HotKeySpecifier), 0) : 0;
+				    ? Math.Max(Rn.ColumnWidth(HotKeySpecifier), 0) : 0;
 			} else {
 				return TextFormatter.IsVerticalDirection(TextDirection) &&
 				    TextFormatter.Text?.Contains(HotKeySpecifier) == true
-				    ? Math.Max(Rune.ColumnWidth(HotKeySpecifier), 0) : 0;
+				    ? Math.Max(Rn.ColumnWidth(HotKeySpecifier), 0) : 0;
 			}
 		}
 

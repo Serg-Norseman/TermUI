@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Terminal.Gui.Core;
 
 namespace Terminal.Gui {
 
@@ -249,7 +250,7 @@ namespace Terminal.Gui {
 			foreach (var ch in title) {
 				if (ch == MenuBar.HotKeySpecifier)
 					continue;
-				len += Math.Max (Rune.ColumnWidth (ch), 1);
+				len += Math.Max (Rn.ColumnWidth (ch), 1);
 			}
 
 			return len;
@@ -316,7 +317,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Initializes a new <see cref="MenuBarItem"/>.
 		/// </summary>
-		public MenuBarItem () : this (children: new MenuItem [] { }) { }
+		public MenuBarItem () : this (children: Array.Empty<MenuItem> ()) { }
 
 		void Initialize (string title, object children, MenuItem parent = null, bool isTopLevel = false)
 		{
@@ -328,7 +329,7 @@ namespace Terminal.Gui {
 				Parent = parent;
 			}
 			if (children is List<MenuItem []> childrenList) {
-				MenuItem [] childrens = new MenuItem [] { };
+				MenuItem [] childrens = Array.Empty<MenuItem> ();
 				foreach (var item in childrenList) {
 					for (int i = 0; i < item.Length; i++) {
 						SetChildrensParent (item);
@@ -1012,7 +1013,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MenuBar"/>.
 		/// </summary>
-		public MenuBar () : this (new MenuBarItem [] { }) { }
+		public MenuBar () : this (Array.Empty<MenuBarItem> ()) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MenuBar"/> class with the specified set of toplevel menu items.

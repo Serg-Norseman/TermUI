@@ -47,7 +47,7 @@ namespace Terminal.Gui.Trees {
 		public object Tag { get; set; }
 
 		/// <summary>
-		/// returns <see cref="Text"/>
+		/// Returns <see cref="Text"/>.
 		/// </summary>
 		/// <returns></returns>
 		public override string ToString ()
@@ -56,18 +56,28 @@ namespace Terminal.Gui.Trees {
 		}
 
 		/// <summary>
-		/// Initialises a new instance with no <see cref="Text"/>
+		/// Initialises a new instance with no <see cref="Text"/>.
 		/// </summary>
 		public TreeNode ()
 		{
 
 		}
+
 		/// <summary>
-		/// Initialises a new instance and sets starting <see cref="Text"/>
+		/// Initialises a new instance and sets starting <see cref="Text"/>.
 		/// </summary>
 		public TreeNode (string text)
 		{
 			Text = text;
+		}
+
+		/// <summary>
+		/// Initialises a new instance and sets starting <see cref="Text"/> and <see cref="Tag"/>.
+		/// </summary>
+		public TreeNode (string text, object tag)
+		{
+			Text = text;
+			Tag = tag;
 		}
 	}
 }

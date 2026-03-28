@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Management;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Terminal.Gui {
@@ -879,32 +876,6 @@ namespace Terminal.Gui {
 			if ((buttonState & MouseFlags.ButtonAlt) != 0 && (mouseFlag & MouseFlags.ButtonAlt) == 0)
 				mouseFlag |= MouseFlags.ButtonAlt;
 			return mouseFlag;
-		}
-
-		/// <summary>
-		/// Get the terminal that holds the console driver.
-		/// </summary>
-		/// <param name="process">The process.</param>
-		/// <returns>If supported the executable console process, null otherwise.</returns>
-		public static Process GetParentProcess (Process process)
-		{
-			if (!RuntimeInformation.IsOSPlatform (OSPlatform.Windows)) {
-				return null;
-			}
-
-			string query = "SELECT ParentProcessId FROM Win32_Process WHERE ProcessId = " + process.Id;
-			using (ManagementObjectSearcher mos = new ManagementObjectSearcher (query)) {
-				foreach (ManagementObject mo in mos.Get ()) {
-					if (mo ["ParentProcessId"] != null) {
-						try {
-							var id = Convert.ToInt32 (mo ["ParentProcessId"]);
-							return Process.GetProcessById (id);
-						} catch {
-						}
-					}
-				}
-			}
-			return null;
 		}
 	}
 }

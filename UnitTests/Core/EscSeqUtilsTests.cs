@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using Xunit;
 
 namespace Terminal.Gui.CoreTests {
@@ -855,16 +853,6 @@ namespace Terminal.Gui.CoreTests {
 			EscSeqUtils.GetMouse (cki, out mouseFlags, out pos, ProcessContinuousButtonPressed);
 			Assert.Equal (new List<MouseFlags> () { MouseFlags.Button1Released }, mouseFlags);
 			Assert.Equal (new Point (1, 2), pos);
-		}
-
-		[Fact]
-		public void GetParentProcess_Tests ()
-		{
-			if (RuntimeInformation.IsOSPlatform (OSPlatform.Windows)) {
-				Assert.NotNull (EscSeqUtils.GetParentProcess (Process.GetCurrentProcess ()));
-			} else {
-				Assert.Null (EscSeqUtils.GetParentProcess (Process.GetCurrentProcess ()));
-			}
 		}
 	}
 }

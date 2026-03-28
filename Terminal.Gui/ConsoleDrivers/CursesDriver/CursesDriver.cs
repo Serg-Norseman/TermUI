@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Terminal.Gui.Core;
 using Unix.Terminal;
 
 namespace Terminal.Gui {
@@ -51,7 +52,7 @@ namespace Terminal.Gui {
 		public override void AddRune (Rune rune)
 		{
 			rune = MakePrintable (rune);
-			var runeWidth = Rune.ColumnWidth (rune);
+			var runeWidth = Rn.ColumnWidth (rune);
 			var validClip = IsValidContent (ccol, crow, Clip);
 
 			if (validClip) {
@@ -75,8 +76,7 @@ namespace Terminal.Gui {
 					contents [crow, ccol - 1, 2] = 1;
 
 				} else {
-					if (runeWidth < 2 && ccol > 0
-						&& Rune.ColumnWidth ((char)contents [crow, ccol - 1, 0]) > 1) {
+					if (runeWidth < 2 && ccol > 0 && Rn.ColumnWidth (contents [crow, ccol - 1, 0]) > 1) {
 
 						var curAtttib = CurrentAttribute;
 						Curses.attrset (contents [crow, ccol - 1, 1]);
@@ -85,8 +85,7 @@ namespace Terminal.Gui {
 						Curses.move (crow, ccol);
 						Curses.attrset (curAtttib);
 
-					} else if (runeWidth < 2 && ccol <= Clip.Right - 1
-						&& Rune.ColumnWidth ((char)contents [crow, ccol, 0]) > 1) {
+					} else if (runeWidth < 2 && ccol <= Clip.Right - 1 && Rn.ColumnWidth (contents [crow, ccol, 0]) > 1) {
 
 						var curAtttib = CurrentAttribute;
 						Curses.attrset (contents [crow, ccol + 1, 1]);

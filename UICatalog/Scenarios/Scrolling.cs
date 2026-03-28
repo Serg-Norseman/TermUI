@@ -1,5 +1,6 @@
 ﻿using System;
 using Terminal.Gui;
+using Terminal.Gui.Core;
 
 namespace UICatalog.Scenarios
 {
@@ -91,7 +92,7 @@ namespace UICatalog.Scenarios
 								break;
 						}
 						Driver.AddRune (r);
-						nw += Rune.RuneLen (r);
+						nw += Rn.RuneLen (r);
 					}
 					Driver.AddRune ('X');
 					if (nw > w)

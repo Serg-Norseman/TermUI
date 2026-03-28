@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using Terminal.Gui;
+using Terminal.Gui.Core;
 using Xunit;
 using Xunit.Abstractions;
 using Attribute = Terminal.Gui.Attribute;
@@ -99,7 +100,7 @@ class TestHelpers {
 				} else {
 					sb.Append ((char)rune);
 				}
-				if (Rune.ColumnWidth (rune) > 1) {
+				if (Rn.ColumnWidth (rune) > 1) {
 					c++;
 				}
 			}
@@ -152,7 +153,7 @@ class TestHelpers {
 							runes.InsertRange (i, new List<Rune> () { ' ' });
 						}
 					}
-					if (Rune.ColumnWidth (rune) > 1) {
+					if (Rn.ColumnWidth (rune) > 1) {
 						c++;
 					}
 					if (c + 1 > w) {
@@ -181,7 +182,7 @@ class TestHelpers {
 			List<Rune> row = lines [r];
 			for (int c = row.Count - 1; c >= 0; c--) {
 				var rune = row [c];
-				if (rune != ' ' || (row.Sum (x => Rune.ColumnWidth (x)) == w)) {
+				if (rune != ' ' || (row.Sum (x => Rn.ColumnWidth (x)) == w)) {
 					break;
 				}
 				row.RemoveAt (c);

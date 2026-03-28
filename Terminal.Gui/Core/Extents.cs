@@ -71,4 +71,62 @@ namespace Terminal.Gui.Core
 			return str.ToCharArray ().ToList ();
 		}
 	}
+
+	public static class Rn
+	{
+		/// <summary>
+		/// Number of column positions of a wide-character code.   This is used to measure runes as displayed by text-based terminals.
+		/// </summary>
+		/// <returns>The width in columns, 0 if the argument is the null character, -1 if the value is not printable, otherwise the number of columns that the rune occupies.</returns>
+		/// <param name="rune">The rune.</param>
+		public static int ColumnWidth (Rune rune)
+		{
+			return Rune.ColumnWidth (rune);
+		}
+
+		public static int ColumnWidth (int rune)
+		{
+			return Rune.ColumnWidth (rune);
+		}
+
+		/// <summary>
+		/// Gets the total width of the passed text.
+		/// </summary>
+		/// <param name="text"></param>
+		/// <returns>The text width.</returns>
+		public static int StrWidth (IEnumerable<Rune> str)
+		{
+			return str.Sum (Rune.ColumnWidth);
+		}
+
+		/// <summary>
+		/// Gets the total width of the passed text.
+		/// </summary>
+		/// <param name="text"></param>
+		/// <returns>The text width.</returns>
+		public static int StrWidth (string str)
+		{
+			return str.Sum (r => Math.Max (Rn.ColumnWidth (r), 1));
+		}
+
+		/// <summary>
+		/// Gets the total width of the passed text.
+		/// </summary>
+		/// <param name="text"></param>
+		/// <returns>The text width.</returns>
+		public static int StrWidth (char[] str)
+		{
+			return str.Sum (r => Math.Max (Rn.ColumnWidth (r), 1));
+		}
+
+		/// <summary>
+		/// number of bytes required to encode the rune.
+		/// </summary>
+		/// <returns>The length, or -1 if the rune is not a valid value to encode in UTF-8.</returns>
+		/// <param name="rune">Rune to probe.</param>
+		public static int RuneLen (Rune rune)
+		{
+			return Rune.RuneLen (rune);
+		}
+	}
 }

@@ -196,7 +196,7 @@ namespace UICatalog.Scenarios {
 				int used = 0;
 				int index = start;
 				while (index < ustr.Length) {
-					var rune = ustr [index];
+					char rune = ustr [index];
 					if (used + 1 >= width) break;
 					driver.AddRune (rune);
 					used += count;

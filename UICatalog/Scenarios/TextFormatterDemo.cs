@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text;
 using Terminal.Gui;
-using Rune = System.Rune;
 
 namespace UICatalog.Scenarios {
 	[ScenarioMetadata (Name: "TextFormatter Demo", Description: "Demos and tests the TextFormatter class.")]
@@ -40,7 +39,7 @@ namespace UICatalog.Scenarios {
 			blockText.Text = block.ToString (); // .Replace(" ", "\u00A0"); // \u00A0 is 'non-breaking space
 			Win.Add (blockText);
 
-			var unicodeCheckBox = new CheckBox ("Unicode", Application.Top.HotKeySpecifier == (Rune)' ') {
+			var unicodeCheckBox = new CheckBox ("Unicode", Application.Top.HotKeySpecifier == ' ') {
 				X = 0,
 				Y = Pos.Bottom (blockText) + 1,
 			};

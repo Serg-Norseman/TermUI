@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using Rune = System.Rune;
 
 namespace Terminal.Gui
 {
@@ -496,9 +495,9 @@ namespace Terminal.Gui
 		/// </summary>
 		/// <param name="rune"></param>
 		/// <returns></returns>
-		public virtual bool IsWordChar(Rune rune)
+		public virtual bool IsWordChar(char rune)
 		{
-			return Char.IsLetterOrDigit((char)rune);
+			return char.IsLetterOrDigit(rune);
 		}
 
 		/// <summary>
@@ -547,7 +546,7 @@ namespace Terminal.Gui
 		/// <summary>
 		/// Returns the currently selected word from the <see cref="HostControl"/>.
 		/// <para>
-		/// When overriding this method views can make use of <see cref="IdxToWord(List{Rune}, int, int)"/>
+		/// When overriding this method views can make use of <see cref="IdxToWord(string, int, int)"/>
 		/// </para>
 		/// </summary>
 		/// <param name="columnOffset">The column offset.</param>

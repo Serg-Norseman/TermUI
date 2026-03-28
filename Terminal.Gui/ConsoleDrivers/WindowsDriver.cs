@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Terminal.Gui.Core;
 using static Terminal.Gui.WindowsConsole;
 
 namespace Terminal.Gui {
@@ -1519,7 +1520,7 @@ namespace Terminal.Gui {
 		public override void AddRune (Rune rune)
 		{
 			rune = MakePrintable (rune);
-			var runeWidth = Rune.ColumnWidth (rune);
+			var runeWidth = Rn.ColumnWidth (rune);
 			var position = GetOutputBufferPosition ();
 			var validClip = IsValidContent (ccol, crow, Clip);
 
@@ -1543,14 +1544,14 @@ namespace Terminal.Gui {
 					WindowsConsole.SmallRect.Update (ref damageRegion, (short)(ccol - 1), (short)crow);
 				} else {
 					if (runeWidth < 2 && ccol > 0
-						&& Rune.ColumnWidth ((char)contents [crow, ccol - 1, 0]) > 1) {
+						&& Rn.ColumnWidth ((char)contents [crow, ccol - 1, 0]) > 1) {
 
 						var prevPosition = crow * Cols + (ccol - 1);
 						OutputBuffer [prevPosition].Char.UnicodeChar = ' ';
 						contents [crow, ccol - 1, 0] = (int)(uint)' ';
 
 					} else if (runeWidth < 2 && ccol <= Clip.Right - 1
-						&& Rune.ColumnWidth ((char)contents [crow, ccol, 0]) > 1) {
+						&& Rn.ColumnWidth ((char)contents [crow, ccol, 0]) > 1) {
 
 						var prevPosition = GetOutputBufferPosition () + 1;
 						OutputBuffer [prevPosition].Char.UnicodeChar = (char)' ';

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Terminal.Gui.Core;
 
 // Alias Console to MockConsole so we don't accidentally use Console
 
@@ -120,7 +121,7 @@ namespace Terminal.Gui {
 		public override void AddRune (Rune rune)
 		{
 			rune = MakePrintable (rune);
-			var runeWidth = Rune.ColumnWidth (rune);
+			var runeWidth = Rn.ColumnWidth (rune);
 			var validClip = IsValidContent (ccol, crow, Clip);
 
 			if (validClip) {
@@ -144,13 +145,11 @@ namespace Terminal.Gui {
 					contents [crow, ccol - 1, 2] = 1;
 
 				} else {
-					if (runeWidth < 2 && ccol > 0
-					&& Rune.ColumnWidth ((Rune)contents [crow, ccol - 1, 0]) > 1) {
+					if (runeWidth < 2 && ccol > 0 && Rn.ColumnWidth (contents [crow, ccol - 1, 0]) > 1) {
 
 						contents [crow, ccol - 1, 0] = (int)(uint)' ';
 
-					} else if (runeWidth < 2 && ccol <= Clip.Right - 1
-						&& Rune.ColumnWidth ((Rune)contents [crow, ccol, 0]) > 1) {
+					} else if (runeWidth < 2 && ccol <= Clip.Right - 1 && Rn.ColumnWidth (contents [crow, ccol, 0]) > 1) {
 
 						contents [crow, ccol + 1, 0] = (int)(uint)' ';
 						contents [crow, ccol + 1, 2] = 1;
