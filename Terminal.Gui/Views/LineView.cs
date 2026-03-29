@@ -1,6 +1,5 @@
 ﻿using System;
 using Terminal.Gui.Core;
-using Terminal.Gui.Graphs;
 
 namespace Terminal.Gui
 {

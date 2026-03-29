@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Terminal.Gui.Graphs;
+﻿using Terminal.Gui.Graphs;
 using Xunit;
 using Xunit.Abstractions;
 
