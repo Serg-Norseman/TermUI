@@ -5,6 +5,8 @@
 //   Serg V. Zhdanovskikh
 //
 
+// FIXME: The current implementation is incomplete when one SLh is nested inside another SLv.
+
 using System;
 using System.Linq;
 

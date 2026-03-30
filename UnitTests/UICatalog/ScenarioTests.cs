@@ -117,7 +117,7 @@ namespace UICatalog.Tests {
 			};
 			var token = Application.MainLoop.AddTimeout (TimeSpan.FromMilliseconds (ms), abortCallback);
 
-			Application.Top.KeyPress += (object sender, View.KeyEventEventArgs args) => {
+			Application.Top.KeyPress += (object sender, KeyEventEventArgs args) => {
 				Assert.Equal (Key.CtrlMask | Key.Q, args.KeyEvent.Key);
 			};
 
@@ -559,7 +559,7 @@ namespace UICatalog.Tests {
 				return view;
 			}
 
-			void LayoutCompleteHandler (object sender, View.LayoutEventArgs args)
+			void LayoutCompleteHandler (object sender, LayoutEventArgs args)
 			{
 				UpdateTitle (_curView);
 			}

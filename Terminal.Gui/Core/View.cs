@@ -30,6 +30,89 @@ namespace Terminal.Gui
 	}
 
 	/// <summary>
+	/// Specifies the event arguments for <see cref="MouseEvent"/>. This is a higher-level construct
+	/// than the wrapped <see cref="MouseEvent"/> class and is used for the events defined on <see cref="View"/>
+	/// and subclasses of View (e.g. <see cref="View.MouseEnter"/> and <see cref="View.MouseClick"/>).
+	/// </summary>
+	public class MouseEventArgs : EventArgs
+	{
+		/// <summary>
+		/// Constructs.
+		/// </summary>
+		/// <param name="me"></param>
+		public MouseEventArgs (MouseEvent me) => MouseEvent = me;
+		/// <summary>
+		/// The <see cref="MouseEvent"/> for the event.
+		/// </summary>
+		public MouseEvent MouseEvent { get; set; }
+
+		/// <summary>
+		/// Indicates if the current mouse event has already been processed and the driver should stop notifying any other event subscriber.
+		/// Its important to set this value to true specially when updating any View's layout from inside the subscriber method.
+		/// </summary>
+		/// <remarks>This property forwards to the <see cref="MouseEvent.Handled"/> property and is provided as a convenience and for
+		/// backwards compatibility</remarks>
+		public bool Handled
+		{
+			get => MouseEvent.Handled;
+			set => MouseEvent.Handled = value;
+		}
+	}
+
+	/// <summary>
+	/// Event arguments for the <see cref="LayoutComplete"/> event.
+	/// </summary>
+	public class LayoutEventArgs : EventArgs
+	{
+		/// <summary>
+		/// The view-relative bounds of the <see cref="View"/> before it was laid out.
+		/// </summary>
+		public Rect OldBounds { get; set; }
+	}
+
+	/// <summary>
+	/// Defines the event arguments for <see cref="KeyEvent"/>
+	/// </summary>
+	public class KeyEventEventArgs : EventArgs
+	{
+		/// <summary>
+		/// Constructs.
+		/// </summary>
+		/// <param name="ke"></param>
+		public KeyEventEventArgs (KeyEvent ke) => KeyEvent = ke;
+		/// <summary>
+		/// The <see cref="KeyEvent"/> for the event.
+		/// </summary>
+		public KeyEvent KeyEvent { get; set; }
+		/// <summary>
+		/// Indicates if the current Key event has already been processed and the driver should stop notifying any other event subscriber.
+		/// Its important to set this value to true specially when updating any View's layout from inside the subscriber method.
+		/// </summary>
+		public bool Handled { get; set; } = false;
+	}
+
+	/// <summary>
+	/// Defines the event arguments for <see cref="SetFocus(View)"/>
+	/// </summary>
+	public class FocusEventArgs : EventArgs
+	{
+		/// <summary>
+		/// Constructs.
+		/// </summary>
+		/// <param name="view">The view that gets or loses focus.</param>
+		public FocusEventArgs (View view) { View = view; }
+		/// <summary>
+		/// Indicates if the current focus event has already been processed and the driver should stop notifying any other event subscriber.
+		/// Its important to set this value to true specially when updating any View's layout from inside the subscriber method.
+		/// </summary>
+		public bool Handled { get; set; }
+		/// <summary>
+		/// Indicates the current view that gets or loses focus.
+		/// </summary>
+		public View View { get; set; }
+	}
+
+	/// <summary>
 	/// View is the base class for all views on the screen and represents a visible element that can render itself and 
 	/// contains zero or more nested views.
 	/// </summary>
@@ -1334,27 +1417,6 @@ namespace Terminal.Gui
 		}
 
 		/// <summary>
-		/// Defines the event arguments for <see cref="SetFocus(View)"/>
-		/// </summary>
-		public class FocusEventArgs : EventArgs
-		{
-			/// <summary>
-			/// Constructs.
-			/// </summary>
-			/// <param name="view">The view that gets or loses focus.</param>
-			public FocusEventArgs(View view) { View = view; }
-			/// <summary>
-			/// Indicates if the current focus event has already been processed and the driver should stop notifying any other event subscriber.
-			/// Its important to set this value to true specially when updating any View's layout from inside the subscriber method.
-			/// </summary>
-			public bool Handled { get; set; }
-			/// <summary>
-			/// Indicates the current view that gets or loses focus.
-			/// </summary>
-			public View View { get; set; }
-		}
-
-		/// <summary>
 		/// Method invoked when a subview is being added to this view.
 		/// </summary>
 		/// <param name="view">The subview being added.</param>
@@ -1688,27 +1750,6 @@ namespace Terminal.Gui
 			}
 
 			SuperView?.SetFocus(this);
-		}
-
-		/// <summary>
-		/// Defines the event arguments for <see cref="KeyEvent"/>
-		/// </summary>
-		public class KeyEventEventArgs : EventArgs
-		{
-			/// <summary>
-			/// Constructs.
-			/// </summary>
-			/// <param name="ke"></param>
-			public KeyEventEventArgs(KeyEvent ke) => KeyEvent = ke;
-			/// <summary>
-			/// The <see cref="KeyEvent"/> for the event.
-			/// </summary>
-			public KeyEvent KeyEvent { get; set; }
-			/// <summary>
-			/// Indicates if the current Key event has already been processed and the driver should stop notifying any other event subscriber.
-			/// Its important to set this value to true specially when updating any View's layout from inside the subscriber method.
-			/// </summary>
-			public bool Handled { get; set; } = false;
 		}
 
 		/// <summary>
@@ -2336,17 +2377,6 @@ namespace Terminal.Gui
 		}
 
 		/// <summary>
-		/// Event arguments for the <see cref="LayoutComplete"/> event.
-		/// </summary>
-		public class LayoutEventArgs : EventArgs
-		{
-			/// <summary>
-			/// The view-relative bounds of the <see cref="View"/> before it was laid out.
-			/// </summary>
-			public Rect OldBounds { get; set; }
-		}
-
-		/// <summary>
 		/// Fired after the View's <see cref="LayoutSubviews"/> method has completed. 
 		/// </summary>
 		/// <remarks>
@@ -2843,36 +2873,6 @@ namespace Terminal.Gui
 
 			return new Size(frame.Size.Width + GetHotKeySpecifierLength(),
 			    frame.Size.Height + GetHotKeySpecifierLength(false));
-		}
-
-		/// <summary>
-		/// Specifies the event arguments for <see cref="MouseEvent"/>. This is a higher-level construct
-		/// than the wrapped <see cref="MouseEvent"/> class and is used for the events defined on <see cref="View"/>
-		/// and subclasses of View (e.g. <see cref="View.MouseEnter"/> and <see cref="View.MouseClick"/>).
-		/// </summary>
-		public class MouseEventArgs : EventArgs
-		{
-			/// <summary>
-			/// Constructs.
-			/// </summary>
-			/// <param name="me"></param>
-			public MouseEventArgs(MouseEvent me) => MouseEvent = me;
-			/// <summary>
-			/// The <see cref="MouseEvent"/> for the event.
-			/// </summary>
-			public MouseEvent MouseEvent { get; set; }
-
-			/// <summary>
-			/// Indicates if the current mouse event has already been processed and the driver should stop notifying any other event subscriber.
-			/// Its important to set this value to true specially when updating any View's layout from inside the subscriber method.
-			/// </summary>
-			/// <remarks>This property forwards to the <see cref="MouseEvent.Handled"/> property and is provided as a convenience and for
-			/// backwards compatibility</remarks>
-			public bool Handled
-			{
-				get => MouseEvent.Handled;
-				set => MouseEvent.Handled = value;
-			}
 		}
 
 		/// <inheritdoc/>

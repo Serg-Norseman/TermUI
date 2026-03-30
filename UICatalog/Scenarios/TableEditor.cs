@@ -216,7 +216,7 @@ namespace UICatalog.Scenarios {
 			return sort;
 		}
 
-		private void ShowHeaderContextMenu (DataColumn clickedCol, View.MouseEventArgs e)
+		private void ShowHeaderContextMenu (DataColumn clickedCol, MouseEventArgs e)
 		{
 			var sort = GetProposedNewSortOrder (clickedCol, out var isAsc);
 
@@ -353,7 +353,7 @@ namespace UICatalog.Scenarios {
 		
 		}
 
-		private void TableViewKeyPress (object sender, View.KeyEventEventArgs e)
+		private void TableViewKeyPress (object sender, KeyEventEventArgs e)
 		{
 			if(e.KeyEvent.Key == Key.DeleteChar){
 

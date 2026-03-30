@@ -10,12 +10,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Terminal.Gui {
-
+namespace Terminal.Gui
+{
 	/// <summary>
 	/// Specifies the ComboBox style.
 	/// </summary>
-	public enum ComboBoxStyle {
+	public enum ComboBoxStyle
+	{
 		/// <summary>
 		/// Specifies that the list is displayed by clicking the down arrow and that the
 		/// text portion is editable. The displayed elements correspond to the entered part of the string.
@@ -50,9 +51,11 @@ namespace Terminal.Gui {
 	/// 
 	/// To get the "classic" behavior, you need HideDropdownListOnClick = true and SearchMode = false.
 	/// </summary>
-	public class ComboBox : View {
+	public class ComboBox : View
+	{
 
-		private class ComboListView : ListView, IPopover {
+		private class ComboListView : ListView, IPopover
+		{
 			private int highlighted = -1;
 			private bool isFocusing;
 			private ComboBox container;
@@ -217,7 +220,8 @@ namespace Terminal.Gui {
 		/// <remarks>
 		///  Use <see cref="SetSource"/> to set a new <see cref="IList"/> source.
 		/// </remarks>
-		public IListDataSource Source {
+		public IListDataSource Source
+		{
 			get => source;
 			set {
 				source = value;
@@ -277,7 +281,8 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Overriding to properly handle event propagation.
 		/// </summary>
-		public override Rect Frame {
+		public override Rect Frame
+		{
 			get {
 				var selfFrame = base.Frame;
 				if (isShow) {
@@ -418,7 +423,8 @@ namespace Terminal.Gui {
 		/// Gets the index of the currently selected item in the <see cref="Source"/>
 		/// </summary>
 		/// <value>The selected item or -1 none selected.</value>
-		public int SelectedIndex {
+		public int SelectedIndex
+		{
 			get => selectedIndex;
 			set {
 				if (selectedIndex != value && (value == -1
@@ -438,7 +444,8 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Gets the drop down list state, expanded or collapsed.
 		/// </summary>
-		public bool IsShow {
+		public bool IsShow
+		{
 			get { return isShow; }
 			private set {
 				if (isShow != value) {
@@ -455,7 +462,8 @@ namespace Terminal.Gui {
 		}
 
 		///<inheritdoc/>
-		public new ColorScheme ColorScheme {
+		public new ColorScheme ColorScheme
+		{
 			get {
 				return base.ColorScheme;
 			}
@@ -469,7 +477,8 @@ namespace Terminal.Gui {
 		/// <summary>
 		///If set to true its not allow any changes in the text.
 		/// </summary>
-		public bool ReadOnly {
+		public bool ReadOnly
+		{
 			get => search.ReadOnly;
 			set => search.ReadOnly = value;
 		}
@@ -477,7 +486,8 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Gets or sets if the drop-down list can be hide with a button click event.
 		/// </summary>
-		public bool HideDropdownListOnClick {
+		public bool HideDropdownListOnClick
+		{
 			get => hideDropdownListOnClick;
 			set => hideDropdownListOnClick = listview.WantContinuousButtonPressed = value;
 		}
@@ -765,7 +775,8 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// The currently selected list item or entered text
 		/// </summary>
-		public new string Text {
+		public new string Text
+		{
 			get {
 				return search.Text;
 			}
@@ -875,6 +886,21 @@ namespace Terminal.Gui {
 			}
 		}
 
+		// FIXME: In some cases, the drop-down list still overlaps with underlying components (this temp hack).
+		// Cases: a combo at the bottom of a FrameView, a combo in a StackLayout(h) under which there are other
+		// components inside another StackLayout(v), etc.
+		private void BringSubviewToFrontX (View subview)
+		{
+			if (subview == null || subview is Window)
+				return;
+
+			var superView = subview.SuperView;
+			if (superView != null) {
+				superView.BringSubviewToFront (subview);
+				BringSubviewToFrontX (superView);
+			}
+		}
+
 		/// <summary>
 		/// Show the search list
 		/// </summary>
@@ -884,7 +910,8 @@ namespace Terminal.Gui {
 			listview.Clear (); // Ensure list shrinks in Dialog as you type
 			listview.Height = CalculateHeight ();
 			listview.Visible = true;
-			SuperView?.BringSubviewToFront (this);
+			//SuperView?.BringSubviewToFront (this);
+			BringSubviewToFrontX (this);
 
 			IsShow = true;
 		}
@@ -929,12 +956,14 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Maximum number of items in the drop-down list.
 		/// </summary>
-		public int MaxDropDownItems {
+		public int MaxDropDownItems
+		{
 			get { return maxDropDownItems; }
 			set { maxDropDownItems = value; }
 		}
 
-		public BorderStyle DropDownBorderStyle {
+		public BorderStyle DropDownBorderStyle
+		{
 			get {
 				if (listview.Border == null) {
 					listview.Border = new Border () { BorderStyle = BorderStyle.None };
