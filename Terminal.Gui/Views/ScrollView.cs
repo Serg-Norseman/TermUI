@@ -508,29 +508,23 @@ namespace Terminal.Gui {
 		///<inheritdoc/>
 		public override bool MouseEvent (MouseEvent me)
 		{
-			if (me.Flags != MouseFlags.WheeledDown && me.Flags != MouseFlags.WheeledUp &&
-				me.Flags != MouseFlags.WheeledRight && me.Flags != MouseFlags.WheeledLeft &&
-//				me.Flags != MouseFlags.Button1Pressed && me.Flags != MouseFlags.Button1Clicked &&
-				!me.Flags.HasFlag (MouseFlags.Button1Pressed | MouseFlags.ReportMousePosition)) {
-				return false;
-			}
-
+			bool res = false;
 			if (me.Flags == MouseFlags.WheeledDown && ShowVerticalScrollIndicator) {
-				ScrollDown (1);
+				res = ScrollDown (1);
 			} else if (me.Flags == MouseFlags.WheeledUp && ShowVerticalScrollIndicator) {
-				ScrollUp (1);
+				res = ScrollUp (1);
 			} else if (me.Flags == MouseFlags.WheeledRight && showHorizontalScrollIndicator) {
-				ScrollRight (1);
+				res = ScrollRight (1);
 			} else if (me.Flags == MouseFlags.WheeledLeft && ShowVerticalScrollIndicator) {
-				ScrollLeft (1);
+				res = ScrollLeft (1);
 			} else if (me.X == vertical.Frame.X && ShowVerticalScrollIndicator) {
-				vertical.MouseEvent (me);
+				res = vertical.MouseEvent (me);
 			} else if (me.Y == horizontal.Frame.Y && ShowHorizontalScrollIndicator) {
-				horizontal.MouseEvent (me);
+				res = horizontal.MouseEvent (me);
 			} else if (IsOverridden (me.View, "MouseEvent")) {
 				Application.UngrabMouse ();
 			}
-			return true;
+			return res;
 		}
 
 		///<inheritdoc/>
