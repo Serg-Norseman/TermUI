@@ -72,23 +72,19 @@ namespace UICatalog.Scenarios {
 				return;
 			}
 
-			MenuBarItem items;
-
+			MenuItem[] items;
 			if (e.Tab == null) {
-				items = new MenuBarItem (new MenuItem [] {
+				items = new MenuItem [] {
 					new MenuItem ($"Open", "", (sender, e) => Open()),
-				});
-
+				};
 			} else {
-				items = new MenuBarItem (new MenuItem [] {
+				items = new MenuItem [] {
 					new MenuItem ($"Save", "", (sender, ea) => Save(e.Tab)),
 					new MenuItem ($"Close", "", (sender, ea) => Close(e.Tab)),
-				});
+				};
 			}
 
-
 			var contextMenu = new ContextMenu (e.MouseEvent.X + 1, e.MouseEvent.Y + 1, items);
-
 			contextMenu.Show ();
 			e.MouseEvent.Handled = true;
 		}

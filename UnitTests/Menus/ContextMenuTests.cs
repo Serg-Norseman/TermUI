@@ -19,43 +19,43 @@ namespace Terminal.Gui.MenuTests {
 		{
 			var cm = new ContextMenu ();
 			Assert.Equal (new Point (0, 0), cm.Position);
-			Assert.Empty (cm.MenuItems.Children);
+			Assert.Empty (cm.Items);
 			Assert.Null (cm.Host);
 			cm.Position = new Point (20, 10);
-			cm.MenuItems = new MenuBarItem (new MenuItem [] {
+			cm.Items.AddRange(new MenuItem [] {
 				new MenuItem ("First", "", null)
 			});
 			Assert.Equal (new Point (20, 10), cm.Position);
-			Assert.Single (cm.MenuItems.Children);
+			Assert.Single (cm.Items);
 
 			cm = new ContextMenu (5, 10,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("One", "", null),
 					new MenuItem ("Two", "", null)
-				})
+				}
 			);
 			Assert.Equal (new Point (5, 10), cm.Position);
-			Assert.Equal (2, cm.MenuItems.Children.Length);
+			Assert.Equal (2, cm.Items.Count);
 			Assert.Null (cm.Host);
 
 			cm = new ContextMenu (new View () { X = 5, Y = 10 },
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("One", "", null),
 					new MenuItem ("Two", "", null)
-				})
+				}
 			);
 			Assert.Equal (new Point (5, 10), cm.Position);
-			Assert.Equal (2, cm.MenuItems.Children.Length);
+			Assert.Equal (2, cm.Items.Count);
 			Assert.NotNull (cm.Host);
 		}
 
 		private ContextMenu Create_ContextMenu_With_Two_MenuItem (int x, int y)
 		{
 			return new ContextMenu (x, y,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("One", "", null),
 					new MenuItem ("Two", "", null)
-				})
+				}
 			);
 		}
 
@@ -94,10 +94,10 @@ namespace Terminal.Gui.MenuTests {
 		public void Position_Changing ()
 		{
 			var cm = new ContextMenu (10, 5,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("One", "", null),
 					new MenuItem ("Two", "", null)
-				})
+				}
 			);
 
 			cm.Show ();
@@ -133,10 +133,10 @@ namespace Terminal.Gui.MenuTests {
 		public void MenuItens_Changing ()
 		{
 			var cm = new ContextMenu (10, 5,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("One", "", null),
 					new MenuItem ("Two", "", null)
-				})
+				}
 			);
 
 			cm.Show ();
@@ -151,7 +151,8 @@ namespace Terminal.Gui.MenuTests {
 
 			TestHelpers.AssertDriverContentsAre (expected, output);
 
-			cm.MenuItems = new MenuBarItem (new MenuItem [] {
+			cm.Items.Clear ();
+			cm.Items.AddRange(new MenuItem [] {
 				new MenuItem ("First", "", null),
 				new MenuItem ("Second", "", null),
 				new MenuItem ("Third", "", null)
@@ -257,10 +258,10 @@ namespace Terminal.Gui.MenuTests {
 		public void Show_Ensures_Display_Inside_The_Container_But_Preserves_Position ()
 		{
 			var cm = new ContextMenu (80, 25,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("One", "", null),
 					new MenuItem ("Two", "", null)
-				})
+				}
 			);
 
 			Assert.Equal (new Point (80, 25), cm.Position);
@@ -293,10 +294,10 @@ namespace Terminal.Gui.MenuTests {
 				Height = 1
 			};
 			var cm = new ContextMenu (view,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("One", "", null),
 					new MenuItem ("Two", "", null)
-				})
+				}
 			);
 
 			Application.Top.Add (view);
@@ -329,10 +330,10 @@ namespace Terminal.Gui.MenuTests {
 		{
 			var view = new View ("View") { X = 10, Y = 5, Width = 10, Height = 1 };
 			var cm = new ContextMenu (view,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("One", "", null),
 					new MenuItem ("Two", "", null)
-				})
+				}
 			);
 
 			Application.Top.Add (view);
@@ -388,10 +389,10 @@ namespace Terminal.Gui.MenuTests {
 			((FakeDriver)Application.Driver).SetBufferSize (5, 25);
 
 			var cm = new ContextMenu (0, 0,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("One", "", null),
 					new MenuItem ("Two", "", null)
-				})
+				}
 			);
 
 			Assert.Equal (new Point (0, 0), cm.Position);
@@ -420,10 +421,10 @@ namespace Terminal.Gui.MenuTests {
 			((FakeDriver)Application.Driver).SetBufferSize (80, 3);
 
 			var cm = new ContextMenu (0, 0,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("One", "", null),
 					new MenuItem ("Two", "", null)
-				})
+				}
 			);
 
 			Assert.Equal (new Point (0, 0), cm.Position);
@@ -449,10 +450,10 @@ namespace Terminal.Gui.MenuTests {
 		public void Hide_Is_Invoke_At_Container_Closing ()
 		{
 			var cm = new ContextMenu (80, 25,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("One", "", null),
 					new MenuItem ("Two", "", null)
-				})
+				}
 			);
 
 			var top = Application.Top;
@@ -472,10 +473,10 @@ namespace Terminal.Gui.MenuTests {
 		public void ForceMinimumPosToZero_True_False ()
 		{
 			var cm = new ContextMenu (-1, -2,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("One", "", null),
 					new MenuItem ("Two", "", null)
-				})
+				}
 			);
 
 			Assert.Equal (new Point (-1, -2), cm.Position);
@@ -513,10 +514,10 @@ namespace Terminal.Gui.MenuTests {
 		public void ContextMenu_Is_Closed_If_Another_MenuBar_Is_Open_Or_Vice_Versa ()
 		{
 			var cm = new ContextMenu (10, 5,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("One", "", null),
 					new MenuItem ("Two", "", null)
-				})
+				}
 			);
 
 			var menu = new MenuBar (new MenuBarItem [] {
@@ -690,7 +691,7 @@ namespace Terminal.Gui.MenuTests {
 		public void Menus_And_SubMenus_Always_Try_To_Be_On_Screen ()
 		{
 			var cm = new ContextMenu (-1, -2,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("One", "", null),
 					new MenuItem ("Two", "", null),
 					new MenuItem ("Three", "", null),
@@ -705,7 +706,7 @@ namespace Terminal.Gui.MenuTests {
 					}),
 					new MenuItem ("Five", "", null),
 					new MenuItem ("Six", "", null)
-				})
+				}
 			);
 
 			Assert.Equal (new Point (-1, -2), cm.Position);

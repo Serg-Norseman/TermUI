@@ -221,10 +221,10 @@ namespace UICatalog.Scenarios {
 			var sort = GetProposedNewSortOrder (clickedCol, out var isAsc);
 
 			var contextMenu = new ContextMenu (e.MouseEvent.X + 1, e.MouseEvent.Y + 1,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ($"Hide {TrimArrows(clickedCol.ColumnName)}", "", (sender, e) => HideColumn(clickedCol)),
 					new MenuItem ($"Sort {StripArrows(sort)}","",(sender, e)=>SortColumn(clickedCol,sort,isAsc)),
-				})
+				}
 			);
 
 			contextMenu.Show ();

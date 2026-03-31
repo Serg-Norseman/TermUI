@@ -1152,7 +1152,7 @@ Edit
 
 			// The fulll expected string for an open sub menu
 			public string expectedSubMenuOpen (int i) => ClosedMenuText +
-				(Menus [i].Children.Length > 0 ?
+				(Menus [i].Children.Count > 0 ?
 					padding (i) + expectedTopRow (i) +
 					padding (i) + expectedMenuItemRow (i) +
 					padding (i) + expectedBottomRow (i)
@@ -1479,7 +1479,7 @@ Edit
 
 			MenuBarItem [] items = new MenuBarItem [expectedMenu.Menus.Length];
 			for (var i = 0; i < expectedMenu.Menus.Length; i++) {
-				items [i] = new MenuBarItem (expectedMenu.Menus [i].Title, expectedMenu.Menus [i].Children.Length > 0
+				items [i] = new MenuBarItem (expectedMenu.Menus [i].Title, expectedMenu.Menus [i].Children.Count > 0
 					? new MenuItem [] {
 						new MenuItem (expectedMenu.Menus [i].Children [0].Title, "", null),
 					}

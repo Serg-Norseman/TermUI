@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Terminal.Gui {
 	/// <summary>
@@ -30,14 +31,14 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Initializes a context menu with no menu items.
 		/// </summary>
-		public ContextMenu () : this (0, 0, new MenuBarItem ()) { }
+		public ContextMenu () : this (0, 0, Array.Empty<MenuItem>()) { }
 
 		/// <summary>
 		/// Initializes a context menu, with a <see cref="View"/> specifiying the parent/hose of the menu.
 		/// </summary>
 		/// <param name="host">The host view.</param>
 		/// <param name="menuItems">The menu items for the context menu.</param>
-		public ContextMenu (View host, MenuBarItem menuItems) :
+		public ContextMenu (View host, MenuItem [] menuItems) :
 			this (host.Frame.X, host.Frame.Y, menuItems)
 		{
 			Host = host;
@@ -49,7 +50,7 @@ namespace Terminal.Gui {
 		/// <param name="x">The left position (screen relative).</param>
 		/// <param name="y">The top position (screen relative).</param>
 		/// <param name="menuItems">The menu items.</param>
-		public ContextMenu (int x, int y, MenuBarItem menuItems)
+		public ContextMenu (int x, int y, MenuItem [] menuItems)
 		{
 			if (IsShow) {
 				if (menuBar.SuperView != null) {
@@ -57,7 +58,8 @@ namespace Terminal.Gui {
 				}
 				IsShow = false;
 			}
-			MenuItems = menuItems;
+			barItem = new MenuBarItem();
+			barItem.Children.AddRange(menuItems);
 			Position = new Point (x, y);
 		}
 
@@ -82,6 +84,20 @@ namespace Terminal.Gui {
 			}
 		}
 
+		public void Show (MouseEvent me)
+		{
+			if (me.Flags.HasFlag (MouseFlags.Button3Clicked) || me.Flags.HasFlag (MouseFlags.Button3Released)) {
+				Position = new Point (me.X, me.Y);
+				Show ();
+			}
+		}
+
+		public void Show (int x, int y)
+		{
+			Position = new Point (x, y);
+			Show ();
+		}
+
 		/// <summary>
 		/// Shows (opens) the ContextMenu, displaying the <see cref="MenuItem"/>s it contains.
 		/// </summary>
@@ -102,7 +118,7 @@ namespace Terminal.Gui {
 					Position = position = pos;
 				}
 			}
-			var rect = Menu.MakeFrame (position.X, position.Y, MenuItems.Children);
+			var rect = Menu.MakeFrame (position.X, position.Y, barItem.Children.ToArray());
 			if (rect.Right >= frame.Right) {
 				if (frame.Right - rect.Width >= 0 || !ForceMinimumPosToZero) {
 					position.X = frame.Right - rect.Width;
@@ -128,7 +144,7 @@ namespace Terminal.Gui {
 				position.Y = 0;
 			}
 
-			menuBar = new MenuBar (new [] { MenuItems }) {
+			menuBar = new MenuBar (new [] { barItem }) {
 				X = position.X,
 				Y = position.Y,
 				Width = 0,
@@ -172,10 +188,12 @@ namespace Terminal.Gui {
 		/// </summary>
 		public Point Position { get; set; }
 
+		private MenuBarItem barItem;
+
 		/// <summary>
 		/// Gets or sets the menu items for this context menu.
 		/// </summary>
-		public MenuBarItem MenuItems { get; set; }
+		public List<MenuItem> Items { get { return barItem.Children; } }
 
 		/// <summary>
 		/// <see cref="Gui.Key"/> specifies they keyboard key that will activate the context menu with the keyboard.

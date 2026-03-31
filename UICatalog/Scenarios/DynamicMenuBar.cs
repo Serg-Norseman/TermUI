@@ -258,7 +258,7 @@ namespace UICatalog.Scenarios {
 					var menuItem = DataContext.Menus.Count > 0 ? DataContext.Menus [i].MenuItem : null;
 					if (menuItem != null) {
 						var childrens = ((MenuBarItem)_currentMenuBarItem).Children;
-						if (i < childrens.Length - 1) {
+						if (i < childrens.Count - 1) {
 							childrens [i] = childrens [i + 1];
 							childrens [i + 1] = menuItem;
 							DataContext.Menus [i] = DataContext.Menus [i + 1];
@@ -347,13 +347,10 @@ namespace UICatalog.Scenarios {
 						var menuBarItem = _currentMenuBarItem as MenuBarItem;
 						if (menuBarItem == null) {
 							menuBarItem = new MenuBarItem (_currentMenuBarItem.Title, new MenuItem [] { newMenu }, _currentMenuBarItem.Parent);
-						} else if (menuBarItem.Children == null) {
-							menuBarItem.Children = new MenuItem [] { newMenu };
+						} else if (menuBarItem.Children.Count == 0) {
+							menuBarItem.Children.Add(newMenu);
 						} else {
-							var childrens = menuBarItem.Children;
-							Array.Resize (ref childrens, childrens.Length + 1);
-							childrens [childrens.Length - 1] = newMenu;
-							menuBarItem.Children = childrens;
+							menuBarItem.Children.Add(newMenu);
 						}
 						DataContext.Menus.Add (new DynamicMenuItemList (newMenu.Title, newMenu));
 						_lstMenus.MoveDown ();
@@ -364,24 +361,12 @@ namespace UICatalog.Scenarios {
 					var menuItem = DataContext.Menus.Count > 0 ? DataContext.Menus [_lstMenus.SelectedItem].MenuItem : null;
 					if (menuItem != null) {
 						var childrens = ((MenuBarItem)_currentMenuBarItem).Children;
-						childrens [_lstMenus.SelectedItem] = null;
-						int i = 0;
-						foreach (var c in childrens) {
-							if (c != null) {
-								childrens [i] = c;
-								i++;
-							}
-						}
-						Array.Resize (ref childrens, childrens.Length - 1);
-						if (childrens.Length == 0) {
+						childrens.RemoveAt(_lstMenus.SelectedItem);
+						if (childrens.Count == 0) {
 							if (_currentMenuBarItem.Parent == null) {
-								((MenuBarItem)_currentMenuBarItem).Children = null;
-								//_currentMenuBarItem.Action = _frmMenuDetails.CreateAction (_currentEditMenuBarItem, new DynamicMenuItem (_currentMenuBarItem.Title));
 							} else {
 								_currentMenuBarItem = new MenuItem (_currentMenuBarItem.Title, _currentMenuBarItem.Help, _frmMenuDetails.CreateAction (_currentEditMenuBarItem, new DynamicMenuItem (_currentEditMenuBarItem.Title)), null, _currentMenuBarItem.Parent);
 							}
-						} else {
-							((MenuBarItem)_currentMenuBarItem).Children = childrens;
 						}
 						DataContext.Menus.RemoveAt (_lstMenus.SelectedItem);
 						if (_lstMenus.Source.Count > 0 && _lstMenus.SelectedItem > _lstMenus.Source.Count - 1) {
@@ -585,17 +570,16 @@ namespace UICatalog.Scenarios {
 					_currentEditMenuBarItem.Help = menuItem.help;
 					_currentEditMenuBarItem.CheckType = menuItem.checkStyle;
 					var parent = _currentEditMenuBarItem.Parent as MenuBarItem;
-					if (parent != null && parent.Children.Length == 1 && _currentEditMenuBarItem.CheckType == MenuItemCheckStyle.Radio) {
+					if (parent != null && parent.Children.Count == 1 && _currentEditMenuBarItem.CheckType == MenuItemCheckStyle.Radio) {
 						_currentEditMenuBarItem.Checked = true;
 					}
-					if (menuItem.isTopLevel && _currentEditMenuBarItem is MenuBarItem) {
-						((MenuBarItem)_currentEditMenuBarItem).Children = null;
+					if (menuItem.isTopLevel && _currentEditMenuBarItem is MenuBarItem barItem) {
+						barItem.Children.Clear();
 						_currentEditMenuBarItem.Action += _frmMenuDetails.CreateAction (_currentEditMenuBarItem, menuItem);
 						SetListViewSource (_currentEditMenuBarItem, true);
 					} else if (menuItem.hasSubMenu) {
 						_currentEditMenuBarItem.Action += null;
-						if (_currentEditMenuBarItem is MenuBarItem && ((MenuBarItem)_currentEditMenuBarItem).Children == null) {
-							((MenuBarItem)_currentEditMenuBarItem).Children = new MenuItem [] { };
+						if (_currentEditMenuBarItem is MenuBarItem barItem3 && barItem3.Children == null) {
 						} else if (_currentEditMenuBarItem.Parent != null) {
 							_frmMenuDetails.UpdateParent (ref _currentEditMenuBarItem);
 						} else {
@@ -606,8 +590,8 @@ namespace UICatalog.Scenarios {
 						_frmMenuDetails.UpdateParent (ref _currentEditMenuBarItem);
 						_currentEditMenuBarItem = new MenuItem (menuItem.title, menuItem.help, _frmMenuDetails.CreateAction (_currentEditMenuBarItem, menuItem), null, _currentEditMenuBarItem.Parent);
 					} else {
-						if (_currentEditMenuBarItem is MenuBarItem) {
-							((MenuBarItem)_currentEditMenuBarItem).Children = null;
+						if (_currentEditMenuBarItem is MenuBarItem barItem2) {
+							barItem2.Children.Clear();
 							DataContext.Menus = new List<DynamicMenuItemList> ();
 						}
 						_currentEditMenuBarItem.Action += _frmMenuDetails.CreateAction (_currentEditMenuBarItem, menuItem);
@@ -944,7 +928,7 @@ namespace UICatalog.Scenarios {
 			bool IsTopLevel (MenuItem menuItem)
 			{
 				var topLevel = menuItem as MenuBarItem;
-				if (topLevel != null && topLevel.Parent == null && (topLevel.Children == null || topLevel.Children.Length == 0) && topLevel.HasAction()) {
+				if (topLevel != null && topLevel.Parent == null && (topLevel.Children == null || topLevel.Children.Count == 0) && topLevel.HasAction()) {
 					return true;
 				} else {
 					return false;
@@ -954,7 +938,7 @@ namespace UICatalog.Scenarios {
 			bool HasSubMenus (MenuItem menuItem)
 			{
 				var menuBarItem = menuItem as MenuBarItem;
-				if (menuBarItem != null && menuBarItem.Children != null && (menuBarItem.Children.Length > 0 || !menuBarItem.HasAction ())) {
+				if (menuBarItem != null && menuBarItem.Children != null && (menuBarItem.Children.Count > 0 || !menuBarItem.HasAction ())) {
 					return true;
 				} else {
 					return false;
@@ -976,7 +960,7 @@ namespace UICatalog.Scenarios {
 					var parent = menuItem?.Parent as MenuBarItem;
 					if (parent != null) {
 						var childrens = parent.Children;
-						for (int i = 0; i < childrens.Length; i++) {
+						for (int i = 0; i < childrens.Count; i++) {
 							var child = childrens [i];
 							if (child != menuItem) {
 								child.Checked = false;

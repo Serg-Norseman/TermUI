@@ -217,8 +217,9 @@ namespace UICatalog.Scenarios {
 			this.borderChildMenuItem = new Terminal.Gui.MenuItem ();
 			this.borderChildMenuItem.Title = "_Borderless Child";
 			this.borderChildMenuItem.Tag = "borderChildMenuItem";
-			this.childMenu.Children = new Terminal.Gui.MenuItem [] {
-					this.createChildMenuItem, this.centerChildMenuItem, this.hideShowChildMenuItem, this.borderChildMenuItem};
+			this.childMenu.Children.AddRange(new Terminal.Gui.MenuItem [] {
+					this.createChildMenuItem, this.centerChildMenuItem, this.hideShowChildMenuItem, this.borderChildMenuItem
+			});
 			this.Add (this.menuBar);
 			this.statusBar = new Terminal.Gui.StatusBar ();
 			this.statusBar.Width = Dim.Fill ();

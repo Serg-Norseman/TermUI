@@ -150,8 +150,7 @@ namespace UICatalog.Scenarios {
 		{
 			var menu = new ContextMenu ();
 			menu.Position = screenPoint;
-
-			menu.MenuItems = new MenuBarItem (new [] { new MenuItem ("Properties", null, (sender, e) => ShowPropertiesOf (forObject)) });
+			menu.Items.Add(new MenuItem ("Properties", null, (sender, e) => ShowPropertiesOf (forObject)));
 
 			Application.MainLoop.Invoke (menu.Show);
 		}

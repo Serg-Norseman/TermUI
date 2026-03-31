@@ -90,7 +90,7 @@ namespace UICatalog.Scenarios {
 		private void ShowContextMenu (int x, int y)
 		{
 			contextMenu = new ContextMenu (x, y,
-				new MenuBarItem (new MenuItem [] {
+				new MenuItem [] {
 					new MenuItem ("_Configuration", "Show configuration", (sender, e) => MessageBox.Query (50, 5, "Info", "This would open settings dialog", "Ok")),
 					new MenuBarItem ("More options", new MenuItem [] {
 						new MenuItem ("_Setup", "Change settings", (sender, e) => MessageBox.Query (50, 5, "Info", "This would open setup dialog", "Ok")),
@@ -111,7 +111,7 @@ namespace UICatalog.Scenarios {
 						},
 					null,
 					new MenuItem ("_Quit", "", (sender, e) => Application.RequestStop ())
-				})
+				}
 			) { ForceMinimumPosToZero = forceMinimumPosToZero, UseSubMenusSingleFrame = useSubMenusSingleFrame };
 
 			tfTopLeft.ContextMenu.ForceMinimumPosToZero = forceMinimumPosToZero;

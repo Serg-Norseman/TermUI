@@ -329,20 +329,13 @@ namespace Terminal.Gui {
 				Parent = parent;
 			}
 			if (children is List<MenuItem []> childrenList) {
-				MenuItem [] childrens = Array.Empty<MenuItem> ();
 				foreach (var item in childrenList) {
-					for (int i = 0; i < item.Length; i++) {
-						SetChildrensParent (item);
-						Array.Resize (ref childrens, childrens.Length + 1);
-						childrens [childrens.Length - 1] = item [i];
-					}
+					SetChildrensParent (item);
+					Children.AddRange (item);
 				}
-				Children = childrens;
 			} else if (children is MenuItem [] childrenArr) {
 				SetChildrensParent (childrenArr);
-				Children = childrenArr;
-			} else {
-				Children = null;
+				Children.AddRange(childrenArr);
 			}
 		}
 
@@ -387,17 +380,10 @@ namespace Terminal.Gui {
 		/// <returns>Returns a value bigger than -1 if the <see cref="MenuItem"/> is a child of this.</returns>
 		public int GetChildrenIndex (MenuItem children)
 		{
-			if (Children?.Length == 0) {
+			if (Children.Count == 0)
 				return -1;
-			}
-			int i = 0;
-			foreach (var child in Children) {
-				if (child == children) {
-					return i;
-				}
-				i++;
-			}
-			return -1;
+
+			return Children.IndexOf(children);
 		}
 
 		void SetTitle (string title)
@@ -407,13 +393,15 @@ namespace Terminal.Gui {
 			Title = title;
 		}
 
+		private readonly List<MenuItem> children = new List<MenuItem>();
+
 		/// <summary>
 		/// Gets or sets an array of <see cref="MenuItem"/> objects that are the children of this <see cref="MenuBarItem"/>
 		/// </summary>
 		/// <value>The children.</value>
-		public MenuItem [] Children { get; set; }
+		public List<MenuItem> Children { get { return children; } }
 
-		internal bool IsTopLevel { get => Parent == null && (Children == null || Children.Length == 0) && HasAction (); }
+		internal bool IsTopLevel { get => Parent == null && (Children == null || Children.Count == 0) && HasAction (); }
 	}
 
 	class Menu : View, IPopover {
@@ -441,7 +429,7 @@ namespace Terminal.Gui {
 		}
 
 		public Menu (MenuBar host, int x, int y, MenuBarItem barItems, Menu parent = null)
-			: base (MakeFrame (x, y, barItems.Children, parent))
+			: base (MakeFrame (x, y, barItems.Children.ToArray(), parent))
 		{
 			this.barItems = barItems;
 			this.host = host;
@@ -452,7 +440,7 @@ namespace Terminal.Gui {
 			} else {
 
 				current = -1;
-				for (int i = 0; i < barItems.Children?.Length; i++) {
+				for (int i = 0; i < barItems.Children.Count; i++) {
 					if (barItems.Children [i]?.IsEnabled () == true) {
 						current = i;
 						break;
@@ -473,9 +461,9 @@ namespace Terminal.Gui {
 			AddCommand (Command.Left, () => { this.host.PreviousMenu (true); return true; });
 			AddCommand (Command.Right, () => {
 				this.host.NextMenu (!this.barItems.IsTopLevel || (this.barItems.Children != null
-					&& this.barItems.Children.Length > 0 && current > -1
-					&& current < this.barItems.Children.Length && this.barItems.Children [current].IsFromSubMenu),
-					this.barItems.Children != null && this.barItems.Children.Length > 0 && current > -1
+					&& this.barItems.Children.Count > 0 && current > -1
+					&& current < this.barItems.Children.Count && this.barItems.Children [current].IsFromSubMenu),
+					this.barItems.Children != null && this.barItems.Children.Count > 0 && current > -1
 					&& host.UseSubMenusSingleFrame && this.barItems.SubMenu (this.barItems.Children [current]) != null);
 
 				return true;
@@ -522,7 +510,7 @@ namespace Terminal.Gui {
 			//intBounds.Inflate (-1, -1); // Breaks the merging of horizontal separator symbols and menu borders
 			var savedClip = SetClip (intBounds);
 
-			for (int i = Bounds.Y; i < barItems.Children.Length; i++) {
+			for (int i = Bounds.Y; i < barItems.Children.Count; i++) {
 				if (i < 0)
 					continue;
 				var item = barItems.Children [i];
@@ -725,7 +713,7 @@ namespace Terminal.Gui {
 			bool disabled;
 			do {
 				current++;
-				if (current >= barItems.Children.Length) {
+				if (current >= barItems.Children.Count) {
 					current = 0;
 				}
 				if (this != host.openCurrentMenu && barItems.Children [current]?.IsFromSubMenu == true && host.selectedSub > -1) {
@@ -776,7 +764,7 @@ namespace Terminal.Gui {
 					}
 				}
 				if (current < 0)
-					current = barItems.Children.Length - 1;
+					current = barItems.Children.Count - 1;
 				if (!host.SelectEnabledItem (barItems.Children, current, out current, false)) {
 					current = 0;
 					if (!host.SelectEnabledItem (barItems.Children, current, out current) && !host.CloseMenu (false)) {
@@ -828,7 +816,7 @@ namespace Terminal.Gui {
 				if (me.Y < 1)
 					return true;
 				var meY = me.Y - 1;
-				if (meY >= barItems.Children.Length)
+				if (meY >= barItems.Children.Count)
 					return true;
 				var item = barItems.Children [meY];
 				if (item == null || !item.IsEnabled ()) disabled = true;
@@ -842,7 +830,7 @@ namespace Terminal.Gui {
 				me.Flags.HasFlag (MouseFlags.Button1Pressed | MouseFlags.ReportMousePosition)) {
 
 				disabled = false;
-				if (me.Y < 1 || me.Y - 1 >= barItems.Children.Length) {
+				if (me.Y < 1 || me.Y - 1 >= barItems.Children.Count) {
 					return true;
 				}
 				var item = barItems.Children [me.Y - 1];
@@ -1267,7 +1255,7 @@ namespace Terminal.Gui {
 		public virtual void OnMenuOpened ()
 		{
 			MenuItem mi = null;
-			if (openCurrentMenu.barItems.Children != null && openCurrentMenu.barItems.Children.Length > 0
+			if (openCurrentMenu.barItems.Children != null && openCurrentMenu.barItems.Children.Count > 0
 				&& openCurrentMenu?.current > -1) {
 
 				mi = openCurrentMenu.barItems.Children [openCurrentMenu.current];
@@ -1361,10 +1349,10 @@ namespace Terminal.Gui {
 						openCurrentMenu = new Menu (this, last.Frame.Left + last.Frame.Width, last.Frame.Top + 1 + last.current, subMenu, last);
 					} else {
 						var first = openSubMenu.Count > 0 ? openSubMenu.First () : openMenu;
-						var mbi = new MenuItem [2 + subMenu.Children.Length];
+						var mbi = new MenuItem [2 + subMenu.Children.Count];
 						mbi [0] = new MenuItem () { Title = subMenu.Title, Parent = subMenu };
 						mbi [1] = null;
-						for (int j = 0; j < subMenu.Children.Length; j++) {
+						for (int j = 0; j < subMenu.Children.Count; j++) {
 							mbi [j + 2] = subMenu.Children [j];
 						}
 						var newSubMenu = new MenuBarItem (mbi);
@@ -1671,7 +1659,7 @@ namespace Terminal.Gui {
 						NextMenu (false, ignoreUseSubMenusSingleFrame);
 					}
 				} else {
-					var subMenu = openCurrentMenu.current > -1 && openCurrentMenu.barItems.Children.Length > 0
+					var subMenu = openCurrentMenu.current > -1 && openCurrentMenu.barItems.Children.Count > 0
 						? openCurrentMenu.barItems.SubMenu (openCurrentMenu.barItems.Children [openCurrentMenu.current])
 						: null;
 					if ((selectedSub == -1 || openSubMenu == null || openSubMenu?.Count - 1 == selectedSub) && subMenu == null) {
@@ -1710,13 +1698,13 @@ namespace Terminal.Gui {
 					if (Char.ToUpperInvariant ((char)mi.Title [p + 1]) == c) {
 						ProcessMenu (i, mi);
 						return true;
-					} else if (mi.Children?.Length > 0) {
-						if (FindAndOpenChildrenMenuByHotkey (kb, mi.Children)) {
+					} else if (mi.Children.Count > 0) {
+						if (FindAndOpenChildrenMenuByHotkey (kb, mi.Children.ToArray ())) {
 							return true;
 						}
 					}
-				} else if (mi.Children?.Length > 0) {
-					if (FindAndOpenChildrenMenuByHotkey (kb, mi.Children)) {
+				} else if (mi.Children.Count > 0) {
+					if (FindAndOpenChildrenMenuByHotkey (kb, mi.Children.ToArray ())) {
 						return true;
 					}
 				}
@@ -1744,13 +1732,13 @@ namespace Terminal.Gui {
 							}
 						}
 						return true;
-					} else if (mi is MenuBarItem menuBarItem && menuBarItem?.Children.Length > 0) {
-						if (FindAndOpenChildrenMenuByHotkey (kb, menuBarItem.Children)) {
+					} else if (mi is MenuBarItem menuBarItem && menuBarItem?.Children.Count > 0) {
+						if (FindAndOpenChildrenMenuByHotkey (kb, menuBarItem.Children.ToArray ())) {
 							return true;
 						}
 					}
-				} else if (mi is MenuBarItem menuBarItem && menuBarItem?.Children.Length > 0) {
-					if (FindAndOpenChildrenMenuByHotkey (kb, menuBarItem.Children)) {
+				} else if (mi is MenuBarItem menuBarItem && menuBarItem?.Children.Count > 0) {
+					if (FindAndOpenChildrenMenuByHotkey (kb, menuBarItem.Children.ToArray ())) {
 						return true;
 					}
 				}
@@ -1780,7 +1768,7 @@ namespace Terminal.Gui {
 					}
 					return true;
 				}
-				if (mi is MenuBarItem menuBarItem && menuBarItem.Children != null && !menuBarItem.IsTopLevel && FindAndOpenMenuByShortcut (kb, menuBarItem.Children)) {
+				if (mi is MenuBarItem menuBarItem && menuBarItem.Children != null && !menuBarItem.IsTopLevel && FindAndOpenMenuByShortcut (kb, menuBarItem.Children.ToArray ())) {
 					return true;
 				}
 			}

@@ -210,9 +210,9 @@ namespace Terminal.Gui
 			AddKeyBinding(ContextMenu.Key, Command.Accept);
 		}
 
-		private MenuBarItem BuildContextMenuBarItem()
+		private MenuItem[] BuildContextMenuBarItem ()
 		{
-			return new MenuBarItem(new MenuItem[] {
+			return new MenuItem[] {
 					new MenuItem (Strings.ctxSelectAll, "", (sender, e) => SelectAll (), null, null, GetKeyFromCommand (Command.SelectAll)),
 					new MenuItem (Strings.ctxDeleteAll, "", (sender, e) => DeleteAll (), null, null, GetKeyFromCommand (Command.DeleteAll)),
 					new MenuItem (Strings.ctxCopy, "", (sender, e) => Copy (), null, null, GetKeyFromCommand (Command.Copy)),
@@ -220,7 +220,7 @@ namespace Terminal.Gui
 					new MenuItem (Strings.ctxPaste, "", (sender, e) => Paste (), null, null, GetKeyFromCommand (Command.Paste)),
 					new MenuItem (Strings.ctxUndo, "", (sender, e) => UndoChanges (), null, null, GetKeyFromCommand (Command.Undo)),
 					new MenuItem (Strings.ctxRedo, "", (sender, e) => RedoChanges (), null, null, GetKeyFromCommand (Command.Redo)),
-				});
+				};
 		}
 
 		private void ContextMenu_KeyChanged(object sender, Key obj)
@@ -935,7 +935,8 @@ namespace Terminal.Gui
 
 				currentCulture = Thread.CurrentThread.CurrentUICulture;
 
-				ContextMenu.MenuItems = BuildContextMenuBarItem();
+				ContextMenu.Items.Clear();
+				ContextMenu.Items.AddRange(BuildContextMenuBarItem());
 			}
 			ContextMenu.Show();
 		}
