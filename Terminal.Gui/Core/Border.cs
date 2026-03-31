@@ -999,7 +999,8 @@ namespace Terminal.Gui
 			if (borderBrush != null) {
 				driver.SetAttribute(new Attribute(BorderBrush));
 			} else {
-				driver.SetAttribute(new Attribute(Parent.ColorScheme.Normal.Foreground));
+				if (Parent != null)
+					driver.SetAttribute(new Attribute(Parent.ColorScheme.Normal.Foreground));
 			}
 		}
 

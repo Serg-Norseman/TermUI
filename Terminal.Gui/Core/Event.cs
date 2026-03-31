@@ -553,6 +553,12 @@ namespace Terminal.Gui {
 		public int KeyValue => (int)Key;
 
 		/// <summary>
+		///   The key value cast to an char, you will typical use this for
+		///   extracting the Unicode value out of a key.
+		/// </summary>
+		public int KeyChar => (char)Key;
+
+		/// <summary>
 		/// Gets a value indicating whether the Shift key was pressed.
 		/// </summary>
 		/// <value><c>true</c> if is shift; otherwise, <c>false</c>.</value>
