@@ -6,9 +6,6 @@ using Terminal.Gui.Core;
 
 namespace Terminal.Gui
 {
-
-
-
 	/// <summary>
 	/// View for tabular data based on a <see cref="DataTable"/>.
 	/// 
@@ -16,7 +13,6 @@ namespace Terminal.Gui
 	/// </summary>
 	public class TableView : View
 	{
-
 		/// <summary>
 		///  Defines the event arguments for <see cref="TableView.CellActivated"/> event
 		/// </summary>
@@ -71,7 +67,6 @@ namespace Terminal.Gui
 		/// </summary>
 		public const int DefaultMaxCellWidth = 100;
 
-
 		/// <summary>
 		/// The default minimum cell width for <see cref="ColumnStyle.MinAcceptableWidth"/>
 		/// </summary>
@@ -122,7 +117,10 @@ namespace Terminal.Gui
 		public int RowOffset
 		{
 			get => rowOffset;
-			set => rowOffset = TableIsNullOrInvisible() ? 0 : Math.Max(0, Math.Min(Table.Rows.Count - 1, value));
+			set {
+				int contentHeight = GetContentHeight (Bounds);
+				rowOffset = TableIsNullOrInvisible () ? 0 : Math.Max (0, Math.Min (Table.Rows.Count - contentHeight /*1*/, value));
+			}
 		}
 
 		/// <summary>
@@ -131,7 +129,6 @@ namespace Terminal.Gui
 		public int SelectedColumn
 		{
 			get => selectedColumn;
-
 			set {
 				var oldValue = selectedColumn;
 
@@ -150,7 +147,6 @@ namespace Terminal.Gui
 		{
 			get => selectedRow;
 			set {
-
 				var oldValue = selectedRow;
 
 				selectedRow = TableIsNullOrInvisible() ? 0 : Math.Min(Table.Rows.Count - 1, Math.Max(0, value));
@@ -313,11 +309,16 @@ namespace Terminal.Gui
 				}
 			}
 
+			if (Style.ShowHorizontalTableUnderline) {
+				RenderTableUnderline (frame.Height - 1, bounds.Width, columnsToRender);
+			}
+
 			bool isNullOrInvisible = TableIsNullOrInvisible();
 			int headerLinesConsumed = line;
+			int footerLinesConsumed = !Style.ShowHorizontalTableUnderline ? 0 : 1;
 
 			//render the cells
-			for (; line < frame.Height; line++) {
+			for (; line < frame.Height - footerLinesConsumed; line++) {
 
 				ClearLine(line, bounds.Width);
 
@@ -371,6 +372,46 @@ namespace Terminal.Gui
 				heightRequired++;
 
 			return heightRequired;
+		}
+
+		/// <summary>
+		/// Returns the amount of vertical space required to display the footer
+		/// </summary>
+		/// <returns></returns>
+		private int GetFooterHeight ()
+		{
+			int heightRequired = 0;
+
+			if (Style.ShowHorizontalTableUnderline)
+				heightRequired++;
+
+			return heightRequired;
+		}
+
+		private void RenderTableUnderline (int row, int availableWidth, ColumnToRender [] columnsToRender)
+		{
+			// Renders a line under table (when visible) like:
+			// └────────────────────┴──────────┴───────────┴──────────────┴─────────┘
+
+			for (int c = 0; c < availableWidth; c++) {
+				var rune = Driver.HLine;
+
+				if (Style.ShowVerticalHeaderLines) {
+					if (c == 0) {
+						rune = Driver.LLCorner;
+					} else if (columnsToRender.Any (r => r.X == c + 1)) {
+						// if the next column is the start of a header
+						rune = Driver.BottomTee;
+					} else if (c == availableWidth - 1) {
+						rune = Driver.LRCorner;
+					} else if (Style.ExpandLastColumn == false && columnsToRender.Any (r => r.IsVeryLast && r.X + r.Width - 1 == c)) {
+						// if the next console column is the lastcolumns end
+						rune = Driver.BottomTee;
+					}
+				}
+
+				AddRuneAt (Driver, c, row, rune);
+			}
 		}
 
 		private void RenderHeaderOverline(int row, int availableWidth, ColumnToRender[] columnsToRender)
@@ -823,7 +864,8 @@ namespace Terminal.Gui
 		/// <param name="extend">true to extend the current selection (if any) instead of replacing</param>
 		public void PageUp(bool extend)
 		{
-			ChangeSelectionByOffset(0, -(Bounds.Height - GetHeaderHeightIfAny()), extend);
+			int contentHeight = GetContentHeight (Bounds);
+			ChangeSelectionByOffset (0, -contentHeight /*(Bounds.Height - GetHeaderHeightIfAny())*/, extend);
 			Update();
 		}
 
@@ -833,7 +875,8 @@ namespace Terminal.Gui
 		/// <param name="extend">true to extend the current selection (if any) instead of replacing</param>
 		public void PageDown(bool extend)
 		{
-			ChangeSelectionByOffset(0, Bounds.Height - GetHeaderHeightIfAny(), extend);
+			int contentHeight = GetContentHeight (Bounds);
+			ChangeSelectionByOffset (0, contentHeight/*Bounds.Height - GetHeaderHeightIfAny()*/, extend);
 			Update();
 		}
 
@@ -1152,6 +1195,7 @@ namespace Terminal.Gui
 			var viewPort = CalculateViewport(Bounds);
 
 			var headerHeight = GetHeaderHeightIfAny();
+			var footerHeight = GetFooterHeight ();
 
 			var col = viewPort.LastOrDefault(c => c.X <= clientX);
 
@@ -1161,6 +1205,9 @@ namespace Terminal.Gui
 				return null;
 			}
 
+			if (clientY >= Bounds.Height - footerHeight) {
+				return null;
+			}
 
 			var rowIdx = RowOffset - headerHeight + clientY;
 
@@ -1171,7 +1218,6 @@ namespace Terminal.Gui
 			}
 
 			if (col != null && rowIdx >= 0) {
-
 				return new Point(col.Column.Ordinal, rowIdx);
 			}
 
@@ -1191,8 +1237,6 @@ namespace Terminal.Gui
 
 			var viewPort = CalculateViewport(Bounds);
 
-			var headerHeight = GetHeaderHeightIfAny();
-
 			var colHit = viewPort.FirstOrDefault(c => c.Column.Ordinal == tableColumn);
 
 			// current column is outside the scroll area
@@ -1202,6 +1246,8 @@ namespace Terminal.Gui
 			// the cell is too far up above the current scroll area
 			if (RowOffset > tableRow)
 				return null;
+
+			var headerHeight = GetHeaderHeightIfAny ();
 
 			// the cell is way down below the scroll area and off the screen
 			if (tableRow > RowOffset + (Bounds.Height - headerHeight))
@@ -1395,7 +1441,6 @@ namespace Terminal.Gui
 			}
 
 			var columnsToRender = CalculateViewport(Bounds).ToArray();
-			var headerHeight = GetHeaderHeightIfAny();
 
 			//if we have scrolled too far to the left 
 			if (SelectedColumn < columnsToRender.Min(r => r.Column.Ordinal)) {
@@ -1422,17 +1467,25 @@ namespace Terminal.Gui
 				} else {
 					ColumnOffset = SelectedColumn;
 				}
-
 			}
 
+			int contentHeight = GetContentHeight (Bounds);
+
 			//if we have scrolled too far down
-			if (SelectedRow >= RowOffset + (Bounds.Height - headerHeight)) {
-				RowOffset = SelectedRow - (Bounds.Height - headerHeight) + 1;
+			if (SelectedRow >= RowOffset + contentHeight) {
+				RowOffset = SelectedRow - contentHeight + 1;
 			}
 			//if we have scrolled too far up
 			if (SelectedRow < RowOffset) {
 				RowOffset = SelectedRow;
 			}
+		}
+
+		private int GetContentHeight(Rect bounds)
+		{
+			var headerHeight = GetHeaderHeightIfAny ();
+			var footerHeight = GetFooterHeight ();
+			return bounds.Height - headerHeight - footerHeight;
 		}
 
 		/// <summary>
@@ -1470,11 +1523,7 @@ namespace Terminal.Gui
 				usedSpace += 1;
 
 			int availableHorizontalSpace = bounds.Width;
-			int rowsToRender = bounds.Height;
-
-			// reserved for the headers row
-			if (ShouldRenderHeaders())
-				rowsToRender -= GetHeaderHeight();
+			int rowsToRender = GetContentHeight(bounds);
 
 			bool first = true;
 			var dataColumns = Table.Columns.Cast<DataColumn>();
@@ -1745,6 +1794,11 @@ namespace Terminal.Gui
 			/// True to render a solid line under the headers
 			/// </summary>
 			public bool ShowHorizontalHeaderUnderline { get; set; } = true;
+
+			/// <summary>
+			/// True to render a solid line under the table
+			/// </summary>
+			public bool ShowHorizontalTableUnderline { get; set; } = true;
 
 			/// <summary>
 			/// True to render a solid line vertical line between cells

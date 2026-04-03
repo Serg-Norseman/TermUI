@@ -1177,13 +1177,6 @@ namespace Terminal.Gui
 			SynchronizationContext.SetSynchronizationContext (syncContext: null);
 		}
 
-
-		static void Redraw (View view)
-		{
-			view.Redraw (view.Bounds);
-			Driver.Refresh ();
-		}
-
 		/// <summary>
 		/// Triggers a refresh of the entire display.
 		/// </summary>

@@ -58,7 +58,7 @@ namespace Terminal.Gui
 			_orientation = orientation;
 			_initialPercent = initialPercent;
 
-			_panel1 = new FrameView ();
+			_panel1 = new View ();
 			_panel1.X = 0;
 			_panel1.Y = 0;
 			_panel1.CanFocus = false;

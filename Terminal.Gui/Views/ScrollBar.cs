@@ -485,9 +485,14 @@ namespace Terminal.Gui
 		protected virtual void SetWidthHeight ()
 		{
 			if (showScrollIndicator) {
-				Width = vertical ? 1 : Dim.Width (Host) - 0;
-				Height = vertical ? Dim.Height (Host) - 0 : 1;
+				Width = vertical ? 1 : Dim.Width (Host) - Margin * 2;
+				Height = vertical ? Dim.Height (Host) - Margin * 2 : 1;
 			}
 		}
+
+		/// <summary>
+		/// Indentation when placed in the host component to create a nice look.
+		/// </summary>
+		public int Margin { get; set; } = 0;
 	}
 }
