@@ -19,10 +19,10 @@ namespace Terminal.Gui
 		private View _panel2;
 		private View _splitterBar;
 
-		private int _initialPercent;
+		private int _initialPercent = 50;
 		private int _minSize1 = 15;
 		private int _minSize2 = 15;
-		private readonly Orientation _orientation;
+		private Orientation _orientation;
 		private int _splitPosition;
 
 
@@ -38,7 +38,35 @@ namespace Terminal.Gui
 			set { _minSize2 = value; }
 		}
 
-		public Orientation Orientation => _orientation;
+		public Orientation Orientation
+		{
+			get { return _orientation; }
+			set {
+				_orientation = value;
+				if (_orientation == Orientation.Horizontal) {
+					_panel1.Width = Dim.Fill ();
+
+					_splitterBar.X = 0;
+					_splitterBar.Y = Pos.Bottom (_panel1);
+					_splitterBar.Width = Dim.Fill ();
+					_splitterBar.Height = 1;
+
+					_panel2.X = 0;
+					_panel2.Y = Pos.Bottom (_splitterBar);
+				} else {
+					_panel1.Height = Dim.Fill ();
+
+					_splitterBar.X = Pos.Right (_panel1);
+					_splitterBar.Y = 0;
+					_splitterBar.Width = 1;
+					_splitterBar.Height = Dim.Fill ();
+
+					_panel2.X = Pos.Right (_splitterBar);
+					_panel2.Y = 0;
+				}
+			}
+		}
+
 		public View Panel1 => _panel1;
 		public View Panel2 => _panel2;
 
@@ -49,14 +77,11 @@ namespace Terminal.Gui
 		public event EventHandler<int> Dragged;
 
 
-		public SplitterContainer (Orientation orientation, int initialPercent = 50) : base ()
+		public SplitterContainer ()
 		{
 			this.Width = Dim.Fill ();
 			this.Height = Dim.Fill ();
 			this.CanFocus = false;
-
-			_orientation = orientation;
-			_initialPercent = initialPercent;
 
 			_panel1 = new View ();
 			_panel1.X = 0;
@@ -70,29 +95,13 @@ namespace Terminal.Gui
 			_panel2.Height = Dim.Fill ();
 			_panel2.CanFocus = false;
 
-			if (orientation == Orientation.Horizontal) {
-				_panel1.Width = Dim.Fill ();
-
-				_splitterBar.X = 0;
-				_splitterBar.Y = Pos.Bottom (_panel1);
-				_splitterBar.Width = Dim.Fill ();
-				_splitterBar.Height = 1;
-
-				_panel2.X = 0;
-				_panel2.Y = Pos.Bottom (_splitterBar);
-			} else {
-				_panel1.Height = Dim.Fill ();
-
-				_splitterBar.X = Pos.Right (_panel1);
-				_splitterBar.Y = 0;
-				_splitterBar.Width = 1;
-				_splitterBar.Height = Dim.Fill ();
-
-				_panel2.X = Pos.Right (_splitterBar);
-				_panel2.Y = 0;
-			}
-
 			Add (_panel1, _splitterBar, _panel2);
+		}
+
+		public SplitterContainer (Orientation orientation, int initialPercent = 50) : this ()
+		{
+			_initialPercent = initialPercent;
+			Orientation = orientation;
 		}
 
 		protected internal override void OnLayoutComplete (LayoutEventArgs args)

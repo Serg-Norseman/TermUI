@@ -1798,7 +1798,7 @@ namespace Terminal.Gui
 			/// <summary>
 			/// True to render a solid line under the table
 			/// </summary>
-			public bool ShowHorizontalTableUnderline { get; set; } = true;
+			public bool ShowHorizontalTableUnderline { get; set; } = false;
 
 			/// <summary>
 			/// True to render a solid line vertical line between cells

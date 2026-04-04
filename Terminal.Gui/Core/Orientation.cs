@@ -5,7 +5,6 @@
 	/// </summary>
 	public enum Orientation
 	{
-
 		/// <summary>
 		/// Left to right 
 		/// </summary>

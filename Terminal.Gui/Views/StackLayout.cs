@@ -18,6 +18,8 @@ namespace Terminal.Gui
 		readonly int padding;
 		readonly int spacing;
 
+		public StackLayout () : this (Orientation.Vertical, 0, 0, null) { }
+
 		public StackLayout (params View? [] views) : this (Orientation.Vertical, 0, 0, views) { }
 
 		public StackLayout (Orientation orientation, int padding, int spacing, params View [] views)
@@ -55,6 +57,9 @@ namespace Terminal.Gui
 
 		public void AddRange (params View [] views)
 		{
+			if (views == null || views.Length == 0)
+				return;
+
 			switch (orientation) {
 				case Orientation.Vertical:
 					int maxWidth = views.Max (vw => vw.Bounds.Width);
