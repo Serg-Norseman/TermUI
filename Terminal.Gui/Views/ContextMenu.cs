@@ -84,18 +84,17 @@ namespace Terminal.Gui {
 			}
 		}
 
-		public void Show (MouseEvent me)
+		private bool nativeMethod = true;
+
+		public void Show (View host, MouseEvent me)
 		{
-			if (me.Flags.HasFlag (MouseFlags.Button3Clicked) || me.Flags.HasFlag (MouseFlags.Button3Released)) {
+			if (host != null && (me.Flags.HasFlag (MouseFlags.Button3Clicked) || me.Flags.HasFlag (MouseFlags.Button3Released))) {
+				nativeMethod = false;
+				Host = host;
 				Position = new Point (me.X, me.Y);
 				Show ();
+				nativeMethod = true;
 			}
-		}
-
-		public void Show (int x, int y)
-		{
-			Position = new Point (x, y);
-			Show ();
 		}
 
 		/// <summary>
@@ -111,11 +110,16 @@ namespace Terminal.Gui {
 			var frame = container.Frame;
 			var position = Position;
 			if (Host != null) {
-				Host.ViewToScreen (container.Frame.X, container.Frame.Y, out int x, out int y);
-				var pos = new Point (x, y);
-				pos.Y += Host.Frame.Height - 1;
-				if (position != pos) {
-					Position = position = pos;
+				if (nativeMethod) {
+					Host.ViewToScreen (container.Frame.X, container.Frame.Y, out int x, out int y);
+					var pos = new Point (x, y);
+					pos.Y += Host.Frame.Height - 1;
+					if (position != pos) {
+						Position = position = pos;
+					}
+				} else {
+					Host.ViewToScreen (position.X, position.Y, out int x, out int y);
+					position = new Point (x, y);
 				}
 			}
 			var rect = Menu.MakeFrame (position.X, position.Y, barItem.Children.ToArray());
@@ -128,14 +132,15 @@ namespace Terminal.Gui {
 			} else if (ForceMinimumPosToZero && position.X < 0) {
 				position.X = 0;
 			}
+
 			if (rect.Bottom >= frame.Bottom) {
 				if (frame.Bottom - rect.Height - 1 >= 0 || !ForceMinimumPosToZero) {
-					if (Host == null) {
-						position.Y = frame.Bottom - rect.Height - 1;
-					} else {
+					if (Host != null && nativeMethod) {
 						Host.ViewToScreen (container.Frame.X, container.Frame.Y, out int x, out int y);
 						var pos = new Point (x, y);
 						position.Y = pos.Y - rect.Height - 1;
+					} else {
+						position.Y = frame.Bottom - rect.Height - 1;
 					}
 				} else if (ForceMinimumPosToZero) {
 					position.Y = 0;
