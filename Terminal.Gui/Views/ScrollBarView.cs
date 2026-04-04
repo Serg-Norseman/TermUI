@@ -213,12 +213,19 @@ namespace Terminal.Gui
 
 		protected override void SetWidthHeight ()
 		{
-			if (showBothScrollIndicator) {
-				Width = vertical ? 1 : Dim.Width (Host) - 1;
-				Height = vertical ? Dim.Height (Host) - 1 : 1;
+			// Margin is used when the component has its own rendered border.
 
-				otherScrollBarView.Width = otherScrollBarView.vertical ? 1 : Dim.Width (Host) - 1;
-				otherScrollBarView.Height = otherScrollBarView.vertical ? Dim.Height (Host) - 1 : 1;
+			if (showBothScrollIndicator) {
+				// sizeDiff=1 - if there are both scrollbars, leaving the lower right corner empty
+				// sizeDiff>=2 - if the component has its own rendered border, with top-right and bottom-left corners
+
+				int sizeDiff = Margin == 0 ? 1 : Margin * 2;
+				Width = vertical ? 1 : Dim.Width (Host) - sizeDiff;
+				Height = vertical ? Dim.Height (Host) - sizeDiff : 1;
+
+				sizeDiff = otherScrollBarView.Margin == 0 ? 1 : otherScrollBarView.Margin * 2;
+				otherScrollBarView.Width = otherScrollBarView.vertical ? 1 : Dim.Width (Host) - sizeDiff;
+				otherScrollBarView.Height = otherScrollBarView.vertical ? Dim.Height (Host) - sizeDiff : 1;
 			} else if (showScrollIndicator) {
 				base.SetWidthHeight ();
 			} else if (otherScrollBarView?.showScrollIndicator == true) {

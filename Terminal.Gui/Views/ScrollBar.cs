@@ -492,6 +492,7 @@ namespace Terminal.Gui
 
 		/// <summary>
 		/// Indentation when placed in the host component to create a nice look.
+		/// Including when the component has its own rendered border.
 		/// </summary>
 		public int Margin { get; set; } = 0;
 	}

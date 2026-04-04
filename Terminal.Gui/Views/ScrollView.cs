@@ -24,9 +24,6 @@ namespace Terminal.Gui {
 	///   <see cref="ContentOffset"/> property.  The view itself is a window into the 
 	///   space represented by the <see cref="ContentSize"/>.
 	/// </para>
-	/// <para>
-	///   Use the 
-	/// </para>
 	/// </remarks>
 	public class ScrollView : View {
 		private class ContentView : View {
@@ -39,6 +36,10 @@ namespace Terminal.Gui {
 		ContentView contentView;
 		ScrollBarView vertical, horizontal;
 
+		protected ScrollBarView HorizontalScrollBar => horizontal;
+
+		protected ScrollBarView VerticalScrollBar => vertical;
+
 		/// <summary>
 		///  Initializes a new instance of the <see cref="Gui.ScrollView"/> class using <see cref="LayoutStyle.Absolute"/> positioning.
 		/// </summary>
@@ -47,7 +48,6 @@ namespace Terminal.Gui {
 		{
 			Initialize (frame);
 		}
-
 
 		/// <summary>
 		///  Initializes a new instance of the <see cref="Gui.ScrollView"/> class using <see cref="LayoutStyle.Computed"/> positioning.

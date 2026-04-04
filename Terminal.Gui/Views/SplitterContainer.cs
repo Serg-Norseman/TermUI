@@ -65,7 +65,7 @@ namespace Terminal.Gui
 
 			_splitterBar = new SplitterBar (this);
 
-			_panel2 = new FrameView ();
+			_panel2 = new View ();
 			_panel2.Width = Dim.Fill ();
 			_panel2.Height = Dim.Fill ();
 			_panel2.CanFocus = false;
