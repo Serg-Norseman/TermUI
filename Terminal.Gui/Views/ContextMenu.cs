@@ -109,6 +109,7 @@ namespace Terminal.Gui {
 			container.Closing += Container_Closing;
 			var frame = container.Frame;
 			var position = Position;
+
 			if (Host != null) {
 				if (nativeMethod) {
 					Host.ViewToScreen (container.Frame.X, container.Frame.Y, out int x, out int y);
@@ -118,10 +119,12 @@ namespace Terminal.Gui {
 						Position = position = pos;
 					}
 				} else {
+					var contLoc = container.Frame.Location;
 					Host.ViewToScreen (position.X, position.Y, out int x, out int y);
-					position = new Point (x, y);
+					position = new Point (x - contLoc.X, y - contLoc.Y);
 				}
 			}
+
 			var rect = Menu.MakeFrame (position.X, position.Y, barItem.Children.ToArray());
 			if (rect.Right >= frame.Right) {
 				if (frame.Right - rect.Width >= 0 || !ForceMinimumPosToZero) {

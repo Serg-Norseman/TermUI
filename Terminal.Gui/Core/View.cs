@@ -2955,9 +2955,18 @@ namespace Terminal.Gui
 				return true;
 			}
 
+			if (ContextMenu != null) {
+				ContextMenu.Show (this, args.MouseEvent);
+			}
+
 			MouseClick?.Invoke(this, args);
 			return args.Handled;
 		}
+
+		/// <summary>
+		/// Gets or sets the <see cref="Gui.ContextMenu"/> associated with this view.
+		/// </summary>
+		public ContextMenu ContextMenu { get; set; }
 
 		/// <inheritdoc/>
 		public override void OnCanFocusChanged() => CanFocusChanged?.Invoke(this, EventArgs.Empty);
