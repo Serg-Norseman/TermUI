@@ -21,15 +21,10 @@
 
 ## Showcase & Examples
 
-**TermUI** can be used with any .Net language to create feature rich and robust applications.
+**TermUI** can be used with any .NET language to create feature rich and robust applications.
 
 * **[UI Catalog](UICatalog)** - The UI Catalog project provides an easy to use and extend sample illustrating the capabilities of **TermUI**. Run `dotnet run --project UICatalog` to run the UI Catalog.
   ![Sample app](docfx/images/sample.gif)
 
 * **[C# Example](Example)** - Run `dotnet run` in the `Example` directory to run the C# Example.
   ![Simple Usage app](./docfx/images/Example.png)
-
-## Building the Library and Running the Examples
-
-* Windows, Mac, and Linux - Build and run using the .NET SDK command line tools (`dotnet build` in the root directory). Run `UICatalog` with `dotnet run --project UICatalog`.
-* Windows - Open `Terminal.sln` with Visual Studio 2022.

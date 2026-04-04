@@ -8,8 +8,7 @@ proper view.
 
 The job of waiting for events and dispatching them in the
 `Application` is implemented by an instance of the
-[`MainLoop`]()
-class.
+[`MainLoop`]() class.
 
 Mainloops are a common idiom in many user interface toolkits so many
 of the concepts will be familiar to you if you have used other
@@ -25,15 +24,13 @@ This class provides the following capabilities:
 * Possibility of integration with other mainloops.
 * On Unix systems, it can monitor file descriptors for readability or writability.
 
-The `MainLoop` property in the the
-[`Application`](~/api/Terminal.Gui.Application.yml)
+The `MainLoop` property in the the `Application`
 provides access to these functions.
 
 When your code invokes `Application.Run (Toplevel)`, the application
-will prepare the current
-[`Toplevel`](~/api/Terminal.Gui.Toplevel.yml) instance by
+will prepare the current `Toplevel` instance by
 redrawing the screen appropriately and then calling the mainloop to
-run.   
+run.
 
 You can configure the Mainloop before calling Application.Run, or you
 can configure the MainLoop in response to events during the execution.
@@ -59,7 +56,7 @@ Timers Processing
 -----------------
 
 You can register timers to be executed at specified intervals by
-calling the [`AddTimeout`]() method, like this:
+calling the `AddTimeout` method, like this:
 
 ```csharp
 void UpdateTimer ()
@@ -82,8 +79,7 @@ Idle Handlers
 
 You can register code to be executed when the application is idling
 and there are no events to process by calling the
-[`AddIdle`]()
-method. This method takes as a parameter a function that will be
+`AddIdle` method. This method takes as a parameter a function that will be
 invoked when the application is idling. 
 
 Idle functions should return `true` if they should be invoked again,
@@ -156,6 +152,5 @@ available, or for the file descriptor being available for data to be
 written without blocking the application.
 
 To do this, you on Unix, you can cast the `MainLoop` instance to a
-[`UnixMainLoop`]()
-and use the `AddWatch` method to register an interest on a particular
+`UnixMainLoop` and use the `AddWatch` method to register an interest on a particular
 condition.
