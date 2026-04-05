@@ -70,6 +70,8 @@ namespace Terminal.Gui
 		public View Panel1 => _panel1;
 		public View Panel2 => _panel2;
 
+		public int Position => _splitPosition;
+
 
 		/// <summary>
 		/// Fired when the user drags the splitter. The argument is the new position.

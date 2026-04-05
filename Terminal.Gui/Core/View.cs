@@ -241,6 +241,11 @@ namespace Terminal.Gui
 		public event EventHandler<MouseEventArgs> MouseClick;
 
 		/// <summary>
+		/// Event fired when a mouse event is generated.
+		/// </summary>
+		public event EventHandler<MouseEventArgs> DoubleClick;
+
+		/// <summary>
 		/// Event fired when the <see cref="CanFocus"/> value is being changed.
 		/// </summary>
 		public event EventHandler CanFocusChanged;
@@ -2932,6 +2937,16 @@ namespace Terminal.Gui
 					return true;
 				}
 			}
+
+			if ((mouseEvent.Flags & MouseFlags.Button1DoubleClicked) != 0 || (mouseEvent.Flags & MouseFlags.Button2DoubleClicked) != 0
+				|| (mouseEvent.Flags & MouseFlags.Button3DoubleClicked) != 0 || (mouseEvent.Flags & MouseFlags.Button4DoubleClicked) != 0) {
+
+				var args = new MouseEventArgs (mouseEvent);
+				if (OnDoubleClick (args)) {
+					return true;
+				}
+			}
+
 			if (MouseEvent(mouseEvent))
 				return true;
 
@@ -2944,6 +2959,16 @@ namespace Terminal.Gui
 				return true;
 			}
 			return false;
+		}
+
+		protected bool OnDoubleClick (MouseEventArgs args)
+		{
+			if (!Enabled) {
+				return true;
+			}
+
+			DoubleClick?.Invoke (this, args);
+			return args.Handled;
 		}
 
 		/// <summary>
