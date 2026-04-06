@@ -130,6 +130,8 @@ namespace Terminal.Gui.ViewTests {
 		}
 
 		private class NewListDataSource : IListDataSource {
+			public object this [int index] => throw new NotImplementedException ();
+
 			public int Count => throw new NotImplementedException ();
 
 			public int Length => throw new NotImplementedException ();

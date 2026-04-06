@@ -16,6 +16,8 @@ namespace Terminal.Gui {
 		/// </summary>
 		int Count { get; }
 
+		object this[int index] { get; }
+
 		/// <summary>
 		/// Returns the maximum length of elements to display
 		/// </summary>
@@ -687,7 +689,7 @@ namespace Terminal.Gui {
 		public virtual bool OnSelectedChanged ()
 		{
 			if (selected != lastSelectedItem) {
-				var value = source?.Count > 0 ? source.ToList () [selected] : null;
+				var value = source?.Count > 0 ? source [selected] : null;
 				SelectedItemChanged?.Invoke (this, new ListViewItemEventArgs (selected, value));
 				if (HasFocus) {
 					lastSelectedItem = selected;
@@ -708,7 +710,7 @@ namespace Terminal.Gui {
 				return false;
 			}
 
-			var value = source.ToList () [selected];
+			var value = source [selected];
 
 			OpenSelectedItem?.Invoke (this, new ListViewItemEventArgs (selected, value));
 
@@ -843,6 +845,13 @@ namespace Terminal.Gui {
 			get {
 				CheckAndResizeMarksIfRequired ();
 				return src?.Count ?? 0;
+			}
+		}
+
+		public object this [int index]
+		{
+			get {
+				return (src == null || count == 0 || index < 0 || index >= count) ? null : src [index];
 			}
 		}
 

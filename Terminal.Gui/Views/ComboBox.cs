@@ -432,7 +432,7 @@ namespace Terminal.Gui
 
 					selectedIndex = lastSelectedIndex = value;
 					if (selectedIndex != -1) {
-						SetValue (source.ToList () [selectedIndex].ToString (), true);
+						SetValue (source [selectedIndex].ToString (), true);
 					} else {
 						SetValue ("", true);
 					}
@@ -554,9 +554,9 @@ namespace Terminal.Gui
 		public override bool OnLeave (View view)
 		{
 			if (source?.Count > 0 && selectedIndex > -1 && selectedIndex < source.Count - 1
-				&& search.Text != source.ToList () [selectedIndex].ToString ()) {
+				&& search.Text != source [selectedIndex].ToString ()) {
 
-				SetValue (source.ToList () [selectedIndex].ToString ());
+				SetValue (source [selectedIndex].ToString ());
 			}
 			if (isShow && view != this && view != search && view != listview) {
 				HideList ();
@@ -626,7 +626,7 @@ namespace Terminal.Gui
 			if (ReadOnly || HideDropdownListOnClick) {
 				SelectedIndex = lastSelectedIndex;
 				if (SelectedIndex > -1 && SelectedIndex < listview.Source?.Count) {
-					search.Text = listview.Source.ToList () [SelectedIndex].ToString ();
+					search.Text = listview.Source [SelectedIndex].ToString ();
 				}
 			} else if (!ReadOnly) {
 				search.Text = "";
@@ -733,7 +733,7 @@ namespace Terminal.Gui
 
 		bool HasItems ()
 		{
-			return Source?.Count > 0;
+			return source?.Count > 0;
 		}
 
 		/// <summary>
@@ -820,9 +820,8 @@ namespace Terminal.Gui
 			if (source == null) {
 				return -1;
 			}
-			var itemsList = source.ToList ();
-			for (int i = 0; i < itemsList.Count; i++) {
-				if (itemsList [i].ToString () == value) {
+			for (int i = 0; i < source.Count; i++) {
+				if (source [i].ToString () == value) {
 					return i;
 				}
 			}
@@ -852,19 +851,19 @@ namespace Terminal.Gui
 		{
 			searchset.Clear ();
 
-			if (Source == null)
+			if (source == null)
 				return;
 
-			var itemsList = Source.ToList ();
-
 			if (!SearchMode) {
-				foreach (var item in itemsList) {
+				for (int i = 0; i < source.Count; i++) {
+					object item = source [i];
 					searchset.Add (item);
 				}
 			} else {
 				string searchVal = search.Text;
 
-				foreach (var item in itemsList) {
+				for (int i = 0; i < source.Count; i++) {
+					object item = source [i];
 					if (item.ToString ().StartsWith (searchVal, StringComparison.CurrentCultureIgnoreCase)) {
 						searchset.Add (item);
 					}

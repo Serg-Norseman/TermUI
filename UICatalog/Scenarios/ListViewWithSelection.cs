@@ -153,6 +153,13 @@ namespace UICatalog.Scenarios {
 
 			public int Count => Scenarios != null ? Scenarios.Count : 0;
 
+			public object this [int index]
+			{
+				get {
+					return (scenarios == null || count == 0 || index < 0 || index >= count) ? null : scenarios [index];
+				}
+			}
+
 			public int Length => len;
 
 			public ScenarioListDataSource (List<Scenario> itemList) => Scenarios = itemList;

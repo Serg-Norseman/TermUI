@@ -303,7 +303,7 @@ namespace UICatalog
 					_cachedCategoryIndex = CategoryListView.SelectedItem;
 					_cachedScenarioIndex = ScenarioListView.SelectedItem;
 					// Create new instance of scenario (even though Scenarios contains instances)
-					_selectedScenario = (Scenario)Activator.CreateInstance (ScenarioListView.Source.ToList () [ScenarioListView.SelectedItem].GetType ());
+					_selectedScenario = (Scenario)Activator.CreateInstance (ScenarioListView.Source [ScenarioListView.SelectedItem].GetType ());
 
 					// Tell the main app to stop
 					Application.RequestStop ();
